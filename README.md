@@ -1,7 +1,5 @@
 # PTS4
-Repository voor het eindproduct.
-
-Dit document wordt bijgewerkt zodra meer informatie beschikbaar is.
+Repository voor het Crisis Informatie Management Systeem (CIMS).
 
 ---
 
@@ -13,4 +11,4 @@ Ons team bestaat uit:
 - Meny Metekia
 - Eric de Regter
 
-Dhr. O.Nbekend (Tutor)
+Tom Broumels (Product Owner)
