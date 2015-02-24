@@ -8,6 +8,7 @@ package cims;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import cims.Property;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -62,10 +63,16 @@ public class DatabaseManager {
         if (openConnection()) {
             try {
                 //Try to execute sql statment
-                Statement stmnt = connection.createStatement();
+                //Prepared statement van gemaakt voor de sql parameters
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, password FROM user WHERE username = ? AND password = ?");
+                pStmnt.setString(1, username);
+                pStmnt.setString(2, password);
+                
+                ResultSet rs = pStmnt.executeQuery();
+                /*Statement stmnt = connection.createStatement();
                 String SQL = "SELECT username, password FROM user WHERE username = '";
                 SQL += username + "'" + " AND password = " + "'" + password + "'" + ";";
-                ResultSet rs = stmnt.executeQuery(SQL);
+                ResultSet rs = stmnt.executeQuery(SQL);*/
                 //Check if password and username match
                 if (rs.next()) {
                     result = true;
