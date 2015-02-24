@@ -24,7 +24,7 @@ and open the template in the editor.
                     <a class="navbar-brand" href="#">CIMS</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
-                    <form class="navbar-form navbar-right" method="POST" action="<% request.getServletPath(); %>">
+                    <form class="navbar-form navbar-right" method="POST" action="<%=request.getRequestURL()%>">
                         <div class="form-group">
                             <input type="text" placeholder="Gebruikersnaam" class="form-control">
                         </div>
