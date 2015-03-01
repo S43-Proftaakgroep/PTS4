@@ -15,3 +15,6 @@ hs_err_pid*
 /CIMS/dist/
 CIMS/nbproject/ant-deploy.xml
 *.properties
+CIMS/nbproject/ant-deploy.xml
+CIMS/nbproject/build-impl.xml
+CIMS/nbproject/project.properties

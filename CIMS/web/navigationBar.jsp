@@ -1,5 +1,5 @@
 <!-- Navigation bar, to be included right after <body> on every page. -->
-<%@ page pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8" import="cims.UserBean" %>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -9,18 +9,28 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">CIMS</a>
+            <a class="navbar-brand" href="index.jsp">CIMS</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <form class="navbar-form navbar-right" method="POST" action="<%=request.getRequestURL() %>">
+            <%
+                UserBean currentUser = (UserBean) session.getAttribute("currentSessionUser");
+                if (currentUser != null && currentUser.isValid()) {
+            %>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="manage.jsp" title="Beheer je account">Hallo, <%=currentUser.getUsername()%></a></li>
+                <li><a href="LogoutServlet" title="Log uit">Log uit</a></li>
+            </ul>
+            <% } else { %>
+            <form class="navbar-form navbar-right" action="LoginServlet">
                 <div class="form-group">
-                    <input type="text" placeholder="Gebruikersnaam" class="form-control">
+                    <input name="username" type="text" placeholder="Gebruikersnaam" class="form-control">
                 </div>
                 <div class="form-group">
-                    <input type="password" placeholder="Wachtwoord" class="form-control">
+                    <input name="password" type="password" placeholder="Wachtwoord" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-success">Log in</button>
             </form>
+            <% }%>
         </div><!--/.navbar-collapse -->
     </div>
 </nav>

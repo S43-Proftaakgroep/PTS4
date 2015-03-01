@@ -7,16 +7,15 @@ package cims;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import cims.Property;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 /**
  *
  * @author Joris
  */
 public class DatabaseManager {
+
     public static Connection connection;
 
     /**
@@ -27,8 +26,10 @@ public class DatabaseManager {
     private static boolean openConnection() {
         boolean result;
         try {
-            connection = DriverManager.getConnection(
-                    "jdbc:mysql://" + Property.DBADDRESS.getProperty() + ":"+ Property.DBPORT.getProperty()+ "/"+Property.DBNAME.getProperty(), Property.DBUSERNAME.getProperty(), Property.DBPASSWORD.getProperty());
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://" + Property.DBADDRESS.getProperty() + ":" + Property.DBPORT.getProperty() + "/" + Property.DBNAME.getProperty(),
+                    Property.DBUSERNAME.getProperty(),
+                    Property.DBPASSWORD.getProperty());
             result = true;
         } catch (Exception e) {
             connection = null;
@@ -38,8 +39,8 @@ public class DatabaseManager {
         }
         return result;
     }
-    
-     /**
+
+    /**
      * Closes the database connection
      */
     private static void closeConnection() {
@@ -49,33 +50,36 @@ public class DatabaseManager {
             System.out.println(e.getMessage());
         }
     }
-    
-     /**
+
+    /**
      * Checks if the username and password the user entered are correct.
      *
-     * @param username The username of the user
-     * @param password The password of the user
+     * @param user The UserBean who's credentials to check
      * @return Returns a boolean if the password and username match or not
      */
-    public static boolean authenticateUser(String username, String password) {
-        boolean result = false;
+    public static UserBean authenticateUser(UserBean user) {
+        UserBean result = null;
         //Open connection
         if (openConnection()) {
             try {
                 //Try to execute sql statment
                 //Prepared statement van gemaakt voor de sql parameters
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, password FROM user WHERE username = ? AND password = ?");
-                pStmnt.setString(1, username);
-                pStmnt.setString(2, password);
-                
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ? AND password = ?");
+                pStmnt.setString(1, user.getUsername());
+                pStmnt.setString(2, user.getPassword());
+
                 ResultSet rs = pStmnt.executeQuery();
                 /*Statement stmnt = connection.createStatement();
-                String SQL = "SELECT username, password FROM user WHERE username = '";
-                SQL += username + "'" + " AND password = " + "'" + password + "'" + ";";
-                ResultSet rs = stmnt.executeQuery(SQL);*/
+                 String SQL = "SELECT username, password FROM user WHERE username = '";
+                 SQL += username + "'" + " AND password = " + "'" + password + "'" + ";";
+                 ResultSet rs = stmnt.executeQuery(SQL);*/
                 //Check if password and username match
                 if (rs.next()) {
-                    result = true;
+                    String username = rs.getString("username");
+                    if (username.equals(user.getUsername()) && rs.getInt("approved") == 1) {
+                        user.setValid(true);
+                        result = user;
+                    }
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -84,10 +88,16 @@ public class DatabaseManager {
         }
         return result;
     }
-    
+
     public static void main(String[] args) {
+        //Fastest time measured: 442ms
+        long firstTime = System.currentTimeMillis();
         DatabaseManager dm = new DatabaseManager();
         dm.openConnection();
-        System.out.println(dm.authenticateUser("test", "test")); 
+        UserBean user = new UserBean();
+        user.setUserName("test");
+        user.setPassword("test");
+        System.out.println(dm.authenticateUser(user).isValid());
+        System.out.println("Operation took: " + (System.currentTimeMillis() - firstTime) + " milliseconds");
     }
 }
