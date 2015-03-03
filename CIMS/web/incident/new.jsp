@@ -16,9 +16,15 @@
     <body>
         <%@include file="/navigationBar.jsp" %>
         <div class="container">
-            <h1>Todo!</h1>
-            <hr>
-
+            <h1>Meld incident</h1>
+            <p>Hier kunnen ingelogde gebruikers incidenten melden.</p>
+            <form ACTION="jspCheckBox.jsp">
+                Type incident <input type="text" name="id"><BR>
+                Locatie <input type="text" class="locationIncident"><BR>
+                Beschrijving <input type="text" name="id"><BR>
+                <input type="submit" value="Submit">
+            </form>
+            <br>
             <footer>
                 <p>&copy; <b>CIMS</b> 2015</p>
             </footer>
