@@ -38,6 +38,6 @@ public class DatabaseManagerTest {
      */
     @Test
     public void testAddUser() {
-        Assert.assertTrue(DatabaseManager.addUser("Maikel", "maikelhoeks@hotmail.com", "test"));
+        Assert.assertTrue(DatabaseManager.addUser("test", "maikelhoeks@hotmail.com", "test"));
     }
 }

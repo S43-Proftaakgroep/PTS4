@@ -6,6 +6,8 @@
 package cims;
 
 import authentication.UserBean;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -63,11 +65,13 @@ public class DatabaseManager {
         //Open connection
         if (openConnection()) {
             try {
+                String encryptedString = encryptPassword(user.getPassword());
+                System.out.println(encryptedString);
                 //Try to execute sql statment
                 //Prepared statement van gemaakt voor de sql parameters
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ? AND password = ?");
                 pStmnt.setString(1, user.getUsername());
-                pStmnt.setString(2, user.getPassword());
+                pStmnt.setString(2, encryptedString);
 
                 ResultSet rs = pStmnt.executeQuery();
                 //Check if password and username match
@@ -99,10 +103,11 @@ public class DatabaseManager {
         //Open the connection
         if (openConnection() && !username.trim().isEmpty() && !password.trim().isEmpty()) {
             try {
+                String encryptedString = encryptPassword(password);
                 PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO user (username, email, password) VALUES(?, ?, ?);");
                 pStmnt.setString(1, username);
                 pStmnt.setString(2, email);
-                pStmnt.setString(3, password);
+                pStmnt.setString(3, encryptedString);
 
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
@@ -114,5 +119,12 @@ public class DatabaseManager {
         //Close connection
         closeConnection();
         return result;
+    }
+
+    private static String encryptPassword(String password) throws NoSuchAlgorithmException {
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+        messageDigest.update(password.getBytes());
+        String encryptedString = new String(messageDigest.digest());
+        return encryptedString;
     }
 }
