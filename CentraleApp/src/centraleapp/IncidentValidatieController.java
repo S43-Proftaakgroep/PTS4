@@ -19,13 +19,22 @@ import javafx.scene.control.Label;
 public class IncidentValidatieController implements Initializable {
     
     @FXML
-    private Label label;
+    Label lblName;
+    Label lblDate;
+    Label lblLocation;
+    Label lblStatus;
+    Label lblDescription;
     
     @FXML
-    private void handleButtonAction(ActionEvent event)
+    private void btnApprove_Click(ActionEvent event)
     {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
+        
+    }
+    
+    @FXML
+    private void btnDeny_Click(ActionEvent event)
+    {
+        
     }
     
     @Override
