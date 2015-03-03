@@ -9,6 +9,6 @@ package incident;
  *
  * @author Sasa2905
  */
-public class RescuerType {
-    
+public enum RescuerType {
+    POLICE,FIRE,AMBULANCE,EXPLOSIVE,POISON
 }

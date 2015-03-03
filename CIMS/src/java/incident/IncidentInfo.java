@@ -13,7 +13,6 @@ import java.util.Map;
  * @author Sasa2905
  */
 public class IncidentInfo {
-    String situationDescription;
     int victims;
     int wounded;
     int sizeDangerZone;

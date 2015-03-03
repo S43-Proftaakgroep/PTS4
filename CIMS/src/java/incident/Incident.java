@@ -39,7 +39,7 @@ public class Incident {
             return false;
         }
         ReinforcementRequest request = new ReinforcementRequest(extraBriefing,this);
-        return request.mapReinforcement(reinforcement);
+        return request.mapReinforcements(reinforcement);
     }
     
     
