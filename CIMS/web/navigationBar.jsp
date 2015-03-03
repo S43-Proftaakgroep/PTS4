@@ -16,6 +16,14 @@
                 UserBean currentUser = (UserBean) session.getAttribute("currentSessionUser");
                 if (currentUser != null && currentUser.isValid()) {
             %>
+            <ul class="nav navbar-nav">
+                <li <% if (request.getServletPath().equals("/incident/new.jsp")) {
+                        out.write("class=\"active\"");
+                    }%>
+                    ><a href="/CIMS/incident/new.jsp">Nieuw incident</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/CIMS/manage/index.jsp" title="Beheer je account">Hallo, <%=currentUser.getUsername()%></a></li>
                 <li><a href="/CIMS/LogoutServlet" title="Log uit">Log uit</a></li>
