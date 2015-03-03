@@ -5,6 +5,7 @@
  */
 package cims;
 
+import authentication.UserBean;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -87,17 +88,5 @@ public class DatabaseManager {
             closeConnection();
         }
         return result;
-    }
-
-    public static void main(String[] args) {
-        //Fastest time measured: 442ms
-        long firstTime = System.currentTimeMillis();
-        DatabaseManager dm = new DatabaseManager();
-        dm.openConnection();
-        UserBean user = new UserBean();
-        user.setUserName("test");
-        user.setPassword("test");
-        System.out.println(dm.authenticateUser(user).isValid());
-        System.out.println("Operation took: " + (System.currentTimeMillis() - firstTime) + " milliseconds");
     }
 }

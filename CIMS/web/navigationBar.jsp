@@ -1,5 +1,5 @@
 <!-- Navigation bar, to be included right after <body> on every page. -->
-<%@ page pageEncoding="UTF-8" import="cims.UserBean" %>
+<%@ page pageEncoding="UTF-8" import="authentication.UserBean" %>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -17,11 +17,11 @@
                 if (currentUser != null && currentUser.isValid()) {
             %>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="manage.jsp" title="Beheer je account">Hallo, <%=currentUser.getUsername()%></a></li>
-                <li><a href="LogoutServlet" title="Log uit">Log uit</a></li>
+                <li><a href="/CIMS/manage/index.jsp" title="Beheer je account">Hallo, <%=currentUser.getUsername()%></a></li>
+                <li><a href="/CIMS/LogoutServlet" title="Log uit">Log uit</a></li>
             </ul>
             <% } else { %>
-            <form class="navbar-form navbar-right" action="LoginServlet">
+            <form class="navbar-form navbar-right" action="/CIMS/LoginServlet" method="POST">
                 <div class="form-group">
                     <input name="username" type="text" placeholder="Gebruikersnaam" class="form-control">
                 </div>

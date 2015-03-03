@@ -8,11 +8,11 @@ and open the template in the editor.
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Crisis Informatie Management Systeem</title>
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/Site.css" rel="stylesheet">
+        <link href="/CIMS/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/CIMS/css/Site.css" rel="stylesheet">
     </head>
     <body>
-        <%@include file="navigationBar.jsp" %>
+        <%@include file="/navigationBar.jsp" %>
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="jumbotron">
             <div class="container">
