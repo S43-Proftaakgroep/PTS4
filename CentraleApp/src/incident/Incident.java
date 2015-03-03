@@ -20,7 +20,7 @@ public class Incident {
     private IncidentInfo detailInfo;
     private boolean approved;
     
-    Incident(String location, String submitter, String typeOfIncident, String situationDescription) {
+    public Incident(String location, String submitter, String typeOfIncident, String situationDescription) {
         this.location = location;
         this.submitter = submitter;
         this.typeOfIncident = typeOfIncident;
@@ -39,6 +39,12 @@ public class Incident {
         }
         ReinforcementRequest request = new ReinforcementRequest(extraBriefing,this);
         return request.mapReinforcements(reinforcement);
+    }
+    
+    @Override
+    public String toString()
+    {
+        return this.typeOfIncident + " (" + location +")";
     }
     
     
