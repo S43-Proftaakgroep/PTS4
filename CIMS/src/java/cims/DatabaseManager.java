@@ -70,10 +70,6 @@ public class DatabaseManager {
                 pStmnt.setString(2, user.getPassword());
 
                 ResultSet rs = pStmnt.executeQuery();
-                /*Statement stmnt = connection.createStatement();
-                 String SQL = "SELECT username, password FROM user WHERE username = '";
-                 SQL += username + "'" + " AND password = " + "'" + password + "'" + ";";
-                 ResultSet rs = stmnt.executeQuery(SQL);*/
                 //Check if password and username match
                 if (rs.next()) {
                     String username = rs.getString("username");
@@ -87,6 +83,36 @@ public class DatabaseManager {
             }
             closeConnection();
         }
+        return result;
+    }
+
+    /**
+     * Creates a new user with the given variables
+     *
+     * @param username Username for the user
+     * @param password Password for the user
+     * @param email
+     * @return Boolean. True if succesfull, false if not
+     */
+    public static boolean addUser(String username, String email, String password) {
+        boolean result = false;
+        //Open the connection
+        if (openConnection() && !username.trim().isEmpty() && !password.trim().isEmpty()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO user (username, email, password) VALUES(?, ?, ?);");
+                pStmnt.setString(1, username);
+                pStmnt.setString(2, email);
+                pStmnt.setString(3, password);
+
+                if (pStmnt.executeUpdate() > 0) {
+                    result = true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        //Close connection
+        closeConnection();
         return result;
     }
 }

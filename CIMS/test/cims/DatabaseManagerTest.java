@@ -32,4 +32,12 @@ public class DatabaseManagerTest {
         Assert.assertTrue(DatabaseManager.authenticateUser(user).isValid());
         System.out.println("Operation took: " + (System.currentTimeMillis() - firstTime) + " milliseconds");
     }
+    
+    /**
+     *  Test of AddUser method, of class DatabaseManager.
+     */
+    @Test
+    public void testAddUser() {
+        Assert.assertTrue(DatabaseManager.addUser("Maikel", "maikelhoeks@hotmail.com", "test"));
+    }
 }
