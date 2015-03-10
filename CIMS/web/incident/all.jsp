@@ -31,10 +31,7 @@
                 ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
                 ObjectInputStream inReader = new ObjectInputStream(inSocket);
                 outWriter.writeObject("@2#");
-                List<Incident> incidentList = (List<Incident>)inReader.readObject();
-                for(Incident i : incidentList) {
-                    System.out.println(i.toString());
-                }
+                List<Incident> incidentList = (List<Incident>) inReader.readObject();
                 outWriter.close();
                 newSocket.close();
             %>
@@ -48,14 +45,14 @@
                         <td><strong><%out.write("Beschrijving  " + "<BR>");%></strong></td>
                     </tr>
                     <%
-                        for (int i = 0; i < 10; i++) {
+                        for (Incident i : incidentList) {
                     %>
 
                     <tr>
-                        <td><%out.write(i + " Type ");%></td>
-                        <td><%out.write(i + " Datum/Tijd");%> </td>
-                        <td><%out.write(i + " Locatie ");%> </td>
-                        <td><%out.write(i + " Beschrijving ");%></td>
+                        <td><%out.write(i.getType());%></td>
+                        <td><%out.write(i.getDate());%> </td>
+                        <td><%out.write(i.getLocation());%> </td>
+                        <td><%out.write(i.getDescription());%></td>
                     </tr>
 
                     <%

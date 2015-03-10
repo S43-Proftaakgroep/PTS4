@@ -49,6 +49,10 @@ public class Incident implements Serializable{
         return this.typeOfIncident + " (" + location +")";
     }
     
+    public String getType() {
+        return this.typeOfIncident;
+    }
+    
     public String getDate()
     {
         return this.date;

@@ -5,24 +5,25 @@
  */
 package incident;
 
-import cims.Account;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Sasa2905
  */
-public class Incident {
+public class Incident implements Serializable{
     private String location;
     private String date;
-    private Account submitter;
+    private String submitter;
     private String typeOfIncident;
     private String situationDescription;
     private IncidentInfo detailInfo;
     private boolean approved;
     
-    Incident(String location, Account submitter, String typeOfIncident, String situationDescription) {
+    public Incident(String location, String submitter, String typeOfIncident, String situationDescription, String date) {
         this.location = location;
+        this.date = date;
         this.submitter = submitter;
         this.typeOfIncident = typeOfIncident;
         this.detailInfo = new IncidentInfo();
@@ -42,6 +43,33 @@ public class Incident {
         return request.mapReinforcements(reinforcement);
     }
     
+    @Override
+    public String toString()
+    {
+        return this.typeOfIncident + " (" + location +")";
+    }
     
+    public String getType() {
+        return this.typeOfIncident;
+    }
     
+    public String getDate()
+    {
+        return this.date;
+    }
+    
+    public String getLocation()
+    {
+        return this.location;
+    }
+    
+    public String getDescription()
+    {
+        return this.situationDescription;
+    }
+    
+    public String getSubmitter()
+    {
+        return this.submitter;
+    }
 }
