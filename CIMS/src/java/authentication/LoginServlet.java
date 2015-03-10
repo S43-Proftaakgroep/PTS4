@@ -30,7 +30,7 @@ public class LoginServlet extends HttpServlet {
 
             user = DatabaseManager.authenticateUser(user);
 
-            if (user.isValid()) {
+            if (user != null && user.isValid()) {
 
                 HttpSession session = request.getSession(true);
                 session.setAttribute("currentSessionUser", user);

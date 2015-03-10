@@ -12,6 +12,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,7 +39,7 @@ public class DatabaseManager {
                     Property.DBUSERNAME.getProperty(),
                     Property.DBPASSWORD.getProperty());
             result = true;
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             connection = null;
             System.out.println(e.getMessage());
             System.out.println("Connection failed");
@@ -49,7 +54,7 @@ public class DatabaseManager {
     private static void closeConnection() {
         try {
             connection.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -82,10 +87,12 @@ public class DatabaseManager {
                         result = user;
                     }
                 }
-            } catch (Exception e) {
+            } catch (SQLException | NoSuchAlgorithmException e) {
                 System.out.println(e.getMessage());
+            } finally {
+                //Close connection
+                closeConnection();
             }
-            closeConnection();
         }
         return result;
     }
@@ -112,12 +119,13 @@ public class DatabaseManager {
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
                 }
-            } catch (Exception e) {
+            } catch (SQLException | NoSuchAlgorithmException e) {
                 System.out.println(e.getMessage());
+            } finally {
+                //Close connection
+                closeConnection();
             }
         }
-        //Close connection
-        closeConnection();
         return result;
     }
 
@@ -126,5 +134,29 @@ public class DatabaseManager {
         messageDigest.update(password.getBytes());
         String encryptedString = new String(messageDigest.digest());
         return encryptedString;
+    }
+
+    public static List<String> getIncidentTypes() {
+        List<String> result = new ArrayList<>();
+        //Open the connection
+        if (openConnection()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT name FROM incidentType;");
+
+                if (pStmnt.execute()) {
+                    ResultSet rs = pStmnt.getResultSet();
+                    String type;
+                    while ((type = rs.getString("name")) != null) {
+                        result.add(type);
+                    }
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                //Close connection
+                closeConnection();
+            }
+        }
+        return result;
     }
 }
