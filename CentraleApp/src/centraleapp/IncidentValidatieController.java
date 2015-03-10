@@ -81,6 +81,7 @@ public class IncidentValidatieController implements Initializable, Observer {
         if (selectedIncident != null)
         {
             instance.approveIncident(selectedIncident);
+            DatabaseManager.authIncident(selectedIncident.getType());
         }
     }
 
@@ -90,6 +91,7 @@ public class IncidentValidatieController implements Initializable, Observer {
         if (selectedIncident != null)
         {
             instance.deleteIncident(selectedIncident);
+            DatabaseManager.denyIncident(selectedIncident.getType());
         }
 
     }
