@@ -6,6 +6,7 @@
 package centraleapp;
 
 import incident.Incident;
+import incident.IncidentContainer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,12 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 
 /**
  *
@@ -34,7 +37,9 @@ public class IncidentValidatieController implements Initializable {
     @FXML
     ListView lvIncidents;
 
-    public final List<Incident> incidents = new ArrayList<>();
+    //nog aan te passen via init
+    IncidentContainer instance = IncidentContainer.getInstance();  
+    public final List<Incident> incidents = IncidentContainer.getInstance().getIncidents();
     ObservableList<Incident> OLincidents = FXCollections.observableList(incidents);
 
     @FXML
@@ -52,19 +57,49 @@ public class IncidentValidatieController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        Incident incident1 = new Incident("Eindhoven", "Eric", "Explosion", "Er was een dikke explosie");
-        Incident incident2 = new Incident("Weert", "Meny", "Gaslek", "Er was een dikke explosie");
-        Incident incident3 = new Incident("Best", "Joris", "Gifwolk", "Er was een dikke explosie");
-        Incident incident4 = new Incident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie");
-        Incident incident5 = new Incident("Breda", "Henk", "Is Breda (niks aan te doen)", "Er was een dikke explosie");
-
-        incidents.add(incident1);
-        incidents.add(incident2);
-        incidents.add(incident3);
-        incidents.add(incident4);
-        incidents.add(incident5);
+        //Nu nog hardcoded
+        instance.addIncident("Eindhoven", "Eric", "Explosion", "Er was een dikke explosie");
+        instance.addIncident("Weert", "Meny", "Gaslek", "Er was een dikke explosie");
+        instance.addIncident("Best", "Joris", "Gifwolk", "Er was een dikke explosie");
+        instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie");
+        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "Er was een dikke explosie");
+        
+//        incidents.add(incident1);
+//        incidents.add(incident2);
+//        incidents.add(incident3);
+//        incidents.add(incident4);
+//        incidents.add(incident5);
         
         lvIncidents.setItems(OLincidents);
+        
+        lvIncidents.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
+            @Override
+            public void handle(MouseEvent event)
+            {
+                String incident = lvIncidents.getSelectionModel().getSelectedItem().toString();
+                
+                
+                Incident incident1 = instance.getIncidentByName(incident);
+                if(incident1 != null)
+                {
+                    System.out.println(incident1.toString());
+                }
+                else
+                {
+                    System.out.println("No incidents found");
+                }
+                
+            }
+    });
+    }
+    
+    @FXML
+    private void lvItem_Click(MouseEvent arg0)
+    {
+        //System.out.println("test: " + arg0.toString());
+        String incident0 = arg0.toString();
+        System.out.println("Incident: " + incident0);
     }
 
 }
