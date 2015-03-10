@@ -66,7 +66,6 @@ public class DatabaseManager {
         if (openConnection()) {
             try {
                 String encryptedString = encryptPassword(user.getPassword());
-                System.out.println(encryptedString);
                 //Try to execute sql statment
                 //Prepared statement van gemaakt voor de sql parameters
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ? AND password = ?");
