@@ -5,13 +5,14 @@
  */
 package incident;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Sasa2905
  */
-public class Incident {
+public class Incident implements Serializable{
     private String location;
     private String date;
     private String submitter;
@@ -20,8 +21,9 @@ public class Incident {
     private IncidentInfo detailInfo;
     private boolean approved;
     
-    public Incident(String location, String submitter, String typeOfIncident, String situationDescription) {
+    public Incident(String location, String submitter, String typeOfIncident, String situationDescription, String date) {
         this.location = location;
+        this.date = date;
         this.submitter = submitter;
         this.typeOfIncident = typeOfIncident;
         this.detailInfo = new IncidentInfo();
@@ -47,6 +49,31 @@ public class Incident {
         return this.typeOfIncident + " (" + location +")";
     }
     
+    public boolean isApproved() {
+        return this.approved;
+    }
     
+    public String getType() {
+        return this.typeOfIncident;
+    }
     
+    public String getDate()
+    {
+        return this.date;
+    }
+    
+    public String getLocation()
+    {
+        return this.location;
+    }
+    
+    public String getDescription()
+    {
+        return this.situationDescription;
+    }
+    
+    public String getSubmitter()
+    {
+        return this.submitter;
+    }
 }

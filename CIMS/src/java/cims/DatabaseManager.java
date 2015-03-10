@@ -6,6 +6,7 @@
 package cims;
 
 import authentication.UserBean;
+import incident.Incident;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -15,8 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
 
 /**
  *
@@ -59,6 +59,48 @@ public class DatabaseManager {
         }
     }
 
+    // check if a user with this username exists
+    public static boolean checkUsername(String name) {
+        if (openConnection()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ?");
+                pStmnt.setString(1, name);
+
+                ResultSet rs = pStmnt.executeQuery();
+                //User with this name exists
+                if (rs.next()) {
+                    return true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            } finally {
+                closeConnection();
+            }
+        }
+        return false;
+    }
+
+    // check if a username with this email exists
+    public static boolean checkEmail(String email) {
+        if (openConnection()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE email = ?");
+                pStmnt.setString(1, email);
+
+                ResultSet rs = pStmnt.executeQuery();
+                //Username with this email exists
+                if (rs.next()) {
+                    return true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            } finally {
+                closeConnection();
+            }
+        }
+        return false;
+    }
+
     /**
      * Checks if the username and password the user entered are correct.
      *
@@ -70,15 +112,23 @@ public class DatabaseManager {
         //Open connection
         if (openConnection()) {
             try {
-                String encryptedString = encryptPassword(user.getPassword());
-                System.out.println(encryptedString);
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT salt FROM user WHERE username = ?");
+                pStmnt.setString(1, user.getUsername());
+                ResultSet rs = pStmnt.executeQuery();
+                String salt = "";
+                if (rs.next()) {
+                    salt = rs.getString("salt");
+                } else {
+                    return null;
+                }
+                String encryptedString = encryptPassword(salt + user.getPassword() + salt);
                 //Try to execute sql statment
                 //Prepared statement van gemaakt voor de sql parameters
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ? AND password = ?");
+                pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ? AND password = ?");
                 pStmnt.setString(1, user.getUsername());
                 pStmnt.setString(2, encryptedString);
 
-                ResultSet rs = pStmnt.executeQuery();
+                rs = pStmnt.executeQuery();
                 //Check if password and username match
                 if (rs.next()) {
                     String username = rs.getString("username");
@@ -110,11 +160,18 @@ public class DatabaseManager {
         //Open the connection
         if (openConnection() && !username.trim().isEmpty() && !password.trim().isEmpty()) {
             try {
+                String salt = "";
+                Random r = new Random();
+                for (int i = 1; i < 16; i++) {
+                    salt += (char) (r.nextInt(30) + 33);
+                }
+                password = salt + password + salt;
                 String encryptedString = encryptPassword(password);
-                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO user (username, email, password) VALUES(?, ?, ?);");
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO user (username, email, password, salt) VALUES(?, ?, ?, ?);");
                 pStmnt.setString(1, username);
                 pStmnt.setString(2, email);
                 pStmnt.setString(3, encryptedString);
+                pStmnt.setString(4, salt);
 
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
@@ -154,6 +211,29 @@ public class DatabaseManager {
                 System.out.println(e.getMessage());
             } finally {
                 //Close connection
+                closeConnection();
+            }
+        }
+        return result;
+    }
+
+    public static boolean addIncident(Incident incident) {
+        boolean result = false;
+        //Open the connection
+        if (openConnection() && incident != null) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incident (type, location, submitter, description) VALUES(?, ?, ?, ?);");
+                pStmnt.setString(1, incident.getType());
+                pStmnt.setString(2, incident.getLocation());
+                pStmnt.setString(3, incident.getSubmitter());
+                pStmnt.setString(4, incident.getDescription());
+
+                if (pStmnt.executeUpdate() > 0) {
+                    result = true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            } finally {
                 closeConnection();
             }
         }

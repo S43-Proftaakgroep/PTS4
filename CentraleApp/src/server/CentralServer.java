@@ -3,12 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cims;
+package server;
+
+import incident.IncidentContainer;
 
 /**
  *
  * @author Sasa2905
  */
-public class Account {
-    
+public class CentralServer {
+
+    public void initServer() {
+        Thread thread = new Thread(new ConnectionSearcher());
+        thread.start();
+    }
 }

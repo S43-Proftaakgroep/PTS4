@@ -1,3 +1,4 @@
+<%@page import="api.WeatherFeed"%>
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -16,6 +17,11 @@ and open the template in the editor.
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="jumbotron">
             <div class="container">
+                <%
+            if (request.getParameter("create") != null)
+                if (request.getParameter("create").equals("success"))
+                    out.write("Successfully Created Account");
+            %>
                 <h1>Hallo, wereld!</h1>
                 <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
                 <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
@@ -27,7 +33,9 @@ and open the template in the editor.
             <div class="row">
                 <div class="col-md-4">
                     <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                    <p><!--< %WeatherFeed wf = new WeatherFeed("Eindhoven", null);
+                          out.write("Eindhoven: "+wf.getData());
+                        %>--> </p>
                     <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
                 </div>
                 <div class="col-md-4">

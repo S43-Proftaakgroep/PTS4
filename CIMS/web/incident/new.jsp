@@ -46,6 +46,7 @@
     <body>
         <%@include file="/navigationBar.jsp" %>
         <div class="container">
+<<<<<<< HEAD
             <form role="form" class="form-create">
                 <h2 class="form-signin-heading">Meld incident</h2>
                 <div class="form-group">

@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -51,58 +53,40 @@ public class DatabaseManager {
             System.out.println(e.getMessage());
         }
     }
-
-    /**
-     * Checks if the username and password the user entered are correct.
-     *
-     * @param user The UserBean who's credentials to check
-     * @return Returns a boolean if the password and username match or not
-     */
-    /**public static UserBean authenticateUser(UserBean user) {
-        UserBean result = null;
-        //Open connection
+    
+    public static List<String> getUnApprovedUsers()
+    {
+        List<String> users = new ArrayList<>();
         if (openConnection()) {
             try {
-                //Try to execute sql statment
-                //Prepared statement van gemaakt voor de sql parameters
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ? AND password = ?");
-                pStmnt.setString(1, user.getUsername());
-                pStmnt.setString(2, user.getPassword());
-
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT username FROM user WHERE approved = 0");
                 ResultSet rs = pStmnt.executeQuery();
-                //Check if password and username match
-                if (rs.next()) {
-                    String username = rs.getString("username");
-                    if (username.equals(user.getUsername()) && rs.getInt("approved") == 1) {
-                        user.setValid(true);
-                        result = user;
-                    }
+                while (rs.next()) {
+                    users.add(rs.getString("username"));
                 }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
             }
-            closeConnection();
+            catch(Exception e)
+            {
+                return null;
+            }
+            finally {closeConnection();}
         }
-        return result;
-    }*/
+        return users;
+    }
 
     /**
-     * Creates a new user with the given variables
+     * Approves a user with the given username
      *
      * @param username Username for the user
-     * @param password Password for the user
-     * @param email
      * @return Boolean. True if succesfull, false if not
      */
-    public static boolean addUser(String username, String email, String password) {
+    public static boolean authUser(String username) {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !username.trim().isEmpty() && !password.trim().isEmpty()) {
+        if (openConnection() && !username.trim().isEmpty()) {
             try {
-                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO user (username, email, password) VALUES(?, ?, ?);");
+                PreparedStatement pStmnt = connection.prepareStatement("UPDATE user SET approved = 1 WHERE username = ?;");
                 pStmnt.setString(1, username);
-                pStmnt.setString(2, email);
-                pStmnt.setString(3, password);
 
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
@@ -110,9 +94,33 @@ public class DatabaseManager {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
+            finally{closeConnection();}
         }
-        //Close connection
-        closeConnection();
+        return result;
+    }
+    
+    /**
+     * Denies a user with the given username
+     *
+     * @param username Username for the user
+     * @return Boolean. True if succesfull, false if not
+     */
+    public static boolean denyUser(String username) {
+        boolean result = false;
+        //Open the connection
+        if (openConnection() && !username.trim().isEmpty()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("UPDATE user SET approved = -1 WHERE username = ?;");
+                pStmnt.setString(1, username);
+
+                if (pStmnt.executeUpdate() > 0) {
+                    result = true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            finally{closeConnection();}
+        }
         return result;
     }
 }

@@ -8,31 +8,40 @@ and open the template in the editor.
     Author     : Joris
 */
 body {
-  padding-top: 50px;
-  padding-bottom: 20px;
+    padding-top: 50px;
+    padding-bottom: 20px;
 }
 
 .form-create {
-  max-width: 600px;
-  padding: 15px;
-  margin: 0 auto;
+    max-width: 600px;
+    padding: 15px;
+    margin: 0 auto;
 }
 .form-create .form-create-heading,
 .form-create .checkbox {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 .form-create .checkbox {
-  font-weight: normal;
+    font-weight: normal;
 }
 .form-create .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
 }
 .form-create .form-control:focus {
-  z-index: 2;
+    z-index: 2;
+}
+
+.incident {
+    width: 500px;
+    clear: both;
+}
+.incident input {
+    width: 100%;
+    clear: both;
 }

@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import server.CentralServer;
 
 /**
  *
@@ -23,7 +24,8 @@ public class CentraleApp extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("IncidentValidatie.fxml"));
         
         Scene scene = new Scene(root);
-        
+        CentralServer server = new CentralServer();
+        server.initServer();
         stage.setScene(scene);
         stage.show();
     }
