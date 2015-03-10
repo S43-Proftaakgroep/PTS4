@@ -58,10 +58,9 @@ public class DatabaseManager {
             System.out.println(e.getMessage());
         }
     }
-    
+
     // check if a user with this username exists
-    public static boolean checkUsername(String name)
-    {
+    public static boolean checkUsername(String name) {
         if (openConnection()) {
             try {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ?");
@@ -75,15 +74,14 @@ public class DatabaseManager {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             } finally {
-            closeConnection();
+                closeConnection();
             }
         }
         return false;
     }
-    
+
     // check if a username with this email exists
-    public static boolean checkEmail(String email)
-    {
+    public static boolean checkEmail(String email) {
         if (openConnection()) {
             try {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE email = ?");
@@ -97,7 +95,7 @@ public class DatabaseManager {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             } finally {
-            closeConnection();
+                closeConnection();
             }
         }
         return false;
@@ -118,11 +116,11 @@ public class DatabaseManager {
                 pStmnt.setString(1, user.getUsername());
                 ResultSet rs = pStmnt.executeQuery();
                 String salt = "";
-                if (rs.next())
-                {
+                if (rs.next()) {
                     salt = rs.getString("salt");
+                } else {
+                    return null;
                 }
-                else return null;
                 String encryptedString = encryptPassword(salt + user.getPassword() + salt);
                 //Try to execute sql statment
                 //Prepared statement van gemaakt voor de sql parameters
@@ -142,7 +140,7 @@ public class DatabaseManager {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             } finally {
-            closeConnection();
+                closeConnection();
             }
         }
         return result;
@@ -163,9 +161,8 @@ public class DatabaseManager {
             try {
                 String salt = "";
                 Random r = new Random();
-                for (int i = 1; i < 16; i++)
-                {
-                    salt += (char)(r.nextInt(30) + 33);
+                for (int i = 1; i < 16; i++) {
+                    salt += (char) (r.nextInt(30) + 33);
                 }
                 password = salt + password + salt;
                 String encryptedString = encryptPassword(password);
@@ -181,7 +178,7 @@ public class DatabaseManager {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             } finally {
-            closeConnection();
+                closeConnection();
             }
         }
         return result;
@@ -193,31 +190,7 @@ public class DatabaseManager {
         String encryptedString = new String(messageDigest.digest());
         return encryptedString;
     }
-    
-    public static List<String> getIncidentTypes() {
-        List<String> result = new ArrayList<>();
-        //Open the connection
-        if (openConnection()) {
-            try {
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT name FROM incidentType WHERE 1=1;");
 
-                if (pStmnt.execute()) {
-                    ResultSet rs = pStmnt.getResultSet();
-                    String type;
-                    while ((type = rs.getString("name")) != null) {
-                        result.add(type);
-                    }
-                }
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            } finally {
-                //Close connection
-                closeConnection();
-            }
-        }
-        return result;
-    }
-    
     public static boolean addIncident(String type, String locatie, String submitter, String description) {
         boolean result = false;
         //Open the connection
@@ -235,7 +208,7 @@ public class DatabaseManager {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             } finally {
-            closeConnection();
+                closeConnection();
             }
         }
         return result;

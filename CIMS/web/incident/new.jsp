@@ -30,7 +30,8 @@
                         });
 
                 addresspickerMap.on("addressChanged", function (evt, address) {
-                    $("#coordinates").val(address.geometry.location.lat() + "," + address.geometry.location.lng());
+                    $("#longtitude").val(address.geometry.location.lng());
+                    $("#latitude").val(address.geometry.location.lat());
                     console.dir(address);
                 });
                 addresspickerMap.on("positionChanged", function (evt, markerPosition) {
@@ -46,21 +47,15 @@
     <body>
         <%@include file="/navigationBar.jsp" %>
         <div class="container">
-            <form role="form" class="form-create">
+            <form role="form" class="form-create" action="/CIMS/CreateIncidentServlet" method="POST">
                 <h2 class="form-signin-heading">Meld incident</h2>
                 <div class="form-group">
                     <label for="name">Incident naam:</label>
                     <input name="name" type="text" class="form-control" id="name">
                 </div>
                 <div class="form-group">
-                    <label for="type">Select list:</label>
-                    <select class="form-control" id="type">
-                        <%
-                            for (String s : DatabaseManager.getIncidentTypes()) {
-                                out.write("<option>" + s + "</option>");
-                            }
-                        %>
-                    </select>
+                    <label for="descr">Incident beschrijving:</label>
+                    <input name="descr" type="text" class="form-control" id="descr">
                 </div>
                 <div class="form-group">
                     <label for="addresspicker_map">Locatie:</label>
@@ -69,9 +64,9 @@
                         <div id="map_canvas" style="width:100%; height:100%"></div>
                         <div id="location" class=""></div>
                     </div>
-                    <input name="coordinates" hidden="true" id="coordinates" />
+                    <input name="longtitude" hidden="true" id="longtitude" />
+                    <input name="latitude" hidden="true" id="latitude" />
                 </div>
-
                 <button type="submit" class="btn btn-default">Melden</button>
             </form>
             <br>

@@ -7,36 +7,31 @@ package incident;
 
 import java.util.Date;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author Sasa2905
  */
-
 public class Incident implements Serializable {
 
-    private String location;
-    private String coordinates;
+    private String location, longtitude, latitude, submitter, typeOfIncident, situationDescription;
     private Date date;
-    private String submitter;
-    private String typeOfIncident;
-    private String situationDescription;
     private IncidentInfo detailInfo;
     private boolean approved;
 
     /**
-     * 
+     *
      * @param location
      * @param coordinates
      * @param submitter
      * @param typeOfIncident
-     * @param situationDescription 
+     * @param situationDescription
      */
-    Incident(String location, String coordinates, String submitter, String typeOfIncident, String situationDescription) {
+    Incident(String location, String longtitude, String latitude, String submitter, String typeOfIncident, String situationDescription) {
         this.location = location;
-        this.coordinates = coordinates;
+        this.longtitude = longtitude;
+        this.latitude = latitude;
         this.date = new Date();
         this.location = location;
         this.submitter = submitter;
@@ -47,17 +42,17 @@ public class Incident implements Serializable {
     }
 
     /**
-     * 
+     *
      */
     public void approve() {
         approved = true;
     }
 
     /**
-     * 
+     *
      * @param reinforcement
      * @param extraBriefing
-     * @return 
+     * @return
      */
     public boolean requestReinforcement(List<RescuerType> reinforcement, String extraBriefing) {
         if (reinforcement.isEmpty()) {
