@@ -131,10 +131,16 @@ public class IncidentValidatieController implements Initializable, Observer {
                 {
                     System.out.println("No incidents found");
                 }
+<<<<<<< HEAD
                 showInfoSelectedIncident();
             }
         });
 
+=======
+            }
+        });
+        showInfoSelectedIncident();
+>>>>>>> origin/master
         selectFirstFromListView();
     }
 
