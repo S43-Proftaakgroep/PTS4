@@ -5,6 +5,7 @@
  */
 package incident;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  *
  * @author Sasa2905
  */
-public class ReinforcementRequest {
+public class ReinforcementRequest implements Serializable{
     Map<RescuerType,Integer> reinforcementsNeeded;
     String briefing;
     Incident information;
