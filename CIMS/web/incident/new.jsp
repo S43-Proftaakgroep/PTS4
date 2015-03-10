@@ -18,7 +18,7 @@
         <div class="container">
             <h1>Meld incident</h1>
             <p>Hier kunnen ingelogde gebruikers incidenten melden.</p>
-            <form ACTION="enter.jsp">
+            <form ACTION="enter.jsp" method="POST">
                 <div class="incident">
                     <label> Type incident</label> <input type="text" name="name"><BR>
                     <label> Locatie</label> <input type="text" name="location"><BR>
