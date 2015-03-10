@@ -10,6 +10,8 @@ import incident.IncidentContainer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,81 +27,88 @@ import javafx.scene.input.MouseEvent;
  *
  * @author Eric
  */
-public class IncidentValidatieController implements Initializable {
+public class IncidentValidatieController implements Initializable, Observer {
 
     @FXML
     Label lblName;
     Label lblDate;
     Label lblLocation;
-    Label lblStatus;
+    Label lblSubmitter;
     Label lblDescription;
-    
+
     @FXML
     ListView lvIncidents;
 
     //nog aan te passen via init
-    IncidentContainer instance = IncidentContainer.getInstance();  
-    public final List<Incident> incidents = IncidentContainer.getInstance().getIncidents();
-    ObservableList<Incident> OLincidents = FXCollections.observableList(incidents);
+    IncidentContainer instance = IncidentContainer.getInstance();
+    ObservableList<Incident> OLincidents = FXCollections.observableArrayList();
+
+    Incident selectedIncident = null;
 
     @FXML
     private void btnApprove_Click(ActionEvent event)
     {
-
+        if (selectedIncident != null)
+        {
+            instance.approveIncident(selectedIncident);
+        }
     }
 
     @FXML
     private void btnDeny_Click(ActionEvent event)
     {
-
+        if(selectedIncident != null)
+        {
+            instance.deleteIncident(selectedIncident);
+        }
+        
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        //Nu nog hardcoded
-        instance.addIncident("Eindhoven", "Eric", "Explosion", "Er was een dikke explosie");
-        instance.addIncident("Weert", "Meny", "Gaslek", "Er was een dikke explosie");
-        instance.addIncident("Best", "Joris", "Gifwolk", "Er was een dikke explosie");
-        instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie");
-        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "Er was een dikke explosie");
+        instance.addObserver(this);
         
-//        incidents.add(incident1);
-//        incidents.add(incident2);
-//        incidents.add(incident3);
-//        incidents.add(incident4);
-//        incidents.add(incident5);
-        
+        //test data
+        instance.addIncident("Eindhoven", "Eric", "Explosion", "Er was een dikke explosie", "Today");
+        instance.addIncident("Weert", "Meny", "Gaslek", "Er was een dikke explosie", "Today");
+        instance.addIncident("Best", "Joris", "Gifwolk", "Er was een dikke explosie", "Today");
+        instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie", "Today");
+        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "Er was een dikke explosie", "Today");
+
         lvIncidents.setItems(OLincidents);
-        
-        lvIncidents.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
+        lvIncidents.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event)
             {
-                String incident = lvIncidents.getSelectionModel().getSelectedItem().toString();
-                
-                
-                Incident incident1 = instance.getIncidentByName(incident);
-                if(incident1 != null)
+                String incidentName = lvIncidents.getSelectionModel().getSelectedItem().toString();
+
+                Incident incidentCurrent = instance.getIncidentByName(incidentName);
+                if (incidentCurrent != null)
                 {
-                    System.out.println(incident1.toString());
+                    System.out.println("Selected incident: " + incidentCurrent.toString());
+                    selectedIncident = incidentCurrent;
+                    
+                    lblName.setText(selectedIncident.toString());
+                    lblDate.setText(selectedIncident.getDate());
+                    lblLocation.setText(selectedIncident.getLocation());
+                    lblSubmitter.setText(selectedIncident.getSubmitter());
+                    lblDescription.setText(selectedIncident.getDescription());
                 }
                 else
                 {
                     System.out.println("No incidents found");
                 }
-                
             }
-    });
-    }
-    
-    @FXML
-    private void lvItem_Click(MouseEvent arg0)
-    {
-        //System.out.println("test: " + arg0.toString());
-        String incident0 = arg0.toString();
-        System.out.println("Incident: " + incident0);
+        });
     }
 
+    @Override
+    public void update(Observable o, Object arg)
+    {
+        OLincidents.clear();
+        OLincidents.addAll((List<Incident>) arg);
+    }
 }
