@@ -18,10 +18,13 @@
         <div class="container">
             <h1>Meld incident</h1>
             <p>Hier kunnen ingelogde gebruikers incidenten melden.</p>
-            <form ACTION="jspCheckBox.jsp">
-                Type incident <input type="text" name="id"><BR>
-                Locatie <input type="text" class="locationIncident"><BR>
-                Beschrijving <input type="text" name="id"><BR>
+            <form ACTION="enter.jsp">
+                <div class="incident">
+                    <label> Type incident</label> <input type="text" name="name"><BR>
+                    <label> Locatie</label> <input type="text" name="location"><BR>
+                    <label> Beschrijving</label> <input type="text" name="description"><BR>
+                </div>
+                <br>
                 <input type="submit" value="Submit">
             </form>
             <br>

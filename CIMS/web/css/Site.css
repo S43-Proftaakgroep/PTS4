@@ -8,10 +8,15 @@ and open the template in the editor.
     Author     : Joris
 */
 body {
-  padding-top: 50px;
-  padding-bottom: 20px;
+    padding-top: 50px;
+    padding-bottom: 20px;
 }
 
-.locationIncident {
-  padding-left: 100px;
+.incident {
+    width: 500px;
+    clear: both;
+}
+.incident input {
+    width: 100%;
+    clear: both;
 }
