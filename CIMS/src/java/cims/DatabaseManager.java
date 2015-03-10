@@ -13,6 +13,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -189,6 +192,30 @@ public class DatabaseManager {
         messageDigest.update(password.getBytes());
         String encryptedString = new String(messageDigest.digest());
         return encryptedString;
+    }
+    
+    public static List<String> getIncidentTypes() {
+        List<String> result = new ArrayList<>();
+        //Open the connection
+        if (openConnection()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT name FROM incidentType WHERE 1=1;");
+
+                if (pStmnt.execute()) {
+                    ResultSet rs = pStmnt.getResultSet();
+                    String type;
+                    while ((type = rs.getString("name")) != null) {
+                        result.add(type);
+                    }
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                //Close connection
+                closeConnection();
+            }
+        }
+        return result;
     }
     
     public static boolean addIncident(String type, String locatie, String submitter, String description) {

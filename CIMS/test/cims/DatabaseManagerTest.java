@@ -39,4 +39,9 @@ public class DatabaseManagerTest {
     public void testAddUser() {
         Assert.assertTrue(DatabaseManager.addUser("test", "maikelhoeks@hotmail.com", "test"));
     }
+    
+    @Test
+    public void testgetIncidentTypes() {
+        Assert.assertTrue(DatabaseManager.getIncidentTypes().size() > 1);
+    }
 }
