@@ -33,9 +33,9 @@ and open the template in the editor.
             <div class="row">
                 <div class="col-md-4">
                     <h2>Heading</h2>
-                    <p><%WeatherFeed wf = new WeatherFeed("Eindhoven", null);
+                    <p><!--< %WeatherFeed wf = new WeatherFeed("Eindhoven", null);
                           out.write("Eindhoven: "+wf.getData());
-                        %> </p>
+                        %>--> </p>
                     <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
                 </div>
                 <div class="col-md-4">
