@@ -25,7 +25,7 @@ public class CentraleApp extends Application {
         
         Scene scene = new Scene(root);
         CentralServer server = new CentralServer();
-        server.initServer();
+        //server.initServer();
         stage.setScene(scene);
         stage.show();
     }
