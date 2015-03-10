@@ -17,14 +17,14 @@
                         <ListView fx:id="lvIncidents" layoutX="14.0" layoutY="14.0" prefHeight="423.0" prefWidth="415.0" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="371.0" AnchorPane.topAnchor="14.0" />
                         <Label layoutX="460.0" layoutY="43.0" text="Naam:" />
                         <Label layoutX="460.0" layoutY="74.0" text="Datum:" />
-                        <Label fx:id="lblLocation" layoutX="640.0" layoutY="110.0" text="&lt;Locatie&gt;" />
-                        <Label fx:id="lblDate" layoutX="640.0" layoutY="77.0" text="&lt;Datum&gt;" />
-                        <Label fx:id="lblName" layoutX="640.0" layoutY="46.0" text="&lt;Naam&gt;" />
-                        <Label fx:id="lblSubmitter" layoutX="640.0" layoutY="145.0" text="&lt;submitter&gt;" />
-                        <Label layoutX="457.0" layoutY="269.0" text="Omschrijving:" />
-                        <Label layoutX="457.0" layoutY="199.0" text="Locatie:" />
-                        <Label fx:id="lblDescription" layoutX="457.0" layoutY="306.0" text="&lt;Omschrijving van het incident&gt;" />
-                        <Label layoutX="457.0" layoutY="237.0" text="Gemeld door:" />
+                        <Label fx:id="lblLocation" layoutX="620.0" layoutY="110.0" text="&lt;Locatie&gt;" />
+                        <Label fx:id="lblDate" layoutX="620.0" layoutY="77.0" text="&lt;Datum&gt;" />
+                        <Label fx:id="lblName" layoutX="620.0" layoutY="46.0" text="&lt;Naam&gt;" />
+                        <Label fx:id="lblSubmitter" layoutX="620.0" layoutY="145.0" text="&lt;submitter&gt;" />
+                        <Label layoutX="460.0" layoutY="190.0" text="Omschrijving:" />
+                        <Label layoutX="460.0" layoutY="110.0" text="Locatie:" />
+                        <Label fx:id="lblDescription" layoutX="460.0" layoutY="227.0" text="&lt;Omschrijving van het incident&gt;" />
+                        <Label layoutX="460.0" layoutY="145.0" text="Gemeld door:" />
                         <Button fx:id="btnApprove" layoutX="651.0" layoutY="379.0" mnemonicParsing="false" onAction="#btnApprove_Click" text="Valideer" />
                         <Button layoutX="569.0" layoutY="378.0" mnemonicParsing="false" onAction="#btnDeny_Click" text="Weiger" />
                      </children>

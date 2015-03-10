@@ -113,24 +113,6 @@ public class IncidentValidatieController implements Initializable, Observer {
             @Override
             public void handle(MouseEvent event)
             {
-                String incidentName = lvIncidents.getSelectionModel().getSelectedItem().toString();
-                Incident incidentCurrent = instance.getIncidentByName(incidentName);
-                if (incidentCurrent != null)
-                {
-                    System.out.println("Selected incident: " + incidentCurrent.toString());
-                    selectedIncident = incidentCurrent;
-                    
-                    lblName.setText(selectedIncident.toString());
-                    String date = selectedIncident.getDate();
-                    lblDate.setText(date);
-                    lblLocation.setText(selectedIncident.getLocation());
-                    lblSubmitter.setText(selectedIncident.getSubmitter());
-                    lblDescription.setText(selectedIncident.getDescription());
-                }
-                else
-                {
-                    System.out.println("No incidents found");
-                }
                 showInfoSelectedIncident();
             }
         });
