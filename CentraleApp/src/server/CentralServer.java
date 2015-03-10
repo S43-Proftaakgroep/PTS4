@@ -14,8 +14,7 @@ import incident.IncidentContainer;
 public class CentralServer {
 
     public void initServer() {
-        IncidentContainer container = IncidentContainer.getInstance();
-        Thread connectionThread = new Thread(new ConnectionThread(container));
-        connectionThread.start();
+        Thread thread = new Thread(new ConnectionSearcher());
+        thread.start();
     }
 }
