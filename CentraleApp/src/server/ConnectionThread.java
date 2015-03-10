@@ -29,6 +29,7 @@ public class ConnectionThread implements Runnable {
         try {
             ObjectInputStream in = new ObjectInputStream(insocket.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(insocket.getOutputStream());
+            IncidentContainer container = IncidentContainer.getInstance();
             String instring = (String) in.readObject();
             if (instring.startsWith("@1#")) {
                 instring = instring.replace("@1#", "");
@@ -37,11 +38,10 @@ public class ConnectionThread implements Runnable {
                 String location = incidentInfo[1];
                 String description = incidentInfo[2];
                 String submitter = incidentInfo[3];
-                IncidentContainer container = IncidentContainer.getInstance();
                 container.addIncident(location, submitter, typeIncident, description, "Today");
                 insocket.close();
             } else if(instring.startsWith("@2#")) {
-                out.writeObject("Dit is een request voor incidenten");
+                out.writeObject(container.getIncidents());
             }
         } catch (Exception e) {
         }
