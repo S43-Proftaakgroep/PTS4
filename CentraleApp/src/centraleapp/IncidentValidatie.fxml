@@ -8,18 +8,41 @@
 
 <AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="centraleapp.IncidentValidatieController">
    <children>
-      <Button fx:id="btnApprove" layoutX="693.0" layoutY="449.0" mnemonicParsing="false" onAction="#btnApprove_Click" text="Valideer" />
-      <ListView fx:id="lvIncidents" layoutX="30.0" layoutY="24.0" prefHeight="455.0" prefWidth="285.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="485.0" AnchorPane.topAnchor="24.0" />
-      <Button layoutX="611.0" layoutY="448.0" mnemonicParsing="false" onAction="#btnDeny_Click" text="Weiger" />
-      <Label layoutX="400.0" layoutY="26.0" text="Naam:" />
-      <Label layoutX="400.0" layoutY="57.0" text="Datum:" />
-      <Label layoutX="400.0" layoutY="160.0" text="Omschrijving:" />
-      <Label layoutX="400.0" layoutY="90.0" text="Locatie:" />
-      <Label fx:id="lblLocation" layoutX="580.0" layoutY="93.0" text="&lt;Locatie&gt;" />
-      <Label fx:id="lblDescription" layoutX="400.0" layoutY="197.0" text="&lt;Omschrijving van het incident&gt;" />
-      <Label fx:id="lblDate" layoutX="580.0" layoutY="60.0" text="&lt;Datum&gt;" />
-      <Label fx:id="lblName" layoutX="580.0" layoutY="29.0" text="&lt;Naam&gt;" />
-      <Label layoutX="400.0" layoutY="128.0" text="Gemeld door:" />
-      <Label fx:id="lblSubmitter" layoutX="580.0" layoutY="128.0" text="&lt;submitter&gt;" />
+      <TabPane prefHeight="500.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Incident">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="799.0">
+                     <children>
+                        <ListView fx:id="lvIncidents" layoutX="14.0" layoutY="14.0" prefHeight="423.0" prefWidth="415.0" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="371.0" AnchorPane.topAnchor="14.0" />
+                        <Label layoutX="460.0" layoutY="43.0" text="Naam:" />
+                        <Label layoutX="460.0" layoutY="74.0" text="Datum:" />
+                        <Label fx:id="lblLocation" layoutX="640.0" layoutY="110.0" text="&lt;Locatie&gt;" />
+                        <Label fx:id="lblDate" layoutX="640.0" layoutY="77.0" text="&lt;Datum&gt;" />
+                        <Label fx:id="lblName" layoutX="640.0" layoutY="46.0" text="&lt;Naam&gt;" />
+                        <Label fx:id="lblSubmitter" layoutX="640.0" layoutY="145.0" text="&lt;submitter&gt;" />
+                        <Label layoutX="457.0" layoutY="269.0" text="Omschrijving:" />
+                        <Label layoutX="457.0" layoutY="199.0" text="Locatie:" />
+                        <Label fx:id="lblDescription" layoutX="457.0" layoutY="306.0" text="&lt;Omschrijving van het incident&gt;" />
+                        <Label layoutX="457.0" layoutY="237.0" text="Gemeld door:" />
+                        <Button fx:id="btnApprove" layoutX="651.0" layoutY="379.0" mnemonicParsing="false" onAction="#btnApprove_Click" text="Valideer" />
+                        <Button layoutX="569.0" layoutY="378.0" mnemonicParsing="false" onAction="#btnDeny_Click" text="Weiger" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Gebruiker">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="listViewNewUsers" layoutX="20.0" layoutY="14.0" prefHeight="452.0" prefWidth="324.0" />
+                        <Button layoutX="370.0" layoutY="21.0" mnemonicParsing="false" onAction="#btnValidateUser_Click" text="Valideer" />
+                        <Button layoutX="370.0" layoutY="58.0" mnemonicParsing="false" onAction="#btnDenyUser_Click" text="Weiger" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>

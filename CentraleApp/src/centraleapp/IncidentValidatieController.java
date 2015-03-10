@@ -5,6 +5,7 @@
  */
 package centraleapp;
 
+import database.DatabaseManager;
 import incident.Incident;
 import incident.IncidentContainer;
 import java.net.URL;
@@ -13,12 +14,14 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
@@ -46,12 +49,31 @@ public class IncidentValidatieController implements Initializable, Observer {
 
     @FXML
     ListView lvIncidents;
+    
+    @FXML
+    ListView listViewNewUsers;
 
     //nog aan te passen via init
     IncidentContainer instance = IncidentContainer.getInstance();
     ObservableList<Incident> OLincidents = FXCollections.observableArrayList();
 
     Incident selectedIncident = null;
+    
+    @FXML
+    private void btnValidateUser_Click(ActionEvent event)
+    {
+        String s = (String)listViewNewUsers.getSelectionModel().getSelectedItem();
+        if(DatabaseManager.authUser(s))
+            listViewNewUsers.getItems().remove(s);
+    }
+    
+    @FXML
+    private void btnDenyUser_Click(ActionEvent event)
+    {
+        String s = (String)listViewNewUsers.getSelectionModel().getSelectedItem();
+        if(DatabaseManager.denyUser(s))
+            listViewNewUsers.getItems().remove(s);  
+    }
 
     @FXML
     private void btnApprove_Click(ActionEvent event)
@@ -85,12 +107,32 @@ public class IncidentValidatieController implements Initializable, Observer {
         instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "wauw", "Today");
 
         lvIncidents.setItems(OLincidents);
-
+        UpdateUsers();
         lvIncidents.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event)
             {
+                String incidentName = lvIncidents.getSelectionModel().getSelectedItem().toString();
+                Incident incidentCurrent = instance.getIncidentByName(incidentName);
+                if (incidentCurrent != null)
+                {
+                    System.out.println("Selected incident: " + incidentCurrent.toString());
+                    selectedIncident = incidentCurrent;
+                    
+                    lblName.setText(selectedIncident.toString());
+                    String date = selectedIncident.getDate();
+                    lblDate.setText(date);
+                    lblLocation.setText(selectedIncident.getLocation());
+                    lblSubmitter.setText(selectedIncident.getSubmitter());
+                    lblDescription.setText(selectedIncident.getDescription());
+                }
+                else
+                {
+                    System.out.println("No incidents found");
+                }
+            }
+        });
                 showInfoSelectedIncident();
             }
         });
@@ -149,5 +191,13 @@ public class IncidentValidatieController implements Initializable, Observer {
         lblLocation.setText(noIncidentSelected);
         lblSubmitter.setText(noIncidentSelected);
         lblDescription.setText(noIncidentSelected);
+    }
+    
+    private void UpdateUsers()
+    {
+        List<String> users = DatabaseManager.getUnApprovedUsers();
+        ObservableList<String> list = FXCollections.observableArrayList();
+        list.addAll(users);
+        listViewNewUsers.setItems(list);
     }
 }
