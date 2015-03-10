@@ -143,9 +143,14 @@ public class IncidentValidatieController implements Initializable, Observer {
     @Override
     public void update(Observable o, Object arg)
     {
+        int sizeOldList = OLincidents.size();
         OLincidents.clear();
         OLincidents.addAll((List<Incident>) arg);
-        selectFirstFromListView();
+        int sizeNewList = OLincidents.size();
+        if(sizeOldList > sizeNewList)
+        {
+            selectFirstFromListView();
+        }
     }
 
     public void selectFirstFromListView()
