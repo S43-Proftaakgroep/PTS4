@@ -43,6 +43,7 @@
                 <table border="2">
                     <tr>
                         <td><strong><%out.write("Type incident " + "<BR>");%></strong></td>
+                        <td><strong><%out.write("Datum/Tijd " + "<BR>");%></strong></td>
                         <td><strong><%out.write("Locatie " + "<BR>");%></strong> </td>
                         <td><strong><%out.write("Beschrijving  " + "<BR>");%></strong></td>
                     </tr>
@@ -52,6 +53,7 @@
 
                     <tr>
                         <td><%out.write(i + " Type ");%></td>
+                        <td><%out.write(i + " Datum/Tijd");%> </td>
                         <td><%out.write(i + " Locatie ");%> </td>
                         <td><%out.write(i + " Beschrijving ");%></td>
                     </tr>
