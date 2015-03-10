@@ -5,11 +5,7 @@
  */
 package server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import incident.IncidentContainer;
 
 /**
  *
@@ -18,19 +14,8 @@ import java.net.Socket;
 public class CentralServer {
 
     public void initServer() {
-        try {
-            ServerSocket socket = new ServerSocket(1099);
-
-            Socket insocket = socket.accept();
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(insocket.getInputStream()));
-            PrintWriter out = new PrintWriter(insocket.getOutputStream(),
-                    true);
-
-            String instring = in.readLine();
-            out.println("The server got this: " + instring);
-            insocket.close();
-        } catch (Exception e) {
-        }
+        IncidentContainer container = IncidentContainer.getInstance();
+        Thread connectionThread = new Thread(new ConnectionThread(container));
+        connectionThread.start();
     }
 }

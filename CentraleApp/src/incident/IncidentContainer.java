@@ -8,63 +8,63 @@ package incident;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import javafx.application.Platform;
 
 /**
  *
  * @author Eric
  */
 public class IncidentContainer extends Observable {
-    
-   private List<Incident> incidents;
-   private static IncidentContainer instance = null;
-   protected IncidentContainer() {
-      // Exists only to defeat instantiation.
-       incidents = new ArrayList<>();
-   }
-   
-   public static IncidentContainer getInstance()
-   {
-       if(instance == null)
-       {
-           instance = new IncidentContainer();
-       }
-       return instance;
-   }
-    
-    public Incident getIncidentByName(String name)
-    {
-        for(Incident incident : incidents)
-        {
-            if(incident.toString().equals(name))
-            {
+
+    private List<Incident> incidents;
+    private static IncidentContainer instance = null;
+
+    protected IncidentContainer() {
+        // Exists only to defeat instantiation.
+        incidents = new ArrayList<>();
+    }
+
+    public static IncidentContainer getInstance() {
+        if (instance == null) {
+            instance = new IncidentContainer();
+        }
+        return instance;
+    }
+
+    public Incident getIncidentByName(String name) {
+        for (Incident incident : incidents) {
+            if (incident.toString().equals(name)) {
                 return incident;
             }
         }
         return null;
     }
-    
-    public List<Incident> getIncidents()
-    {
+
+    public List<Incident> getIncidents() {
         return this.incidents;
     }
-    
-    public void addIncident(String location, String submitter, String typeOfIncident, String situationDescription, String date)
-    {
+
+    public void addIncident(String location, String submitter, String typeOfIncident, String situationDescription, String date) {
         Incident incident = new Incident(location, submitter, typeOfIncident, situationDescription, date);
         this.incidents.add(incident);
-        setChanged();
-        notifyObservers(this.incidents);
+        Platform.runLater(new Runnable() {
+
+            @Override
+            public void run() {
+                setChanged();
+                notifyObservers(getIncidents());
+            }
+        });
+        
     }
-    
-    public void deleteIncident(Incident incident)
-    {
+
+    public void deleteIncident(Incident incident) {
         this.incidents.remove(incident);
         setChanged();
         notifyObservers(this.incidents);
     }
-    
-    public void approveIncident(Incident incident)
-    {
+
+    public void approveIncident(Incident incident) {
         incident.approve();
         deleteIncident(incident);
     }
