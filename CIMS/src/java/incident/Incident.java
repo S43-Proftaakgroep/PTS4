@@ -5,6 +5,7 @@
  */
 package incident;
 
+import java.util.Date;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,19 +14,31 @@ import java.util.List;
  *
  * @author Sasa2905
  */
+
 public class Incident implements Serializable {
 
     private String location;
-    private String date;
+    private String coordinates;
+    private Date date;
     private String submitter;
     private String typeOfIncident;
     private String situationDescription;
     private IncidentInfo detailInfo;
     private boolean approved;
 
-    public Incident(String location, String submitter, String typeOfIncident, String situationDescription, String date) {
+    /**
+     * 
+     * @param location
+     * @param coordinates
+     * @param submitter
+     * @param typeOfIncident
+     * @param situationDescription 
+     */
+    Incident(String location, String coordinates, String submitter, String typeOfIncident, String situationDescription) {
         this.location = location;
-        this.date = date;
+        this.coordinates = coordinates;
+        this.date = new Date();
+        this.location = location;
         this.submitter = submitter;
         this.typeOfIncident = typeOfIncident;
         this.detailInfo = new IncidentInfo();
@@ -33,10 +46,19 @@ public class Incident implements Serializable {
         this.situationDescription = situationDescription;
     }
 
+    /**
+     * 
+     */
     public void approve() {
         approved = true;
     }
 
+    /**
+     * 
+     * @param reinforcement
+     * @param extraBriefing
+     * @return 
+     */
     public boolean requestReinforcement(List<RescuerType> reinforcement, String extraBriefing) {
         if (reinforcement.isEmpty()) {
             return false;
@@ -59,7 +81,7 @@ public class Incident implements Serializable {
     }
 
     public String getDate() {
-        return this.date;
+        return this.date.toString();
     }
 
     public String getLocation() {
