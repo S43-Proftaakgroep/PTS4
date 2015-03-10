@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Random;
 
 /**
  *
@@ -107,14 +108,23 @@ public class DatabaseManager {
         //Open connection
         if (openConnection()) {
             try {
-                String encryptedString = encryptPassword(user.getPassword());
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT salt FROM user WHERE username = ?");
+                pStmnt.setString(1, user.getUsername());
+                ResultSet rs = pStmnt.executeQuery();
+                String salt = "";
+                if (rs.next())
+                {
+                    salt = rs.getString("salt");
+                }
+                else return null;
+                String encryptedString = encryptPassword(salt + user.getPassword() + salt);
                 //Try to execute sql statment
                 //Prepared statement van gemaakt voor de sql parameters
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ? AND password = ?");
+                pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ? AND password = ?");
                 pStmnt.setString(1, user.getUsername());
                 pStmnt.setString(2, encryptedString);
 
-                ResultSet rs = pStmnt.executeQuery();
+                rs = pStmnt.executeQuery();
                 //Check if password and username match
                 if (rs.next()) {
                     String username = rs.getString("username");
@@ -144,11 +154,19 @@ public class DatabaseManager {
         //Open the connection
         if (openConnection() && !username.trim().isEmpty() && !password.trim().isEmpty()) {
             try {
+                String salt = "";
+                Random r = new Random();
+                for (int i = 1; i < 16; i++)
+                {
+                    salt += (char)(r.nextInt(30) + 33);
+                }
+                password = salt + password + salt;
                 String encryptedString = encryptPassword(password);
-                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO user (username, email, password) VALUES(?, ?, ?);");
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO user (username, email, password, salt) VALUES(?, ?, ?, ?);");
                 pStmnt.setString(1, username);
                 pStmnt.setString(2, email);
                 pStmnt.setString(3, encryptedString);
+                pStmnt.setString(4, salt);
 
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;

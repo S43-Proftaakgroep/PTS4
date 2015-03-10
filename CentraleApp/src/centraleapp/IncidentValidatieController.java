@@ -133,10 +133,7 @@ public class IncidentValidatieController implements Initializable, Observer {
                 }
             }
         });
-                showInfoSelectedIncident();
-            }
-        });
-
+        showInfoSelectedIncident();
         selectFirstFromListView();
     }
 

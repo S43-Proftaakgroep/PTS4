@@ -53,40 +53,6 @@ public class DatabaseManager {
             System.out.println(e.getMessage());
         }
     }
-
-    /**
-     * Checks if the username and password the user entered are correct.
-     *
-     * @param user The UserBean who's credentials to check
-     * @return Returns a boolean if the password and username match or not
-     */
-    /**public static UserBean authenticateUser(UserBean user) {
-        UserBean result = null;
-        //Open connection
-        if (openConnection()) {
-            try {
-                //Try to execute sql statment
-                //Prepared statement van gemaakt voor de sql parameters
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ? AND password = ?");
-                pStmnt.setString(1, user.getUsername());
-                pStmnt.setString(2, user.getPassword());
-
-                ResultSet rs = pStmnt.executeQuery();
-                //Check if password and username match
-                if (rs.next()) {
-                    String username = rs.getString("username");
-                    if (username.equals(user.getUsername()) && rs.getInt("approved") == 1) {
-                        user.setValid(true);
-                        result = user;
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            closeConnection();
-        }
-        return result;
-    }*/
     
     public static List<String> getUnApprovedUsers()
     {
