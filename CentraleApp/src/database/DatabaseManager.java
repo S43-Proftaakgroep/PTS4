@@ -125,7 +125,7 @@ public class DatabaseManager {
         //Open the connection
         if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty()) {
             try {
-                PreparedStatement pStmnt = connection.prepareStatement("DELETE incident WHERE type = ? AND location = ?;;");
+                PreparedStatement pStmnt = connection.prepareStatement("DELETE FROM incident WHERE type = ? AND location = ?;;");
                 pStmnt.setString(1, type);
                 pStmnt.setString(2, locatie);
                 
