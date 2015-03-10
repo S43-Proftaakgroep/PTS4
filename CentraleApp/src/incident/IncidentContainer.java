@@ -17,11 +17,13 @@ import javafx.application.Platform;
 public class IncidentContainer extends Observable {
 
     private List<Incident> incidents;
+    private List<Incident> approved;
     private static IncidentContainer instance = null;
 
     protected IncidentContainer() {
         // Exists only to defeat instantiation.
         incidents = new ArrayList<>();
+        approved = new ArrayList<>();
     }
 
     public static IncidentContainer getInstance() {
@@ -45,12 +47,6 @@ public class IncidentContainer extends Observable {
     }
     
     public List<Incident> getApprovedIncidents() {
-        List<Incident> approved = new ArrayList<>();
-        for(Incident i : this.incidents) {
-            if(i.isApproved()) {
-                approved.add(i);
-            }
-        }
         return approved;
     }
 
@@ -76,6 +72,7 @@ public class IncidentContainer extends Observable {
 
     public void approveIncident(Incident incident) {
         incident.approve();
+        approved.add(incident);
         deleteIncident(incident);
     }
 }
