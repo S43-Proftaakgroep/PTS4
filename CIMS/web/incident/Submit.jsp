@@ -4,6 +4,7 @@
     Author     : Sasa2905
 --%>
 
+<%@page import="cims.DatabaseManager"%>
 <%@page import="java.io.ObjectInputStream"%>
 <%@page import="java.io.ObjectOutputStream"%>
 <%@page import="java.io.BufferedOutputStream"%>
@@ -28,11 +29,12 @@
             String description = request.getParameter("description");
             UserBean currentUser = (UserBean) session.getAttribute("currentSessionUser");
             String submitter = currentUser.getUsername();
+            name = name.replace("|", "");
+            location = location.replace("|", "");
+            description = description.replace("|", "");
+            String infoString = "@1#" + name + "|" + location + "|" + description + "|" + submitter;
+            DatabaseManager.addIncident(name, location, submitter, description);
             try {
-                name = name.replace("|", "");
-                location = location.replace("|", "");
-                description = description.replace("|", "");
-                String infoString = "@1#" + name + "|" + location + "|" + description + "|" + submitter;
                 Socket socket = new Socket("145.93.105.17", 1099);
                 OutputStream outSocket = socket.getOutputStream();
                 ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
