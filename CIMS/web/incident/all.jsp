@@ -20,20 +20,20 @@
             <p>Hier kunnen je alle incidenten zien.</p>
             <form ACTION="jspCheckBox.jsp">
 
-                <table border="1">
+                <table border="2">
                     <tr>
-                        <td><%out.write("Type incident " + "<BR>");%></td>
-                        <td><%out.write("Locatie " + "<BR>");%> </td>
-                        <td><%out.write("Beschrijving  " + "<BR>");%></td>
+                        <td><strong><%out.write("Type incident " + "<BR>");%></strong></td>
+                        <td><strong><%out.write("Locatie " + "<BR>");%></strong> </td>
+                        <td><strong><%out.write("Beschrijving  " + "<BR>");%></strong></td>
                     </tr>
                     <%
                         for (int i = 0; i < 10; i++) {
                     %>
 
                     <tr>
-                        <td><%out.write(i + " Type");%></td>
-                        <td><%out.write(i + " Locatie");%> </td>
-                        <td><%out.write(i + " Beschrijving");%></td>
+                        <td><%out.write(i + " Type ");%></td>
+                        <td><%out.write(i + " Locatie ");%> </td>
+                        <td><%out.write(i + " Beschrijving ");%></td>
                     </tr>
 
                     <%
