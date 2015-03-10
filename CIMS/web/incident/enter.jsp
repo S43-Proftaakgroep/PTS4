@@ -4,6 +4,7 @@
     Author     : Sasa2905
 --%>
 
+<%@page import="authentication.UserBean"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -15,6 +16,8 @@
         <h1><%String name = request.getParameter("name");
             String location = request.getParameter("location");
             String description = request.getParameter("description");
+            UserBean currentUser = (UserBean) session.getAttribute("currentSessionUser");
+            String submitter = currentUser.getUsername();
         %>
         </h1>
     </body>
