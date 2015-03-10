@@ -37,7 +37,14 @@ public class CreateIncidentServlet extends HttpServlet {
             location = location.replace("|", "");
             description = description.replace("|", "");
             String infoString = "@1#" + name + "|" + location + "|" + description + "|" + submitter + "|" + longtitude + "|" + latitude;
-            DatabaseManager.addIncident(name, location, submitter, description);
+            try{
+            double longtitudeDouble = Double.parseDouble(longtitude);
+            double latitudeDouble = Double.parseDouble(latitude);
+            DatabaseManager.addIncident(name, location, submitter, description, longtitudeDouble, latitudeDouble);
+            }
+            catch(NumberFormatException e){
+                e.printStackTrace();
+            }
             try {
                 Socket socket = new Socket("145.93.105.17", 1099);
                 OutputStream outSocket = socket.getOutputStream();

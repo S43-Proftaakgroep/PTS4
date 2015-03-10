@@ -191,16 +191,18 @@ public class DatabaseManager {
         return encryptedString;
     }
 
-    public static boolean addIncident(String type, String locatie, String submitter, String description) {
+    public static boolean addIncident(String type, String locatie, String submitter, String description, double longtitude, double latitude) {
         boolean result = false;
         //Open the connection
         if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty() && !submitter.trim().isEmpty()) {
             try {
-                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incident (type, location, submitter, description) VALUES(?, ?, ?, ?);");
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incident (type, location, submitter, description, longtitude, latitude) VALUES(?, ?, ?, ?, ?, ?);");
                 pStmnt.setString(1, type);
                 pStmnt.setString(2, locatie);
                 pStmnt.setString(3, submitter);
                 pStmnt.setString(4, description);
+                pStmnt.setDouble(5, longtitude);
+                pStmnt.setDouble(6, latitude);
 
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
