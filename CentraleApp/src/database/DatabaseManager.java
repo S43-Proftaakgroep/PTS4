@@ -6,6 +6,7 @@
 package database;
 
 //import authentication.UserBean;
+import incident.Incident;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -122,5 +123,31 @@ public class DatabaseManager {
             finally{closeConnection();}
         }
         return result;
+    }
+    
+    public static List<Incident> getIncidents()
+    {
+        List<Incident> unapprovedIncidents = new ArrayList<>();
+        if(openConnection())
+        {
+            try
+            {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date FROM incident WHERE approved = 0;");
+                ResultSet results = pStmnt.executeQuery();
+                while (results.next()) {
+                    Incident incident = new Incident(results.getString("location"), results.getString("submitter"), results.getString("type"), results.getString("description"), results.getString("date"));
+                    unapprovedIncidents.add(incident);
+                }
+            }
+            catch(Exception ex)
+            {
+                System.out.println("Database exception: " + ex.getMessage());
+            }
+            finally
+            {
+                closeConnection();
+            }
+        }
+        return unapprovedIncidents;
     }
 }

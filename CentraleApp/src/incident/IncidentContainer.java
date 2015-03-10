@@ -5,6 +5,7 @@
  */
 package incident;
 
+import database.DatabaseManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -24,6 +25,7 @@ public class IncidentContainer extends Observable {
         // Exists only to defeat instantiation.
         incidents = new ArrayList<>();
         approved = new ArrayList<>();
+        incidents = DatabaseManager.getIncidents();
     }
 
     public static IncidentContainer getInstance() {
