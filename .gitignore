@@ -18,3 +18,5 @@ CIMS/nbproject/ant-deploy.xml
 CIMS/nbproject/ant-deploy.xml
 CIMS/nbproject/build-impl.xml
 CIMS/nbproject/project.properties
+/CentraleApp/build/
+/CentraleApp/dist/

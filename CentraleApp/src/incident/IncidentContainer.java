@@ -7,13 +7,12 @@ package incident;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 /**
  *
  * @author Eric
  */
-public class IncidentContainer extends Observable {
+public class IncidentContainer {
     
    private List<Incident> incidents;
    private static IncidentContainer instance = null;
@@ -48,24 +47,9 @@ public class IncidentContainer extends Observable {
         return this.incidents;
     }
     
-    public void addIncident(String location, String submitter, String typeOfIncident, String situationDescription, String date)
+    public void addIncident(String location, String submitter, String typeOfIncident, String situationDescription)
     {
-        Incident incident = new Incident(location, submitter, typeOfIncident, situationDescription, date);
+        Incident incident = new Incident(location, submitter, typeOfIncident, situationDescription);
         this.incidents.add(incident);
-        setChanged();
-        notifyObservers(this.incidents);
-    }
-    
-    public void deleteIncident(Incident incident)
-    {
-        this.incidents.remove(incident);
-        setChanged();
-        notifyObservers(this.incidents);
-    }
-    
-    public void approveIncident(Incident incident)
-    {
-        incident.approve();
-        deleteIncident(incident);
     }
 }
