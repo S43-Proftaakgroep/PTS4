@@ -98,13 +98,15 @@ public class IncidentValidatieController implements Initializable, Observer {
     public void initialize(URL url, ResourceBundle rb)
     {
         instance.addObserver(this);
-
+        OLincidents.clear();
+        OLincidents.addAll(instance.getIncidents());
         //test data
-        instance.addIncident("Eindhoven", "Eric", "Explosion", "Er was een dikke explosie", "Today");
-        instance.addIncident("Weert", "Meny", "Gaslek", "Er was een dikke explosie", "Today");
-        instance.addIncident("Best", "Joris", "Gifwolk", "Er was een dikke explosie", "Today");
-        instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie", "Today");
-        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "wauw", "Today");
+//        instance.addIncident("Eindhoven", "Eric", "Explosion", "Er was een dikke explosie", "Today");
+//        instance.addIncident("Weert", "Meny", "Gaslek", "Er was een dikke explosie", "Today");
+//        instance.addIncident("Best", "Joris", "Gifwolk", "Er was een dikke explosie", "Today");
+//        instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie", "Today");
+//        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "wauw", "Today");
+        
 
         lvIncidents.setItems(OLincidents);
         UpdateUsers();
@@ -113,7 +115,10 @@ public class IncidentValidatieController implements Initializable, Observer {
             @Override
             public void handle(MouseEvent event)
             {
-                showInfoSelectedIncident();
+                if(lvIncidents.getItems().size() > 0)
+                {
+                    showInfoSelectedIncident();
+                }
             }
         });
     }
