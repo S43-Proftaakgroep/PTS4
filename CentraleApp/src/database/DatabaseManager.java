@@ -100,13 +100,14 @@ public class DatabaseManager {
         return result;
     }
     
-     public static boolean authIncident(String type) {
+     public static boolean authIncident(String type, String locatie ) {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !type.trim().isEmpty()) {
+        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty()) {
             try {
-                PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = 1 WHERE type = ?;");
+                PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = 1 WHERE type = ? AND location = ?;");
                 pStmnt.setString(1, type);
+                pStmnt.setString(2, locatie);
 
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
@@ -119,14 +120,15 @@ public class DatabaseManager {
         return result;
     }
      
-      public static boolean denyIncident(String type) {
+      public static boolean denyIncident(String type , String locatie) {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !type.trim().isEmpty()) {
+        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty()) {
             try {
-                PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = -1 WHERE type = ?;");
+                PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = -1 WHERE type = ? AND location = ?;;");
                 pStmnt.setString(1, type);
-
+                pStmnt.setString(2, locatie);
+                
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
                 }
