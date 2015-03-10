@@ -43,6 +43,16 @@ public class IncidentContainer extends Observable {
     public List<Incident> getIncidents() {
         return this.incidents;
     }
+    
+    public List<Incident> getApprovedIncidents() {
+        List<Incident> approved = new ArrayList<>();
+        for(Incident i : this.incidents) {
+            if(i.isApproved()) {
+                approved.add(i);
+            }
+        }
+        return approved;
+    }
 
     public void addIncident(String location, String submitter, String typeOfIncident, String situationDescription, String date) {
         Incident incident = new Incident(location, submitter, typeOfIncident, situationDescription, date);

@@ -49,6 +49,10 @@ public class Incident implements Serializable{
         return this.typeOfIncident + " (" + location +")";
     }
     
+    public boolean isApproved() {
+        return this.approved;
+    }
+    
     public String getType() {
         return this.typeOfIncident;
     }
