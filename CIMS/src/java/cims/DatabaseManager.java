@@ -70,8 +70,9 @@ public class DatabaseManager {
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
-            }
+            } finally {
             closeConnection();
+            }
         }
         return false;
     }
@@ -91,8 +92,9 @@ public class DatabaseManager {
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
-            }
+            } finally {
             closeConnection();
+            }
         }
         return false;
     }
@@ -135,8 +137,9 @@ public class DatabaseManager {
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
-            }
+            } finally {
             closeConnection();
+            }
         }
         return result;
     }
@@ -173,10 +176,10 @@ public class DatabaseManager {
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+            } finally {
+            closeConnection();
             }
         }
-        //Close connection
-        closeConnection();
         return result;
     }
 
