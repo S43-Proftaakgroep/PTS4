@@ -31,16 +31,16 @@ public class IncidentValidatieController implements Initializable, Observer {
 
     @FXML
     Label lblName;
-    
+
     @FXML
     Label lblDate;
-    
+
     @FXML
     Label lblLocation;
-    
+
     @FXML
     Label lblSubmitter;
-    
+
     @FXML
     Label lblDescription;
 
@@ -65,24 +65,24 @@ public class IncidentValidatieController implements Initializable, Observer {
     @FXML
     private void btnDeny_Click(ActionEvent event)
     {
-        if(selectedIncident != null)
+        if (selectedIncident != null)
         {
             instance.deleteIncident(selectedIncident);
         }
-        
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
         instance.addObserver(this);
-        
+
         //test data
         instance.addIncident("Eindhoven", "Eric", "Explosion", "Er was een dikke explosie", "Today");
         instance.addIncident("Weert", "Meny", "Gaslek", "Er was een dikke explosie", "Today");
         instance.addIncident("Best", "Joris", "Gifwolk", "Er was een dikke explosie", "Today");
         instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie", "Today");
-        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "Er was een dikke explosie", "Today");
+        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "wauw", "Today");
 
         lvIncidents.setItems(OLincidents);
 
@@ -91,27 +91,11 @@ public class IncidentValidatieController implements Initializable, Observer {
             @Override
             public void handle(MouseEvent event)
             {
-                String incidentName = lvIncidents.getSelectionModel().getSelectedItem().toString();
-
-                Incident incidentCurrent = instance.getIncidentByName(incidentName);
-                if (incidentCurrent != null)
-                {
-                    System.out.println("Selected incident: " + incidentCurrent.toString());
-                    selectedIncident = incidentCurrent;
-                    
-                    lblName.setText(selectedIncident.toString());
-                    String date = selectedIncident.getDate();
-                    lblDate.setText(date);
-                    lblLocation.setText(selectedIncident.getLocation());
-                    lblSubmitter.setText(selectedIncident.getSubmitter());
-                    lblDescription.setText(selectedIncident.getDescription());
-                }
-                else
-                {
-                    System.out.println("No incidents found");
-                }
+                showInfoSelectedIncident();
             }
         });
+
+        selectFirstFromListView();
     }
 
     @Override
@@ -119,5 +103,51 @@ public class IncidentValidatieController implements Initializable, Observer {
     {
         OLincidents.clear();
         OLincidents.addAll((List<Incident>) arg);
+        selectFirstFromListView();
+    }
+
+    public void selectFirstFromListView()
+    {
+        if (lvIncidents.getItems().size() > 0)
+        {
+            lvIncidents.getSelectionModel().select(0);
+            showInfoSelectedIncident();
+        }
+        else
+        {
+            showNoInfo();
+        }
+    }
+
+    public void showInfoSelectedIncident()
+    {
+        String incidentName = lvIncidents.getSelectionModel().getSelectedItem().toString();
+
+        Incident incidentCurrent = instance.getIncidentByName(incidentName);
+        if (incidentCurrent != null)
+        {
+            System.out.println("Selected incident: " + incidentCurrent.toString());
+            selectedIncident = incidentCurrent;
+
+            lblName.setText(selectedIncident.toString());
+            lblDate.setText(selectedIncident.getDate());
+            lblLocation.setText(selectedIncident.getLocation());
+            lblSubmitter.setText(selectedIncident.getSubmitter());
+            lblDescription.setText(selectedIncident.getDescription());
+        }
+        else
+        {
+            System.out.println("No incidents found");
+        }
+    }
+
+    public void showNoInfo()
+    {
+        String noIncidentSelected = "No incident selected";
+        lblName.setText(noIncidentSelected);
+        lblDate.setText(noIncidentSelected);
+        lblLocation.setText(noIncidentSelected);
+        lblSubmitter.setText(noIncidentSelected);
+        lblDescription.setText(noIncidentSelected);
     }
 }
