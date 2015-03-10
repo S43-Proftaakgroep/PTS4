@@ -5,6 +5,7 @@
  */
 package incident;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import java.util.Map;
  *
  * @author Sasa2905
  */
-public class IncidentInfo {
+public class IncidentInfo implements Serializable{
     int victims;
     int wounded;
     int sizeDangerZone;

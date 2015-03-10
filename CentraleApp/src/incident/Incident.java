@@ -5,13 +5,14 @@
  */
 package incident;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Sasa2905
  */
-public class Incident {
+public class Incident implements Serializable{
     private String location;
     private String date;
     private String submitter;
