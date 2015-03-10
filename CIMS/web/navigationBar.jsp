@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.jsp">CIMS</a>
+            <a class="navbar-brand" href="/CIMS/index.jsp">CIMS</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <%
@@ -44,6 +44,7 @@
                     <input name="password" type="password" placeholder="Wachtwoord" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-success">Log in</button>
+                <button type="button" class="btn btn-success" onclick="location.href='/CIMS/manage/newUser.jsp'">Create User</button>
             </form>
             <% }%>
         </div><!--/.navbar-collapse -->

@@ -53,6 +53,48 @@ public class DatabaseManager {
             System.out.println(e.getMessage());
         }
     }
+    
+    // check if a user with this username exists
+    public static boolean checkUsername(String name)
+    {
+        if (openConnection()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ?");
+                pStmnt.setString(1, name);
+
+                ResultSet rs = pStmnt.executeQuery();
+                //User with this name exists
+                if (rs.next()) {
+                    return true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            closeConnection();
+        }
+        return false;
+    }
+    
+    // check if a username with this email exists
+    public static boolean checkEmail(String email)
+    {
+        if (openConnection()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE email = ?");
+                pStmnt.setString(1, email);
+
+                ResultSet rs = pStmnt.executeQuery();
+                //Username with this email exists
+                if (rs.next()) {
+                    return true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            closeConnection();
+        }
+        return false;
+    }
 
     /**
      * Checks if the username and password the user entered are correct.
