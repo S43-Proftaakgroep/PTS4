@@ -6,6 +6,7 @@
 package cims;
 
 import authentication.UserBean;
+import incident.Incident;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -189,4 +190,28 @@ public class DatabaseManager {
         String encryptedString = new String(messageDigest.digest());
         return encryptedString;
     }
+    
+    public static boolean addIncident(Incident incident) {
+        boolean result = false;
+        //Open the connection
+        if (openConnection() && incident != null) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incident (type, location, submitter, description) VALUES(?, ?, ?, ?);");
+                pStmnt.setString(1, incident.getType());
+                pStmnt.setString(2, incident.getLocation());
+                pStmnt.setString(3, incident.getSubmitter());
+                pStmnt.setString(4, incident.getDescription());
+
+                if (pStmnt.executeUpdate() > 0) {
+                    result = true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            } finally {
+            closeConnection();
+            }
+        }
+        return result;
+    }
+
 }
