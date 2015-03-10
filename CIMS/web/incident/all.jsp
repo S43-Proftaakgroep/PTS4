@@ -19,13 +19,29 @@
             <h1>Alle incidenten</h1>
             <p>Hier kunnen je alle incidenten zien.</p>
             <form ACTION="jspCheckBox.jsp">
-                <% 
-                for(int i = 0; i < 10; i++){
-                        out.write("Type incident:" + "<BR>" );
-                        out.write("Locatie:" + " <BR>");
-                        out.write("Beschrijving:" +i + " <BR><BR>");
-                }
-                 %>
+
+                <table border="1">
+                    <tr>
+                        <td><%out.write("Type incident " + "<BR>");%></td>
+                        <td><%out.write("Locatie " + "<BR>");%> </td>
+                        <td><%out.write("Beschrijving  " + "<BR>");%></td>
+                    </tr>
+                    <%
+                        for (int i = 0; i < 10; i++) {
+                    %>
+
+                    <tr>
+                        <td><%out.write(i + " Type");%></td>
+                        <td><%out.write(i + " Locatie");%> </td>
+                        <td><%out.write(i + " Beschrijving");%></td>
+                    </tr>
+
+                    <%
+                        }
+                    %>
+
+                </table>
+
             </form>
             <br>
             <footer>
