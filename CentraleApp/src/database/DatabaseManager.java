@@ -100,6 +100,44 @@ public class DatabaseManager {
         return result;
     }
     
+     public static boolean authIncident(String type) {
+        boolean result = false;
+        //Open the connection
+        if (openConnection() && !type.trim().isEmpty()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = 1 WHERE type = ?;");
+                pStmnt.setString(1, type);
+
+                if (pStmnt.executeUpdate() > 0) {
+                    result = true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            finally{closeConnection();}
+        }
+        return result;
+    }
+     
+      public static boolean denyIncident(String type) {
+        boolean result = false;
+        //Open the connection
+        if (openConnection() && !type.trim().isEmpty()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = -1 WHERE type = ?;");
+                pStmnt.setString(1, type);
+
+                if (pStmnt.executeUpdate() > 0) {
+                    result = true;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            finally{closeConnection();}
+        }
+        return result;
+    }
+    
     /**
      * Denies a user with the given username
      *
