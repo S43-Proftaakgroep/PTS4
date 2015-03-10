@@ -4,6 +4,8 @@
     Author     : Joris
 --%>
 
+<%@page import="java.util.List"%>
+<%@page import="incident.Incident"%>
 <%@page import="java.io.InputStream"%>
 <%@page import="java.io.ObjectInputStream"%>
 <%@page import="java.io.ObjectOutputStream"%>
@@ -29,7 +31,10 @@
                 ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
                 ObjectInputStream inReader = new ObjectInputStream(inSocket);
                 outWriter.writeObject("@2#");
-                System.out.println(inReader.readObject());
+                List<Incident> incidentList = (List<Incident>)inReader.readObject();
+                for(Incident i : incidentList) {
+                    System.out.println(i.toString());
+                }
                 outWriter.close();
                 newSocket.close();
             %>

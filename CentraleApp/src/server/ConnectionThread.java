@@ -31,6 +31,7 @@ public class ConnectionThread implements Runnable {
             ObjectOutputStream out = new ObjectOutputStream(insocket.getOutputStream());
             String instring = (String) in.readObject();
             if (instring.startsWith("@1#")) {
+                instring = instring.replace("@1#", "");
                 String[] incidentInfo = instring.split(Pattern.quote("|"));
                 String typeIncident = incidentInfo[0];
                 String location = incidentInfo[1];
