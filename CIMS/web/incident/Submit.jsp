@@ -32,7 +32,7 @@
                 name = name.replace("|", "");
                 location = location.replace("|", "");
                 description = description.replace("|", "");
-                String infoString = name + "|" + location + "|" + description + "|" + submitter;
+                String infoString = "@1#" + name + "|" + location + "|" + description + "|" + submitter;
                 Socket socket = new Socket("145.93.105.17", 1099);
                 OutputStream outSocket = socket.getOutputStream();
                 ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);

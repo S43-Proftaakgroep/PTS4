@@ -4,6 +4,11 @@
     Author     : Joris
 --%>
 
+<%@page import="java.io.InputStream"%>
+<%@page import="java.io.ObjectInputStream"%>
+<%@page import="java.io.ObjectOutputStream"%>
+<%@page import="java.io.OutputStream"%>
+<%@page import="java.net.Socket"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,6 +23,16 @@
         <div class="container">
             <h1>Alle incidenten</h1>
             <p>Hier kunnen je alle incidenten zien.</p>
+            <% Socket newSocket = new Socket("145.93.105.17", 1099);
+                OutputStream outSocket = newSocket.getOutputStream();
+                InputStream inSocket = newSocket.getInputStream();
+                ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
+                ObjectInputStream inReader = new ObjectInputStream(inSocket);
+                outWriter.writeObject("@2#");
+                System.out.println(inReader.readObject());
+                outWriter.close();
+                newSocket.close();
+            %>
             <form ACTION="jspCheckBox.jsp">
 
                 <table border="2">

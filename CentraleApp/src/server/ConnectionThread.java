@@ -7,6 +7,7 @@ package server;
 
 import incident.IncidentContainer;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.regex.Pattern;
@@ -15,29 +16,34 @@ import java.util.regex.Pattern;
  *
  * @author Sasa2905
  */
-public class ConnectionThread implements Runnable{
+public class ConnectionThread implements Runnable {
 
     Socket insocket;
+
     public ConnectionThread(Socket socket) {
         this.insocket = socket;
     }
 
-    
     @Override
     public void run() {
         try {
             ObjectInputStream in = new ObjectInputStream(insocket.getInputStream());
+            ObjectOutputStream out = new ObjectOutputStream(insocket.getOutputStream());
             String instring = (String) in.readObject();
-            String[] incidentInfo = instring.split(Pattern.quote("|"));
-            String typeIncident = incidentInfo[0];
-            String location = incidentInfo[1];
-            String description = incidentInfo[2];
-            String submitter = incidentInfo[3];
-            IncidentContainer container = IncidentContainer.getInstance();
-            container.addIncident(location, submitter, typeIncident, description, "Today");
-            insocket.close();
+            if (instring.startsWith("@1#")) {
+                String[] incidentInfo = instring.split(Pattern.quote("|"));
+                String typeIncident = incidentInfo[0];
+                String location = incidentInfo[1];
+                String description = incidentInfo[2];
+                String submitter = incidentInfo[3];
+                IncidentContainer container = IncidentContainer.getInstance();
+                container.addIncident(location, submitter, typeIncident, description, "Today");
+                insocket.close();
+            } else if(instring.startsWith("@2#")) {
+                out.writeObject("Dit is een request voor incidenten");
+            }
         } catch (Exception e) {
         }
     }
-    
+
 }
