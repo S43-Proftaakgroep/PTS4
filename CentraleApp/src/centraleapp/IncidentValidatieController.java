@@ -18,12 +18,14 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -52,8 +54,10 @@ public class IncidentValidatieController implements Initializable, Observer {
     
     @FXML
     ListView listViewNewUsers;
+    
+    @FXML
+    Tab tabGebruiker;
 
-    //nog aan te passen via init
     IncidentContainer instance = IncidentContainer.getInstance();
     ObservableList<Incident> OLincidents = FXCollections.observableArrayList();
 
@@ -123,8 +127,23 @@ public class IncidentValidatieController implements Initializable, Observer {
                 }
             }
         });
+        
+        tabGebruiker.setOnSelectionChanged(new EventHandler<Event>() {
+            @Override
+            public void handle(Event t) {
+                if (tabGebruiker.isSelected()) {
+                    UpdateUsers();
+                }
+            }
+        });
     }
 
+    @FXML
+    public void btnRefresh_Click(ActionEvent event)
+    {
+        UpdateUsers();
+    }
+    
     @Override
     public void update(Observable o, Object arg)
     {

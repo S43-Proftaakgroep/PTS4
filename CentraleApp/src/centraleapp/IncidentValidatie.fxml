@@ -31,13 +31,14 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Gebruiker">
+          <Tab fx:id="tabGebruiker" text="Gebruiker">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <ListView fx:id="listViewNewUsers" layoutX="20.0" layoutY="14.0" prefHeight="452.0" prefWidth="324.0" />
                         <Button layoutX="370.0" layoutY="21.0" mnemonicParsing="false" onAction="#btnValidateUser_Click" text="Valideer" />
                         <Button layoutX="370.0" layoutY="58.0" mnemonicParsing="false" onAction="#btnDenyUser_Click" text="Weiger" />
+                        <Button layoutX="370.0" layoutY="97.0" mnemonicParsing="false" onAction="#btnRefresh_Click" text="Vernieuwen" />
                      </children>
                   </AnchorPane>
             </content>
