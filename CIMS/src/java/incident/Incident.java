@@ -7,7 +7,12 @@ package incident;
 
 import cims.DatabaseManager;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -76,7 +81,14 @@ public class Incident implements Serializable {
     }
 
     public String getDate() {
-        return this.date;
+        String formattedDate = "error";
+        try {
+            Date newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(date);
+            formattedDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(newDate);
+        } catch (ParseException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return formattedDate;
     }
 
     public String getLocation() {

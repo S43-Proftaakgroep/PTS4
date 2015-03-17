@@ -36,8 +36,8 @@ function tryGeolocation() {
 
 function sendGeolocation(location) {
     var json = JSON.stringify({
-        "long": location.coords.latitude,
-        "lat": location.coords.longitude
+        "long": location.coords.longitude,
+        "lat": location.coords.latitude
     });
     console.log("sending text: " + json);
     websocket.send(json);
@@ -46,6 +46,7 @@ function sendGeolocation(location) {
 // For testing purposes
 function onMessage(evt) {
     console.log("received: " + evt.data);
+    location.reload();
 }
 
 function writeToScreen(message) {

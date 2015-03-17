@@ -5,10 +5,13 @@
  */
 package websockets;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpSession;
@@ -35,7 +38,14 @@ public class GeolocationWS {
         JsonObject jsonObject = Json.createReader(new StringReader(message)).readObject();
         System.out.println("Longitude: " + jsonObject.get("long"));
         System.out.println("Latitude: " + jsonObject.get("lat"));
-        httpSession.setAttribute("userLocation",
+        if(httpSession.getAttribute("geolocation") == null){
+            try {
+                wsSession.getBasicRemote().sendText("refresh pls");
+            } catch (IOException ex) {
+                System.out.println("Error" + ex.getMessage());
+            }
+        }
+        httpSession.setAttribute("geolocation",
                 new Coordinates(
                         Double.parseDouble(jsonObject.get("long").toString()),
                         Double.parseDouble(jsonObject.get("lat").toString())));
