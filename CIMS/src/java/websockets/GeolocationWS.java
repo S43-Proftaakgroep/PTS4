@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.servlet.http.HttpSession;
+import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
@@ -21,27 +23,32 @@ import javax.websocket.server.ServerEndpoint;
  *
  * @author Joris
  */
-@ServerEndpoint("/geolocation")
+@ServerEndpoint(value = "/geolocation", configurator = GetHttpSessionConfigurator.class)
 public class GeolocationWS {
 
-    private static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
-    
+    private Session wsSession;
+    private HttpSession httpSession;
+
     @OnMessage
-    public String onMessage(String message) {
+    public void onMessage(String message) {
         System.out.println("Message received: " + message);
         JsonObject jsonObject = Json.createReader(new StringReader(message)).readObject();
         System.out.println("Longitude: " + jsonObject.get("long"));
         System.out.println("Latitude: " + jsonObject.get("lat"));
-        return null;
+        httpSession.setAttribute("userLocation",
+                new Coordinates(
+                        Double.parseDouble(jsonObject.get("long").toString()),
+                        Double.parseDouble(jsonObject.get("lat").toString())));
     }
-    
+
     @OnOpen
-    public void onOpen (Session peer) {
-        peers.add(peer);
+    public void onOpen(Session peer, EndpointConfig config) {
+        wsSession = peer;
+        this.httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
     }
 
     @OnClose
-    public void onClose (Session peer) {
-        peers.remove(peer);
+    public void onClose(Session peer) {
+        wsSession = null;
     }
 }

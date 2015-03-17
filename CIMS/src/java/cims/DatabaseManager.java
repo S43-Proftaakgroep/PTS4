@@ -195,17 +195,17 @@ public class DatabaseManager {
         return encryptedString;
     }
 
-    public static boolean addIncident(String type, String locatie, String submitter, String description, double longtitude, double latitude) {
+    public static boolean addIncident(String type, String locatie, String submitter, String description, double longitude, double latitude) {
         boolean result = false;
         //Open the connection
         if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty() && !submitter.trim().isEmpty()) {
             try {
-                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incident (type, location, submitter, description, longtitude, latitude) VALUES(?, ?, ?, ?, ?, ?);");
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incident (type, location, submitter, description, longitude, latitude) VALUES(?, ?, ?, ?, ?, ?);");
                 pStmnt.setString(1, type);
                 pStmnt.setString(2, locatie);
                 pStmnt.setString(3, submitter);
                 pStmnt.setString(4, description);
-                pStmnt.setDouble(5, longtitude);
+                pStmnt.setDouble(5, longitude);
                 pStmnt.setDouble(6, latitude);
 
                 if (pStmnt.executeUpdate() > 0) {
@@ -227,10 +227,17 @@ public class DatabaseManager {
         {
             try
             {
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date FROM incident WHERE approved = 1;");
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date, longitude, latitude FROM incident WHERE approved = 1;");
                 ResultSet results = pStmnt.executeQuery();
                 while (results.next()) {
-                    Incident incident = new Incident(results.getString("location"), results.getString("submitter"), results.getString("type"), results.getString("description"), results.getString("date"));
+                    Incident incident = new Incident(
+                            results.getString("location"),
+                            results.getDouble("longitude"),
+                            results.getDouble("latitude"),
+                            results.getString("submitter"), 
+                            results.getString("type"), 
+                            results.getString("description"), 
+                            results.getString("date"));
                     approvedIncidents.add(incident);
                 }
             }
