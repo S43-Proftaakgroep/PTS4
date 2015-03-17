@@ -253,7 +253,7 @@ public class DatabaseManager {
         {
             try
             {
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT id FROM incident WHERE type = " + typeOfIncident + " AND location = " + location + " AND submitter = " + submitter);
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT id FROM incident WHERE type = '" + typeOfIncident + "' AND location = '" + location + "' AND submitter = '" + submitter + "'");
                 ResultSet results = pStmnt.executeQuery();
                 while (results.next())
                 {
