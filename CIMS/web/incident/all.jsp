@@ -1,4 +1,4 @@
-<%-- 
+ <%-- 
     Document   : new
     Created on : 3-mrt-2015, 10:16:51
     Author     : Joris
@@ -25,7 +25,7 @@
         <div class="container">
             <h1>Alle incidenten</h1>
             <p>Hier kunnen je alle incidenten zien.</p>
-            <% Socket newSocket = new Socket("145.93.105.17", 1099);
+            <% Socket newSocket = new Socket("145.93.104.228", 1099);
                 OutputStream outSocket = newSocket.getOutputStream();
                 InputStream inSocket = newSocket.getInputStream();
                 ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
