@@ -7,6 +7,7 @@ package cims;
 
 import authentication.UserBean;
 import incident.Incident;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -15,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Random;
 
@@ -184,10 +186,12 @@ public class DatabaseManager {
         return result;
     }
 
-    private static String encryptPassword(String password) throws NoSuchAlgorithmException {
+    private static String encryptPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-        messageDigest.update(password.getBytes());
-        String encryptedString = new String(messageDigest.digest());
+        messageDigest.update(password.getBytes("UTF-8"));
+        //String encryptedString = new String(messageDigest.digest());
+        byte[] hashedByteArray = messageDigest.digest();
+        String encryptedString = Base64.getEncoder().encodeToString(hashedByteArray);
         return encryptedString;
     }
 
