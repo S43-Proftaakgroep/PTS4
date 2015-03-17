@@ -26,18 +26,22 @@ public final class PropertiesController {
      *
      * @return The properties file this controller manages
      */
-    public static Properties getSettings() {
+    public static Properties getSettings()
+    {
         //Check if properties is not null
-        if (props == null) {
+        if (props == null)
+        {
             props = new Properties();
             loadProperties();
         }
         //Check if properties are correct,
         //if so return properties
-        if (isCorrectlyConfigured()) {
+        if (isCorrectlyConfigured())
+        {
             return props;
         } //Else return new configured properties
-        else {
+        else
+        {
             resetProperties();
             return props;
         }
@@ -48,30 +52,40 @@ public final class PropertiesController {
      *
      * @return True if success, false if failed
      */
-    public static boolean loadProperties() {
+    public static boolean loadProperties()
+    {
         InputStream input = null;
-        try {
+        try
+        {
             input = new FileInputStream("config.properties");
 
             // load a properties file
             props.load(input);
 
-            if (!isCorrectlyConfigured()) {
+            if (!isCorrectlyConfigured())
+            {
                 resetProperties();
             }
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             System.out.println(ex.getMessage());
-            if(resetProperties())
+            if (resetProperties())
             {
                 return true;
             }
             return false;
-        } finally {
-            if (input != null) {
-                try {
+        } finally
+        {
+            if (input != null)
+            {
+                try
+                {
                     input.close();
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     System.out.println(e.getMessage());
                     return false;
                 }
@@ -91,12 +105,17 @@ public final class PropertiesController {
      * @return If succesfully written or not
      */
     public static boolean writeProperties(
-            String dbUrl, String dbPort, String dbUsername, String dbPassword, String dbName) {
+            String dbUrl, String dbPort, String dbUsername, String dbPassword, String dbName)
+    {
         OutputStream output = null;
-        if (dbUrl.isEmpty() || dbPort.isEmpty() || dbUsername.isEmpty() || dbPassword.isEmpty() || dbName.isEmpty()) {
+        if (dbUrl.isEmpty() || dbPort.isEmpty() || dbUsername.isEmpty() || dbPassword.isEmpty() || dbName.isEmpty())
+        {
             return false;
-        } else {
-            try {
+        }
+        else
+        {
+            try
+            {
 
                 output = new FileOutputStream("config.properties");
 
@@ -106,27 +125,34 @@ public final class PropertiesController {
 //            props.setProperty("dbusername", "remoteuser");
 //            props.setProperty("dbpassword", "420blaze");
 //            props.setProperty("dbname", "cims");
-            
-            props.setProperty("dburl", "a-chan.nl");
-            props.setProperty("dbport", "3306");
-            props.setProperty("dbusername", "deb82648_pts4");
-            props.setProperty("dbpassword", "watdenkjezelf");
-            props.setProperty("dbname", "deb82648_cims");
+                props.setProperty("dburl", "a-chan.nl");
+                props.setProperty("dbport", "3306");
+                props.setProperty("dbusername", "deb82648_pts4");
+                props.setProperty("dbpassword", "watdenkjezelf");
+                props.setProperty("dbname", "deb82648_cims");
 
-                if (!isCorrectlyConfigured()) {
+                if (!isCorrectlyConfigured())
+                {
                     resetProperties();
                 }
                 // save properties to project root folder
                 props.store(output, null);
 
-            } catch (IOException io) {
+            }
+            catch (IOException io)
+            {
                 System.out.println(io.getMessage());
                 return false;
-            } finally {
-                if (output != null) {
-                    try {
+            } finally
+            {
+                if (output != null)
+                {
+                    try
+                    {
                         output.close();
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e)
+                    {
                         System.out.println(e.getMessage());
                         return false;
                     }
@@ -141,23 +167,30 @@ public final class PropertiesController {
      *
      * @return False if not correctly configured, otherwise true.
      */
-    public static boolean isCorrectlyConfigured() {
-        if (props == null) {
+    public static boolean isCorrectlyConfigured()
+    {
+        if (props == null)
+        {
             return false;
         }
-        if (!props.containsKey("dburl")) {
+        if (!props.containsKey("dburl"))
+        {
             return false;
         }
-        if (!props.containsKey("dbport")) {
+        if (!props.containsKey("dbport"))
+        {
             return false;
         }
-        if (!props.containsKey("dbusername")) {
+        if (!props.containsKey("dbusername"))
+        {
             return false;
         }
-        if (!props.containsKey("dbpassword")) {
+        if (!props.containsKey("dbpassword"))
+        {
             return false;
         }
-        if (!props.containsKey("dbname")) {
+        if (!props.containsKey("dbname"))
+        {
             return false;
         }
         return true;
@@ -168,21 +201,30 @@ public final class PropertiesController {
      *
      * @return True if succesfull, false if failed
      */
-    private static boolean resetProperties() {
-        try {
+    private static boolean resetProperties()
+    {
+        try
+        {
 
             OutputStream output = new FileOutputStream("config.properties");
 
             //Set database properties
-            props.setProperty("dburl", "www.douven.me");
+//            props.setProperty("dburl", "www.douven.me");
+//            props.setProperty("dbport", "3306");
+//            props.setProperty("dbusername", "remoteuser");
+//            props.setProperty("dbpassword", "420blaze");
+//            props.setProperty("dbname", "cims");
+            props.setProperty("dburl", "a-chan.nl");
             props.setProperty("dbport", "3306");
-            props.setProperty("dbusername", "remoteuser");
-            props.setProperty("dbpassword", "420blaze");
-            props.setProperty("dbname", "cims");
+            props.setProperty("dbusername", "deb82648_pts4");
+            props.setProperty("dbpassword", "watdenkjezelf");
+            props.setProperty("dbname", "deb82648_cims");
 
             //Save properties to project root folder
             props.store(output, null);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             System.out.println(e.getMessage());
             return false;
         }
