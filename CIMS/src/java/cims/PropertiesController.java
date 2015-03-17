@@ -168,11 +168,17 @@ public final class PropertiesController {
             OutputStream output = new FileOutputStream("config.properties");
 
             //Set database properties
-            props.setProperty("dburl", "www.douven.me");
+//            props.setProperty("dburl", "www.douven.me");
+//            props.setProperty("dbport", "3306");
+//            props.setProperty("dbusername", "remoteuser");
+//            props.setProperty("dbpassword", "420blaze");
+//            props.setProperty("dbname", "cims");
+            
+            props.setProperty("dburl", "a-chan.nl");
             props.setProperty("dbport", "3306");
-            props.setProperty("dbusername", "remoteuser");
-            props.setProperty("dbpassword", "420blaze");
-            props.setProperty("dbname", "cims");
+            props.setProperty("dbusername", "deb82648_pts4");
+            props.setProperty("dbpassword", "watdenkjezelf");
+            props.setProperty("dbname", "deb82648_cims");
 
             //Save properties to project root folder
             props.store(output, null);
