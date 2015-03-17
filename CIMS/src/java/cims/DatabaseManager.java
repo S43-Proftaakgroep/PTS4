@@ -33,15 +33,19 @@ public class DatabaseManager {
      *
      * @return Returns true if succesfull, else returns false
      */
-    private static boolean openConnection() {
+    private static boolean openConnection()
+    {
         boolean result;
-        try {
+        try
+        {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" + Property.DBADDRESS.getProperty() + ":" + Property.DBPORT.getProperty() + "/" + Property.DBNAME.getProperty(),
                     Property.DBUSERNAME.getProperty(),
                     Property.DBPASSWORD.getProperty());
             result = true;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             connection = null;
             System.out.println(e.getMessage());
             System.out.println("Connection failed");
@@ -53,29 +57,40 @@ public class DatabaseManager {
     /**
      * Closes the database connection
      */
-    private static void closeConnection() {
-        try {
+    private static void closeConnection()
+    {
+        try
+        {
             connection.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             System.out.println(e.getMessage());
         }
     }
 
     // check if a user with this username exists
-    public static boolean checkUsername(String name) {
-        if (openConnection()) {
-            try {
+    public static boolean checkUsername(String name)
+    {
+        if (openConnection())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE username = ?");
                 pStmnt.setString(1, name);
 
                 ResultSet rs = pStmnt.executeQuery();
                 //User with this name exists
-                if (rs.next()) {
+                if (rs.next())
+                {
                     return true;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 System.out.println(e.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
@@ -83,20 +98,27 @@ public class DatabaseManager {
     }
 
     // check if a username with this email exists
-    public static boolean checkEmail(String email) {
-        if (openConnection()) {
-            try {
+    public static boolean checkEmail(String email)
+    {
+        if (openConnection())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT username, approved FROM user WHERE email = ?");
                 pStmnt.setString(1, email);
 
                 ResultSet rs = pStmnt.executeQuery();
                 //Username with this email exists
-                if (rs.next()) {
+                if (rs.next())
+                {
                     return true;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 System.out.println(e.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
@@ -109,18 +131,24 @@ public class DatabaseManager {
      * @param user The UserBean who's credentials to check
      * @return Returns a boolean if the password and username match or not
      */
-    public static UserBean authenticateUser(UserBean user) {
+    public static UserBean authenticateUser(UserBean user)
+    {
         UserBean result = null;
         //Open connection
-        if (openConnection()) {
-            try {
+        if (openConnection())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT salt FROM user WHERE username = ?");
                 pStmnt.setString(1, user.getUsername());
                 ResultSet rs = pStmnt.executeQuery();
                 String salt = "";
-                if (rs.next()) {
+                if (rs.next())
+                {
                     salt = rs.getString("salt");
-                } else {
+                }
+                else
+                {
                     return null;
                 }
                 String encryptedString = encryptPassword(salt + user.getPassword() + salt);
@@ -132,16 +160,21 @@ public class DatabaseManager {
 
                 rs = pStmnt.executeQuery();
                 //Check if password and username match
-                if (rs.next()) {
+                if (rs.next())
+                {
                     String username = rs.getString("username");
-                    if (username.equals(user.getUsername()) && rs.getInt("approved") == 1) {
+                    if (username.equals(user.getUsername()) && rs.getInt("approved") == 1)
+                    {
                         user.setValid(true);
                         result = user;
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 System.out.println(e.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
@@ -156,14 +189,18 @@ public class DatabaseManager {
      * @param email
      * @return Boolean. True if succesfull, false if not
      */
-    public static boolean addUser(String username, String email, String password) {
+    public static boolean addUser(String username, String email, String password)
+    {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !username.trim().isEmpty() && !password.trim().isEmpty()) {
-            try {
+        if (openConnection() && !username.trim().isEmpty() && !password.trim().isEmpty())
+        {
+            try
+            {
                 String salt = "";
                 Random r = new Random();
-                for (int i = 1; i < 16; i++) {
+                for (int i = 1; i < 16; i++)
+                {
                     salt += (char) (r.nextInt(30) + 33);
                 }
                 password = salt + password + salt;
@@ -174,19 +211,24 @@ public class DatabaseManager {
                 pStmnt.setString(3, encryptedString);
                 pStmnt.setString(4, salt);
 
-                if (pStmnt.executeUpdate() > 0) {
+                if (pStmnt.executeUpdate() > 0)
+                {
                     result = true;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 System.out.println(e.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
         return result;
     }
 
-    private static String encryptPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    private static String encryptPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException
+    {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
         messageDigest.update(password.getBytes("UTF-8"));
         //String encryptedString = new String(messageDigest.digest());
@@ -195,11 +237,14 @@ public class DatabaseManager {
         return encryptedString;
     }
 
-    public static boolean addIncident(String type, String locatie, String submitter, String description, double longitude, double latitude) {
+    public static boolean addIncident(String type, String locatie, String submitter, String description, double longitude, double latitude)
+    {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty() && !submitter.trim().isEmpty()) {
-            try {
+        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty() && !submitter.trim().isEmpty())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incident (type, location, submitter, description, longitude, latitude) VALUES(?, ?, ?, ?, ?, ?);");
                 pStmnt.setString(1, type);
                 pStmnt.setString(2, locatie);
@@ -208,44 +253,48 @@ public class DatabaseManager {
                 pStmnt.setDouble(5, longitude);
                 pStmnt.setDouble(6, latitude);
 
-                if (pStmnt.executeUpdate() > 0) {
+                if (pStmnt.executeUpdate() > 0)
+                {
                     result = true;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 System.out.println(e.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
         return result;
     }
-    
-     public static List<Incident> getIncidents()
+
+    public static List<Incident> getIncidents()
     {
         List<Incident> approvedIncidents = new ArrayList<>();
-        if(openConnection())
+        if (openConnection())
         {
             try
             {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date, longitude, latitude FROM incident WHERE approved = 1;");
                 ResultSet results = pStmnt.executeQuery();
-                while (results.next()) {
+                while (results.next())
+                {
                     Incident incident = new Incident(
                             results.getString("location"),
                             results.getDouble("longitude"),
                             results.getDouble("latitude"),
-                            results.getString("submitter"), 
-                            results.getString("type"), 
-                            results.getString("description"), 
+                            results.getString("submitter"),
+                            results.getString("type"),
+                            results.getString("description"),
                             results.getString("date"));
                     approvedIncidents.add(incident);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 System.out.println("Database exception: " + ex.getMessage());
-            }
-            finally
+            } finally
             {
                 closeConnection();
             }
@@ -256,7 +305,7 @@ public class DatabaseManager {
     public static int getId(String typeOfIncident, String location, String submitter)
     {
         int id = -1;
-        if(openConnection())
+        if (openConnection())
         {
             try
             {
@@ -267,11 +316,10 @@ public class DatabaseManager {
                     id = results.getInt("id");
                 }
             }
-            catch(SQLException ex)
+            catch (SQLException ex)
             {
                 System.out.println("Exception: " + ex.getMessage());
-            }
-            finally
+            } finally
             {
                 closeConnection();
             }
@@ -279,4 +327,36 @@ public class DatabaseManager {
         return id;
     }
 
+    public static Incident getIncientById(int id)
+    {
+        Incident incident = null;
+        if (openConnection())
+        {
+            try
+            {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT * FROM incident WHERE id = ? AND approved = 1");
+                pStmnt.setInt(1, id);
+                ResultSet results = pStmnt.executeQuery();
+                while (results.next())
+                {
+                    incident = new Incident(
+                            results.getString("location"),
+                            results.getDouble("longitude"),
+                            results.getDouble("latitude"),
+                            results.getString("submitter"),
+                            results.getString("type"),
+                            results.getString("description"),
+                            results.getString("date"));
+                }
+            }
+            catch (SQLException ex)
+            {
+                System.out.println("Exception: " + ex.getMessage());
+            } finally
+            {
+                closeConnection();
+            }
+        }
+        return incident;
+    }
 }
