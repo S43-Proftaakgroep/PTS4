@@ -101,11 +101,17 @@ public final class PropertiesController {
                 output = new FileOutputStream("config.properties");
 
                 //Set database properties
-                props.setProperty("dburl", dbUrl);
-                props.setProperty("dbport", dbPort);
-                props.setProperty("dbusername", dbUsername);
-                props.setProperty("dbpassword", dbPassword);
-                props.setProperty("dbname", dbName);
+//            props.setProperty("dburl", "www.douven.me");
+//            props.setProperty("dbport", "3306");
+//            props.setProperty("dbusername", "remoteuser");
+//            props.setProperty("dbpassword", "420blaze");
+//            props.setProperty("dbname", "cims");
+            
+            props.setProperty("dburl", "a-chan.nl");
+            props.setProperty("dbport", "3306");
+            props.setProperty("dbusername", "deb82648_pts4");
+            props.setProperty("dbpassword", "watdenkjezelf");
+            props.setProperty("dbname", "deb82648_cims");
 
                 if (!isCorrectlyConfigured()) {
                     resetProperties();
