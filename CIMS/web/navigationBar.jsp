@@ -27,11 +27,11 @@
                         out.write("class=\"active\"");
                     }%>
                     ><a href="/CIMS/incident/all.jsp">Incidenten</a></li>
-                <li <% if (request.getServletPath().equals("about.jsp")) {
+                <li <% if (request.getServletPath().equals("/about.jsp")) {
                         out.write("class=\"active\"");
                     }%>
                     ><a href="/CIMS/about.jsp">About</a></li>
-                <li <% if (request.getServletPath().equals("contact.jsp")) {
+                <li <% if (request.getServletPath().equals("/contact.jsp")) {
                         out.write("class=\"active\"");
                     }%>
                     ><a href="/CIMS/contact.jsp">Contact</a></li>
