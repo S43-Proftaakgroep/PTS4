@@ -9,6 +9,10 @@
 <%@page import="incident.Incident" %>
 <%@page import="websockets.Coordinates" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%!
+    public Incident closestIncident;
+    public int closestIncidentId;
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -26,17 +30,21 @@
             <div id="output"></div>            
             <%
                 List<Incident> incidentList = DatabaseManager.getIncidents();
+                Coordinates coord = (Coordinates) session.getAttribute("geolocation");
+                        if (coord != null) {
+                            this.closestIncident = coord.getClosestIncident(incidentList);
+                            this.closestIncidentId = closestIncident.getId();
+                        }
             %>
             <h1>
-                <span class="label label-primary">
+                <a  class="btn btn-primary" href="incident_detail.jsp?incident=<%=closestIncidentId %>">
                     <%
-                        Coordinates coord = (Coordinates) session.getAttribute("geolocation");
-                        if (coord != null) {
-                            Incident i = coord.getClosestIncident(incidentList);
-                            out.write(i.toString() + " " + i.getDate());
-                        }
+                    if(closestIncident != null)
+                    {
+                        out.println(closestIncident.toString() + " " + closestIncident.getDate());
+                    }
                     %>
-                </span>
+                </a>
             </h1>
                 <br>
                 <br>

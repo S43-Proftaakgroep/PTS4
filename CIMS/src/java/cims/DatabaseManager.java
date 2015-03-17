@@ -359,4 +359,31 @@ public class DatabaseManager {
         }
         return incident;
     }
+    
+    public static List<String> getAdviceById(int id)
+    {
+        List<String> advice = new ArrayList<>();
+        if(openConnection())
+        {
+            try
+            {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT adviceText FROM advice WHERE id = ?");
+                pStmnt.setInt(1, id);
+                ResultSet results = pStmnt.executeQuery();
+                while (results.next())
+                {
+                    advice.add(results.getString("adviceText"));
+                }
+            }
+            catch(SQLException ex)
+            {
+                System.out.println("Exception: " + ex.getMessage());
+            }
+            finally
+            {
+                closeConnection();
+            }
+        }
+        return advice;
+    }
 }

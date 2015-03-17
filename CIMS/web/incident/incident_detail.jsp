@@ -4,6 +4,7 @@
     Author     : Eric
 --%>
 
+<%@page import="java.util.List"%>
 <%@page import="incident.Incident"%>
 <%@page import="javax.persistence.criteria.CriteriaBuilder.In"%>
 <%@page import="cims.DatabaseManager"%>
@@ -11,6 +12,7 @@
 <%!
     public int incidentId;
     public Incident currentIncident;
+    public List<String> advice;
 %>
 <!DOCTYPE html>
 <html>
@@ -39,14 +41,33 @@
                         response.sendRedirect("all.jsp");
                     }
 
+                    advice = DatabaseManager.getAdviceById(Integer.parseInt(id));
+
                 }
             %>
 
-            <h1><%= this.currentIncident.toString() %></h1>
-            
-            <p><%out.println("Naam: " + this.currentIncident.toString()); %></p>
-            <p><%out.println("Locatie: " + this.currentIncident.getLocation()); %></p>
-            <p><%out.println("Gemeld op: " + this.currentIncident.getDate()); %></p>
+            <div class="jumbotron">
+                <h2><%out.println(this.currentIncident.toString()); %></h2>
+                <p><%out.println("Locatie: " + this.currentIncident.getLocation()); %></p>
+                <p><%out.println("Gemeld op: " + this.currentIncident.getDate());%></p>
+                <p><%out.println("Advies: " + this.currentIncident.getDate());%></p>
+                <%
+                    if (advice.size() > 0)
+                    {
+
+                        for (String singleAdvice : advice)
+                        { %>
+                <p><% out.println(singleAdvice); %></p>
+                <% }
+                }
+                else
+                { %>
+                <p><% out.println("Nog geen advies beschikbaar. Blijf deze pagina in de gaten houden voor advies."); %></p>
+                <% }
+                %>
+
+            </div>
+
             <footer>
                 <p>&copy; <b>CIMS</b> 2015</p>
             </footer>
