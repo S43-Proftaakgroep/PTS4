@@ -1,4 +1,5 @@
- <%-- 
+ <%@page import="cims.DatabaseManager"%>
+<%-- 
     Document   : new
     Created on : 3-mrt-2015, 10:16:51
     Author     : Joris
@@ -25,15 +26,8 @@
         <div class="container">
             <h1>Alle incidenten</h1>
             <p>Hier kunnen je alle incidenten zien.</p>
-            <% Socket newSocket = new Socket("145.93.104.228", 1099);
-                OutputStream outSocket = newSocket.getOutputStream();
-                InputStream inSocket = newSocket.getInputStream();
-                ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
-                ObjectInputStream inReader = new ObjectInputStream(inSocket);
-                outWriter.writeObject("@2#");
-                List<Incident> incidentList = (List<Incident>) inReader.readObject();
-                outWriter.close();
-                newSocket.close();
+            <% 
+                List<Incident> incidentList = DatabaseManager.getIncidents();
             %>
             <form ACTION="jspCheckBox.jsp">
 
@@ -49,7 +43,7 @@
                     %>
 
                     <tr>
-                        <td><%out.write(i.getType());%></td>
+                        <td><a href="#"><%out.write(i.getType());%></a></td>
                         <td><%out.write(i.getDate());%> </td>
                         <td><%out.write(i.getLocation());%> </td>
                         <td><%out.write(i.getDescription());%></td>

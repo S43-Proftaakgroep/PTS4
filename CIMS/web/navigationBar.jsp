@@ -12,22 +12,33 @@
             <a class="navbar-brand" href="/CIMS/index.jsp">CIMS</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <%
-                UserBean currentUser = (UserBean) session.getAttribute("currentSessionUser");
-                if (currentUser != null && currentUser.isValid()) {
-            %>
+
             <ul class="nav navbar-nav">
+                <%
+                    UserBean currentUser = (UserBean) session.getAttribute("currentSessionUser");
+                    if (currentUser != null && currentUser.isValid()) {
+                %>
                 <li <% if (request.getServletPath().equals("/incident/new.jsp")) {
                         out.write("class=\"active\"");
                     }%>
                     ><a href="/CIMS/incident/new.jsp">Nieuw incident</a></li>
+                    <% } %>
                 <li <% if (request.getServletPath().equals("/incident/all.jsp")) {
                         out.write("class=\"active\"");
                     }%>
                     ><a href="/CIMS/incident/all.jsp">Incidenten</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                <li <% if (request.getServletPath().equals("about.jsp")) {
+                        out.write("class=\"active\"");
+                    }%>
+                    ><a href="/CIMS/about.jsp">About</a></li>
+                <li <% if (request.getServletPath().equals("contact.jsp")) {
+                        out.write("class=\"active\"");
+                    }%>
+                    ><a href="/CIMS/contact.jsp">Contact</a></li>
             </ul>
+            <%
+                if (currentUser != null && currentUser.isValid()) {
+            %>
             <ul class="nav navbar-nav navbar-right">
                 <li <% if (request.getServletPath().equals("/manage/index.jsp")) {
                         out.write("class=\"active\"");
@@ -44,7 +55,7 @@
                     <input name="password" type="password" placeholder="Wachtwoord" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-success">Log in</button>
-                <button type="button" class="btn btn-success" onclick="location.href='/CIMS/manage/newUser.jsp'">Create User</button>
+                <button type="button" class="btn btn-success" onclick="location.href = '/CIMS/manage/newUser.jsp'">Create User</button>
             </form>
             <% }%>
         </div><!--/.navbar-collapse -->
