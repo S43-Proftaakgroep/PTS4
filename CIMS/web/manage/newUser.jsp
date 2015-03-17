@@ -31,7 +31,7 @@
         <form class="registerform" style="width:45%" action="/CIMS/CreateServlet" method="POST">
             <div class="form-group">
                 <input name="username" type="text" placeholder="Gebruikersnaam" class="form-control">
-                <input name="password" type="text" placeholder="Wachtwoord" class="form-control">
+                <input name="password" type="password" placeholder="Wachtwoord" class="form-control">
                 <input name="emailadress" type="text" placeholder="EmailAdres" class="form-control">
             </div>
             <div class="registerButton">

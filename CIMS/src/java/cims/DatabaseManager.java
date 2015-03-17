@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -250,6 +251,32 @@ public class DatabaseManager {
             }
         }
         return approvedIncidents;
+    }
+
+    public static int getId(String typeOfIncident, String location, String submitter)
+    {
+        int id = -1;
+        if(openConnection())
+        {
+            try
+            {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT id FROM incident WHERE type = " + typeOfIncident + " AND location = " + location + " AND submitter = " + submitter);
+                ResultSet results = pStmnt.executeQuery();
+                while (results.next())
+                {
+                    id = results.getInt("id");
+                }
+            }
+            catch(SQLException ex)
+            {
+                System.out.println("Exception: " + ex.getMessage());
+            }
+            finally
+            {
+                closeConnection();
+            }
+        }
+        return id;
     }
 
 }
