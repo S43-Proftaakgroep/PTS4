@@ -25,6 +25,7 @@
         <div class="container">
             <h1>Alle incidenten</h1>
             <p>Hier kunnen je alle incidenten zien.</p>
+            <script type="text/javascript" src="/js/geolocation.js"></script>
             <% Socket newSocket = new Socket("145.93.104.228", 1099);
                 OutputStream outSocket = newSocket.getOutputStream();
                 InputStream inSocket = newSocket.getInputStream();
