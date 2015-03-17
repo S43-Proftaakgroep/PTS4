@@ -215,5 +215,31 @@ public class DatabaseManager {
         }
         return result;
     }
+    
+     public static List<Incident> getIncidents()
+    {
+        List<Incident> approvedIncidents = new ArrayList<>();
+        if(openConnection())
+        {
+            try
+            {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date FROM incident WHERE approved = 1;");
+                ResultSet results = pStmnt.executeQuery();
+                while (results.next()) {
+                    Incident incident = new Incident(results.getString("location"), results.getString("submitter"), results.getString("type"), results.getString("description"), results.getString("date"));
+                    approvedIncidents.add(incident);
+                }
+            }
+            catch(Exception ex)
+            {
+                System.out.println("Database exception: " + ex.getMessage());
+            }
+            finally
+            {
+                closeConnection();
+            }
+        }
+        return approvedIncidents;
+    }
 
 }
