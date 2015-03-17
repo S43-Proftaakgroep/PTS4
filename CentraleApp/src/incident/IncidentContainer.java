@@ -25,7 +25,7 @@ public class IncidentContainer extends Observable {
         // Exists only to defeat instantiation.
         incidents = new ArrayList<>();
         approved = new ArrayList<>();
-        incidents = DatabaseManager.getIncidents();
+        incidents = DatabaseManager.getIncidents(0);
     }
 
     public static IncidentContainer getInstance() {

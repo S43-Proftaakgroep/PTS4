@@ -8,13 +8,17 @@ package centraleapp;
 import database.DatabaseManager;
 import incident.Incident;
 import incident.IncidentContainer;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,10 +26,12 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -51,58 +57,59 @@ public class IncidentValidatieController implements Initializable, Observer {
 
     @FXML
     ListView lvIncidents;
-    
+
     @FXML
     ListView listViewNewUsers;
-    
+
     @FXML
     Tab tabGebruiker;
+
+    @FXML
+    TableView table;
+
+    @FXML
+    TableColumn columName;
 
     IncidentContainer instance = IncidentContainer.getInstance();
     ObservableList<Incident> OLincidents = FXCollections.observableArrayList();
 
     Incident selectedIncident = null;
-    
-    @FXML
-    private void btnValidateUser_Click(ActionEvent event)
-    {
-        String s = (String)listViewNewUsers.getSelectionModel().getSelectedItem();
-        if(DatabaseManager.authUser(s))
-            listViewNewUsers.getItems().remove(s);
-    }
-    
-    @FXML
-    private void btnDenyUser_Click(ActionEvent event)
-    {
-        String s = (String)listViewNewUsers.getSelectionModel().getSelectedItem();
-        if(DatabaseManager.denyUser(s))
-            listViewNewUsers.getItems().remove(s);  
-    }
 
     @FXML
-    private void btnApprove_Click(ActionEvent event)
-    {
-        if (selectedIncident != null)
-        {
-            instance.approveIncident(selectedIncident);
-            DatabaseManager.authIncident(selectedIncident.getType() , selectedIncident.getLocation());
+    private void btnValidateUser_Click(ActionEvent event) {
+        String s = (String) listViewNewUsers.getSelectionModel().getSelectedItem();
+        if (DatabaseManager.authUser(s)) {
+            listViewNewUsers.getItems().remove(s);
         }
     }
 
     @FXML
-    private void btnDeny_Click(ActionEvent event)
-    {
-        if (selectedIncident != null)
-        {
+    private void btnDenyUser_Click(ActionEvent event) {
+        String s = (String) listViewNewUsers.getSelectionModel().getSelectedItem();
+        if (DatabaseManager.denyUser(s)) {
+            listViewNewUsers.getItems().remove(s);
+        }
+    }
+
+    @FXML
+    private void btnApprove_Click(ActionEvent event) {
+        if (selectedIncident != null) {
+            instance.approveIncident(selectedIncident);
+            DatabaseManager.authIncident(selectedIncident.getType(), selectedIncident.getLocation());
+        }
+    }
+
+    @FXML
+    private void btnDeny_Click(ActionEvent event) {
+        if (selectedIncident != null) {
             instance.deleteIncident(selectedIncident);
-            DatabaseManager.denyIncident(selectedIncident.getType() , selectedIncident.getLocation());
+            DatabaseManager.denyIncident(selectedIncident.getType(), selectedIncident.getLocation());
         }
 
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
+    public void initialize(URL url, ResourceBundle rb) {
         instance.addObserver(this);
         OLincidents.clear();
         OLincidents.addAll(instance.getIncidents());
@@ -112,71 +119,98 @@ public class IncidentValidatieController implements Initializable, Observer {
 //        instance.addIncident("Best", "Joris", "Gifwolk", "Er was een dikke explosie", "Today");
 //        instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie", "Today");
 //        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "wauw", "Today");
-        
 
         lvIncidents.setItems(OLincidents);
-        UpdateUsers();
+        updateUsers();
         lvIncidents.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
-            public void handle(MouseEvent event)
-            {
-                if(lvIncidents.getItems().size() > 0)
-                {
+            public void handle(MouseEvent event) {
+                if (lvIncidents.getItems().size() > 0) {
                     showInfoSelectedIncident();
                 }
             }
         });
-        
+
         tabGebruiker.setOnSelectionChanged(new EventHandler<Event>() {
             @Override
             public void handle(Event t) {
                 if (tabGebruiker.isSelected()) {
-                    UpdateUsers();
+                    updateUsers();
                 }
             }
         });
+        ObservableList<Incident> incidents = FXCollections.observableArrayList(DatabaseManager.getIncidents(1));
+        table.setEditable(true);
+
+        TableColumn firstNameCol = new TableColumn("Naam");
+        firstNameCol.setMinWidth(100);
+        firstNameCol.setCellValueFactory(
+                new PropertyValueFactory<>("type"));
+
+        TableColumn lastNameCol = new TableColumn("Locatie");
+        lastNameCol.setMinWidth(200);
+        lastNameCol.setCellValueFactory(
+                new PropertyValueFactory<>("location"));
+
+        TableColumn emailCol = new TableColumn("Beschrijving");
+        emailCol.setMinWidth(240);
+        emailCol.setCellValueFactory(
+                new PropertyValueFactory<>("description"));
+
+        table.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+        table.setItems(incidents);
+//        try {
+//            initMap();
+//        } catch (IOException ex) {
+//            Logger.getLogger(IncidentValidatieController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }
+
+    void initMap() throws IOException {
+        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452");
+        URLConnection yc = url.openConnection();
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(
+                        yc.getInputStream()));
+        String inputLine;
+
+        while ((inputLine = in.readLine()) != null) {
+            System.out.println(inputLine);
+        }
+        in.close();
     }
 
     @FXML
-    public void btnRefresh_Click(ActionEvent event)
-    {
-        UpdateUsers();
+    public void btnRefresh_Click(ActionEvent event) {
+        updateUsers();
     }
-    
+
     @Override
-    public void update(Observable o, Object arg)
-    {
+    public void update(Observable o, Object arg) {
         int sizeOldList = OLincidents.size();
         OLincidents.clear();
         OLincidents.addAll((List<Incident>) arg);
         int sizeNewList = OLincidents.size();
-        if(sizeOldList > sizeNewList)
-        {
+        if (sizeOldList > sizeNewList) {
             selectFirstFromListView();
         }
     }
 
-    public void selectFirstFromListView()
-    {
-        if (lvIncidents.getItems().size() > 0)
-        {
+    public void selectFirstFromListView() {
+        if (lvIncidents.getItems().size() > 0) {
             lvIncidents.getSelectionModel().select(0);
             showInfoSelectedIncident();
-        }
-        else
-        {
+        } else {
             showNoInfo();
         }
     }
 
-    public void showInfoSelectedIncident()
-    {
+    public void showInfoSelectedIncident() {
         String incidentName = lvIncidents.getSelectionModel().getSelectedItem().toString();
 
         Incident incidentCurrent = instance.getIncidentByName(incidentName);
-        if (incidentCurrent != null)
-        {
+        if (incidentCurrent != null) {
             System.out.println("Selected incident: " + incidentCurrent.toString());
             selectedIncident = incidentCurrent;
 
@@ -185,15 +219,12 @@ public class IncidentValidatieController implements Initializable, Observer {
             lblLocation.setText(selectedIncident.getLocation());
             lblSubmitter.setText(selectedIncident.getSubmitter());
             lblDescription.setText(selectedIncident.getDescription());
-        }
-        else
-        {
+        } else {
             System.out.println("No incidents found");
         }
     }
 
-    public void showNoInfo()
-    {
+    public void showNoInfo() {
         String noIncidentSelected = "No incident selected";
         lblName.setText(noIncidentSelected);
         lblDate.setText(noIncidentSelected);
@@ -201,9 +232,8 @@ public class IncidentValidatieController implements Initializable, Observer {
         lblSubmitter.setText(noIncidentSelected);
         lblDescription.setText(noIncidentSelected);
     }
-    
-    private void UpdateUsers()
-    {
+
+    private void updateUsers() {
         List<String> users = DatabaseManager.getUnApprovedUsers();
         ObservableList<String> list = FXCollections.observableArrayList();
         list.addAll(users);

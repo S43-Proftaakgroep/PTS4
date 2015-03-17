@@ -37,7 +37,7 @@ public class DatabaseManager {
             result = true;
         } catch (Exception e) {
             connection = null;
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             System.out.println("Connection failed");
             result = false;
         }
@@ -165,14 +165,14 @@ public class DatabaseManager {
         return result;
     }
     
-    public static List<Incident> getIncidents()
+    public static List<Incident> getIncidents(int approved)
     {
         List<Incident> unapprovedIncidents = new ArrayList<>();
         if(openConnection())
         {
             try
             {
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date FROM incident WHERE approved = 0;");
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date FROM incident WHERE approved = " + approved+ ";");
                 ResultSet results = pStmnt.executeQuery();
                 while (results.next()) {
                     Incident incident = new Incident(results.getString("location"), results.getString("submitter"), results.getString("type"), results.getString("description"), results.getString("date"));
