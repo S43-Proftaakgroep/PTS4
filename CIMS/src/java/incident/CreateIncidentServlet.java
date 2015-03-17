@@ -46,7 +46,7 @@ public class CreateIncidentServlet extends HttpServlet {
                 e.printStackTrace();
             }
             try {
-                Socket socket = new Socket("145.93.105.17", 1099);
+                Socket socket = new Socket("145.93.104.228", 1099);
                 OutputStream outSocket = socket.getOutputStream();
                 ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
                 outWriter.writeObject(infoString);
