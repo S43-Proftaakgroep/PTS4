@@ -32,12 +32,6 @@
                         for (Incident i : incidentList) {
                             }
                     %>
-                    <tr>
-                        <td><a href=<%=url%>> <%out.write(i.getType() + "("+ i.getLocation() +") ");%></a></td>
-                        <td><%out.write(i.getDate());%> </td>
-                        <td><%out.write(i.getLocation());%> </td>
-                        <td><%out.write(i.getDescription());%></td>
-                    </tr>
                 </span>
             </h1>
             <table class="table table-striped">
@@ -52,7 +46,7 @@
                         String url = "incident_detail.jsp" + i.getType();
                 %>
                 <tr>
-                    <td><a href="incident_detail.jsp"><%out.write(i.getType() + "(" + i.getLocation() + ") ");%></a></td>
+                    <td><a href=<%=url%>><%out.write(i.getType() + "(" + i.getLocation() + ") ");%></a></td>
                     <td><%out.write(i.getDate());%> </td>
                     <td><%out.write(i.getLocation());%> </td>
                     <td><%out.write(i.getDescription());%></td>
