@@ -28,16 +28,17 @@
             <form ACTION="jspCheckBox.jsp">
                 <table border="2">
                     <tr>
-                        <td><strong><%out.write("Type incident " + "<BR>");%></strong></td>
+                        <td><strong><%out.write("Naam " + "<BR>");%></strong></td>
                         <td><strong><%out.write("Datum/Tijd " + "<BR>");%></strong></td>
                         <td><strong><%out.write("Locatie " + "<BR>");%></strong> </td>
                         <td><strong><%out.write("Beschrijving  " + "<BR>");%></strong></td>
                     </tr>
                     <%
                         for (Incident i : incidentList) {
+                            String url = "incident_detail.jsp" + i.getType();
                     %>
                     <tr>
-                        <td><a href="#"><%out.write(i.getType());%></a></td>
+                        <td><a href="incident_detail.jsp"><%out.write(i.getType() + "("+ i.getLocation() +") ");%></a></td>
                         <td><%out.write(i.getDate());%> </td>
                         <td><%out.write(i.getLocation());%> </td>
                         <td><%out.write(i.getDescription());%></td>
