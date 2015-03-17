@@ -5,9 +5,12 @@
  */
 package websockets;
 
+import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
@@ -25,6 +28,10 @@ public class GeolocationWS {
     
     @OnMessage
     public String onMessage(String message) {
+        System.out.println("Message received: " + message);
+        JsonObject jsonObject = Json.createReader(new StringReader(message)).readObject();
+        System.out.println("Longitude: " + jsonObject.get("long"));
+        System.out.println("Latitude: " + jsonObject.get("lat"));
         return null;
     }
     

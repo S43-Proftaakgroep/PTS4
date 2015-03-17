@@ -7,11 +7,6 @@
 
 <%@page import="java.util.List"%>
 <%@page import="incident.Incident"%>
-<%@page import="java.io.InputStream"%>
-<%@page import="java.io.ObjectInputStream"%>
-<%@page import="java.io.ObjectOutputStream"%>
-<%@page import="java.io.OutputStream"%>
-<%@page import="java.net.Socket"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -26,12 +21,11 @@
         <div class="container">
             <h1>Alle incidenten</h1>
             <p>Hier kunnen je alle incidenten zien.</p>
-            <script type="text/javascript" src="/js/geolocation.js"></script>
+            <div id="output"></div>            
             <%
                 List<Incident> incidentList = DatabaseManager.getIncidents();
             %>
             <form ACTION="jspCheckBox.jsp">
-
                 <table border="2">
                     <tr>
                         <td><strong><%out.write("Type incident " + "<BR>");%></strong></td>
@@ -42,20 +36,16 @@
                     <%
                         for (Incident i : incidentList) {
                     %>
-
                     <tr>
                         <td><a href="#"><%out.write(i.getType());%></a></td>
                         <td><%out.write(i.getDate());%> </td>
                         <td><%out.write(i.getLocation());%> </td>
                         <td><%out.write(i.getDescription());%></td>
                     </tr>
-
                     <%
                         }
                     %>
-
                 </table>
-
             </form>
             <br>
             <footer>
@@ -63,6 +53,7 @@
             </footer>
         </div> <!-- /container -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
+        <script src="/CIMS/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/CIMS/js/geolocation.js"></script>
     </body>
 </html>
