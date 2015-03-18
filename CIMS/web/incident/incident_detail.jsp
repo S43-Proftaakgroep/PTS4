@@ -4,6 +4,7 @@
     Author     : Eric
 --%>
 
+<%@page import="api.WeatherFeed"%>
 <%@page import="java.util.List"%>
 <%@page import="incident.Incident"%>
 <%@page import="javax.persistence.criteria.CriteriaBuilder.In"%>
@@ -65,7 +66,11 @@
                 <p><% out.println("Nog geen advies beschikbaar. Blijf deze pagina in de gaten houden voor advies."); %></p>
                 <% }
                 %>
-
+                <p><%
+                    WeatherFeed wf = new WeatherFeed(this.currentIncident.getLocation(), WeatherFeed.Query.TEMPERATURE);
+                    out.println("Weer: " + wf.getData() + " en ");
+                    wf.setQuery(WeatherFeed.Query.DESCRIPTION);
+                    out.println(wf.getData());%></p>
             </div>
 
             <footer>
