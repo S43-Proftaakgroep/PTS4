@@ -49,14 +49,14 @@
             <div class="jumbotron">
                 <h2><%out.println(this.currentIncident.toString()); %></h2>
                 <p><%out.println("Locatie: " + this.currentIncident.getLocation()); %></p>
-                <p><%out.println("Gemeld op: " + this.currentIncident.getDate());%></p>
-                <p><%out.println("Advies: " + this.currentIncident.getDate());%></p>
+                <p><% out.println("Gemeld op: " + this.currentIncident.getDate());%></p>
+
                 <%
                     if (advice.size() > 0)
-                    {
-
-                        for (String singleAdvice : advice)
-                        { %>
+                    {%>
+                <p><%out.println("Advies: "); %></p>
+                <% for (String singleAdvice : advice)
+                            { %>
                 <p><% out.println(singleAdvice); %></p>
                 <% }
                 }
