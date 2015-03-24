@@ -28,7 +28,6 @@
                             }
 
                         });
-
                 addresspickerMap.on("addressChanged", function (evt, address) {
                     $("#longtitude").val(address.geometry.location.lng());
                     $("#latitude").val(address.geometry.location.lat());
@@ -51,7 +50,7 @@
                 <h2 class="form-signin-heading">Meld incident</h2>
                 <div class="form-group">
                     <label for="name">Incident naam:</label>
-                    <input name="name" type="text" class="form-control" id="name">
+                    <input name="name" type="text" class="form-control" id="name" required>
                 </div>
                 <div class="form-group">
                     <label for="descr">Incident beschrijving:</label>
@@ -59,7 +58,7 @@
                 </div>
                 <div class="form-group">
                     <label for="addresspicker_map">Locatie:</label>
-                    <input name="address" class="form-control" id="addresspicker_map" />
+                    <input name="address" class="form-control" id="addresspicker_map" required/>
                     <div style="width:300px;height:300px;margin-top:20px;">
                         <div id="map_canvas" style="width:100%; height:100%"></div>
                         <div id="location" class=""></div>

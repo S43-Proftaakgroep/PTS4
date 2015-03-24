@@ -17,7 +17,7 @@
     var AddressPicker = function(element, options) {
         this.options = options;
         this.$element = $(element);
-        this._create()
+        this._create();
     }
 
     AddressPicker.prototype = {

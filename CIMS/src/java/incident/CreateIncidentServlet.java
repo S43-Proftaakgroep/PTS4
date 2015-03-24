@@ -32,6 +32,10 @@ public class CreateIncidentServlet extends HttpServlet {
             String description = request.getParameter("descr");
             String longtitude = request.getParameter("longtitude");
             String latitude = request.getParameter("latitude");
+            if(longtitude.equals("") || latitude.equals("")) {
+                request.setAttribute("errorMessageLocation", "Please enter a location for the incident");
+                request.getRequestDispatcher("incident/new.jsp").forward(request, response);
+            }
             UserBean currentUser = (UserBean) request.getSession().getAttribute("currentSessionUser");
             String submitter = currentUser.getUsername();
             name = name.replace("|", "");
