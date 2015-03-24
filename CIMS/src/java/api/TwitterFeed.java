@@ -2,12 +2,14 @@ package api;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 import java.util.logging.*;
 import javax.net.ssl.*;
 import org.scribe.services.*;
 
 /**
  * Class for aggregating Twitter data.
+ * Uses Twitter's Search API using App authentication.
  * @author Etienne
  */
 public class TwitterFeed {
@@ -19,7 +21,7 @@ public class TwitterFeed {
 	private static final String SECRET_ACCESS_TOKEN = "OZgde6l5P0teMYkNoyQ4LvxCnuE0d3HIsZGhXnNVRth4RxH5bd";
 	
 	/**
-	 * The URL for requesting data about the amount of request left for the current timeframe.
+	 * The URL for requesting data about the amount of requests left for the current timeframe.
 	 */
 	private static final String RATE_LIMIT_STATUS = "https://api.twitter.com/1.1/application/rate_limit_status.json";
 	
@@ -30,7 +32,7 @@ public class TwitterFeed {
 	private static final String SEARCH = "https://api.twitter.com/1.1/search/tweets.json";
 	
 	/**
-	 * Creates a new feed.
+	 * A custom feed for Twitter API v1.1.
 	 */
 	public TwitterFeed() {
 		try {
@@ -66,26 +68,59 @@ public class TwitterFeed {
 	/**
 	 *
 	 * @param keyword
-	 * @param geocode
-	 * @param result_type
-	 * @param count
+	 * @param count the amount of tweets to return.
+	 * @return a list of tweets found by most recent date.
 	 */
-	public String getTweets(String keyword, int geocode, String result_type, int count){
-		throw new UnsupportedOperationException("Still working on this, sorry! :(");
-		//set query
-		//String query;
-		//return request(query);		
+	public ArrayList<String> getTweets(String keyword, int count){
+		ArrayList<String> tweets = new ArrayList<>();
+		String text_tag = "\"text\":\""; // Marks the beginning of the tweet in the JSON feed.
+		String query = "?q=" + keyword; // Builds the search query.
+		query += "&result_type=recent";
+		query += "&count=" + count;
+		
+		// Escape single quotes properly.
+		String data = request(SEARCH + query);
+		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_
+		
+		// Start looping through the data, adding all found tweets to the list.
+		int start = 1; 
+		int end = 1;
+		while ( start > 0 && end > 0) {
+			start = data.indexOf(text_tag, end);
+			end = data.indexOf("\",", start);
+			String tweet = data.substring(start + text_tag.length(), end);
+			tweets.add(tweet);
+		}
+		return tweets;
 	}
 		
 	/**
-	 *
-	 * @param location 
+	 * Returns tweets based on their GPS coordinates. Currently being debugged (23-03)
+	 * @param latitude
+	 * @param longitude
+	 * @param radius range from the coordinates in kilometres.
+	 * @return
 	 */	
-	public String getByLocation(String location){
-		throw new UnsupportedOperationException("Still working on this, sorry! :(");
-		//set query
-		//String query;
-		//return request(query);
+	public String getByLocation(double latitude, double longitude, int radius){
+		String query = "&geocode=" + latitude + "," + longitude + "," + radius + "km";
+		return request(SEARCH + query);/*
+		ArrayList<String> tweets = new ArrayList<>();
+		String text_tag = "\"text\":\""; // Marks the beginning of the tweet in the JSON feed.
+		
+		// Escape single quotes properly.
+		String data = request(SEARCH + query);
+		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_
+		
+		// Start looping through the data, adding all found tweets to the list.
+		int start = 1; 
+		int end = 1;
+		while (start > 0 && end > 0) {
+			start = data.indexOf(text_tag, end) + text_tag.length();
+			end = data.indexOf("\",", start);
+			String tweet = data.substring(start, end);
+			tweets.add(tweet);
+		}
+		return tweets;*/
 	}
 
 	/**
@@ -115,7 +150,27 @@ public class TwitterFeed {
 	 */
 	public String getStatus(){		
 		String query = RATE_LIMIT_STATUS;
-		return request(query);
+		String remaining_tag = "\"remaining\":";
+		String limit_tag = "\"limit\":";
+		String search_tag = "\"search\":";
+		
+		String data = request(query);
+		
+		int start = 1;
+		int end = 1;
+		
+		// Find amount of requests remaining for the Search API.
+		start = data.indexOf(search_tag); 
+		
+		start = data.indexOf(limit_tag, start) + limit_tag.length();
+		end = data.indexOf(",", start);
+		String limit = data.substring(start, end);
+		
+		start = data.indexOf(remaining_tag, start) + remaining_tag.length();
+		end = data.indexOf(",", start);
+		String remaining = data.substring(start, end);
+		
+		return "Usage: " + remaining + " / " + limit + " requests.";
 	}
 
 	/**
@@ -126,7 +181,7 @@ public class TwitterFeed {
 	public String request(String query){
 		try {
 			// Connect
-			URL url2 = new URL("https://api.twitter.com/oauth2/token");//Unauthorized?
+			URL url2 = new URL("https://api.twitter.com/oauth2/token");
 			HttpsURLConnection conn = (HttpsURLConnection) url2.openConnection();
 			// Authenticate.
 			String token = requestBearerToken("https://api.twitter.com/oauth2/token");
@@ -145,7 +200,7 @@ public class TwitterFeed {
 	        connection.setRequestProperty("User-Agent", "CIMS");
 	        connection.setRequestProperty("Authorization", "Bearer " + token);
 	        connection.setUseCaches(false);
-	        
+	        System.out.println("Connection: " + connection.toString()); // If you feel like checking: http://codebeautify.org/jsonvalidate
 			String out = readResponse(connection);
 			return out;   
 		} catch (IOException ex) {
@@ -166,7 +221,7 @@ public class TwitterFeed {
 	 * @param consumerSecret the Secret Access Token from the app.
 	 * @return the encoded pair.
 	 */
-	public String encodeKeys(String consumerKey, String consumerSecret) {
+	private String encodeKeys(String consumerKey, String consumerSecret) {
 	    try {
 	        String encodedConsumerKey = URLEncoder.encode(consumerKey, "UTF-8");
 	        String encodedConsumerSecret = URLEncoder.encode(consumerSecret, "UTF-8");
@@ -187,7 +242,7 @@ public class TwitterFeed {
 	 * @throws IOException 
 	 * @return the Bearer token.
 	 */
-	public String requestBearerToken(String endPointUrl) throws IOException {
+	private String requestBearerToken(String endPointUrl) throws IOException {
 	    HttpsURLConnection connection2 = null;
 	    String encodedCredentials = encodeKeys(ACCESS_TOKEN, SECRET_ACCESS_TOKEN);
 	         
@@ -206,7 +261,6 @@ public class TwitterFeed {
 	             
 	        writeRequest(connection2, "grant_type=client_credentials");
 	             
-	        // Receive JSON, get moneez.
 	        String json = readResponse(connection2);
 	        /*
 	        if (json != null) {
@@ -238,7 +292,7 @@ public class TwitterFeed {
 	 * @param request the httprequest for a response.
 	 * @return true if succeeded, false otherwise.
 	 */
-	public boolean writeRequest(HttpsURLConnection connection, String request) {
+	private boolean writeRequest(HttpsURLConnection connection, String request) {
 	    try {
 	        BufferedWriter wr = new BufferedWriter
 					(new OutputStreamWriter(connection.getOutputStream()));
@@ -256,7 +310,7 @@ public class TwitterFeed {
 	 * @param connection the connection to read from.
 	 * @return 
 	 */
-	public String readResponse(HttpsURLConnection connection) {
+	private String readResponse(HttpsURLConnection connection) {
 	    try {
 	        StringBuilder str = new StringBuilder();
 	             
@@ -273,16 +327,32 @@ public class TwitterFeed {
 	//</editor-fold>
 	
 	/** 
-	 * Prints some output for testing and reference.
+	 * Prints some output for testing/demonstration and reference.
 	 */
 	public static void main(String[] args) throws Exception {
 		TwitterFeed t = new TwitterFeed();
 		String out = t.request("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2");
+		
+		// Commented functions still work - they merely return the full JSON.
+		
+		// TwitterFeed.getStatus():
 		System.out.println(t.getStatus());
-		System.out.println(t.getByTag("henk"));
+
+		// TwitterFeed.getByTag():
+		System.out.println(t.getByTag("CIMS"));
+		
+		// TwitterFeed.getByTags():
 		System.out.println(t.getByTags(new String[]{"fontysict", "fontys"}));
-		//System.out.println(t.getTweets(out, geocode, out, count));
-		//System.out.println(t.getByLocation(out);
-		System.out.println(out); // 400 ~ 403 = Unauthorized.
+		
+		// TwitterFeed.getTweets():
+		ArrayList<String> tweets = t.getTweets("incident", 5);
+		for (String tweet : tweets) {System.out.println(tweet);}
+		
+		// TwitterFeed.getByLocation():
+		//ArrayList<String> geotweets = t.getByLocation(51.450922, 5.479748, 15); // Rachelsmolen, Eindhoven.
+		//for (String tweet : geotweets) {System.out.println(tweet);}
+		// DIY: http://www.gps-coordinates.net/
+		System.out.println(t.getByLocation(51.450922, 5.479748, 15)); // Rachelsmolen, Eindhoven.
+		//System.out.println(out); // 400 ~ 403 = Unauthorized.
     }
 }
