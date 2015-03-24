@@ -20,7 +20,7 @@ public class GoogleMaps {
             + "                    function initialize() {\n"
             + "                    var latlng = new google.maps.LatLng( %latitude% , %longitude% );\n"
             + "                            var myOptions = {\n"
-            + "                            zoom: 17,\n"
+            + "                            zoom: 10,\n"
             + "                                    center: latlng,\n"
             + "                                    mapTypeId: google.maps.MapTypeId.ROADMAP\n"
             + "                            };\n"

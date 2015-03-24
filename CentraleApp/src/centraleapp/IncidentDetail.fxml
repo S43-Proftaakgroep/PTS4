@@ -9,19 +9,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="687.0" prefWidth="1023.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="centraleapp.IncidentDetailController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="687.0" prefWidth="1023.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="centraleapp.IncidentDetailController">
    <children>
       <TabPane prefHeight="484.0" prefWidth="885.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab text="Incident">
                <content>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                  <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
                      <center>
-                        <GridPane alignment="CENTER" gridLinesVisible="true" BorderPane.alignment="CENTER">
+                        <GridPane fx:id="grid" alignment="CENTER" gridLinesVisible="true" BorderPane.alignment="CENTER">
                           <columnConstraints>
-                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="506.0" minWidth="10.0" prefWidth="306.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="717.0" minWidth="10.0" prefWidth="717.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -38,7 +37,7 @@
                               </Label>
                               <Label fx:id="lblIncidentDescription" text="&lt;incident_beschrijving&gt;" GridPane.columnIndex="1">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font size="18.0" />
                                  </font>
                               </Label>
                               <Label text="Adviezen" GridPane.rowIndex="1">
@@ -57,34 +56,32 @@
                                  </font>
                               </Label>
                               <ListView fx:id="lvAdvices" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <VBox fx:id="vbox" layoutX="307.0" layoutY="4.260997772216797" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                  <children>
-                                    <Label fx:id="lblIncidentWeather" text="&lt;incident_weer&gt;">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblIncidentAir" text="&lt;incident_lucht&gt;">
+                                    <ProgressIndicator fx:id="piWeather" layoutX="333.0" layoutY="14.0" maxHeight="52.0" minHeight="52.0" />
+                                    <Label fx:id="lblIncidentWeather" alignment="CENTER" contentDisplay="CENTER" layoutX="307.0" layoutY="31.0" text="Loading weather">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
                                  </children>
                               </VBox>
-                              <WebView fx:id="webView" prefHeight="150.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <WebView fx:id="webView" prefHeight="250.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <Label text="Social Media" GridPane.rowIndex="3">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
                               <ListView fx:id="lvSocialMedia" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <ProgressIndicator fx:id="piAdvice" maxHeight="52.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <ProgressIndicator fx:id="piSocialMedia" maxHeight="52.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                            </children>
                         </GridPane>
                      </center>
                      <top>
                         <Label fx:id="lblIncidentName" text="&lt;incident_naam&gt;" BorderPane.alignment="CENTER">
                            <font>
-                              <Font size="24.0" />
+                              <Font name="System Bold" size="24.0" />
                            </font>
                            <BorderPane.margin>
                               <Insets left="10.0" right="10.0" />

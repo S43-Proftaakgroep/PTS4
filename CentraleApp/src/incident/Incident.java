@@ -5,7 +5,11 @@
  */
 package incident;
 
+import database.DatabaseManager;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +27,7 @@ public class Incident implements Serializable {
     private String situationDescription;
     private IncidentInfo detailInfo;
     private boolean approved;
+    private int id;
 
     public Incident(String location, String longitude, String latitude, String submitter, String typeOfIncident, String situationDescription, String date) {
         this.location = location;
@@ -34,6 +39,7 @@ public class Incident implements Serializable {
         this.detailInfo = new IncidentInfo();
         this.approved = false;
         this.situationDescription = situationDescription;
+        this.id = -1;
     }
 
     public void approve() {
@@ -62,7 +68,14 @@ public class Incident implements Serializable {
     }
 
     public String getDate() {
-        return this.date;
+        String formattedDate = "error";
+        try {
+            Date newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(date);
+            formattedDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(newDate);
+        } catch (ParseException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return formattedDate;
     }
 
     public String getLocation() {
@@ -83,5 +96,15 @@ public class Incident implements Serializable {
 
     public String getSubmitter() {
         return this.submitter;
+    }
+    
+    public int getId()
+    {
+        if(this.id == -1)
+        {
+            this.id = DatabaseManager.getId(this.typeOfIncident, this.location, this.submitter);
+        }
+        
+        return this.id;
     }
 }

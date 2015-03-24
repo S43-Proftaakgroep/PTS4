@@ -125,23 +125,30 @@ public class IncidentValidatieController implements Initializable, Observer {
         ObservableList<Incident> incidents = FXCollections.observableArrayList(DatabaseManager.getIncidents(1));
         tableIncidents.setEditable(false);
 
-        TableColumn firstNameCol = new TableColumn("Naam");
-        firstNameCol.setMinWidth(100);
-        firstNameCol.setCellValueFactory(
+        TableColumn nameCol = new TableColumn("Naam");
+        nameCol.setMinWidth(100);
+        nameCol.setCellValueFactory(
                 new PropertyValueFactory<>("type"));
 
-        TableColumn lastNameCol = new TableColumn("Locatie");
-        lastNameCol.setMinWidth(200);
-        lastNameCol.setCellValueFactory(
+        TableColumn locationCol = new TableColumn("Locatie");
+        locationCol.setMinWidth(200);
+        locationCol.setCellValueFactory(
                 new PropertyValueFactory<>("location"));
 
-        TableColumn emailCol = new TableColumn("Beschrijving");
-        emailCol.setMinWidth(240);
-        emailCol.setCellValueFactory(
+        TableColumn descriptionCol = new TableColumn("Beschrijving");
+        descriptionCol.setMinWidth(240);
+        descriptionCol.setCellValueFactory(
                 new PropertyValueFactory<>("description"));
+        
+        TableColumn dateCol = new TableColumn("Datum");
+        dateCol.setMinWidth(140);
+        dateCol.setCellValueFactory(
+                new PropertyValueFactory<>("date"));
+        dateCol.setSortType(TableColumn.SortType.DESCENDING);
 
-        tableIncidents.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+        tableIncidents.getColumns().addAll(nameCol, locationCol, descriptionCol, dateCol);
         tableIncidents.setItems(incidents);
+        tableIncidents.getSortOrder().add(dateCol);
 //        try {
 //            initMap();
 //        } catch (IOException ex) {
