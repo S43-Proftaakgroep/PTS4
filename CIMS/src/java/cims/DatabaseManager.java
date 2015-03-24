@@ -276,7 +276,7 @@ public class DatabaseManager {
         {
             try
             {
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date, longitude, latitude FROM incident WHERE approved = 1;");
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date, longitude, latitude FROM incident WHERE approved = 1 ORDER BY date DESC;");
                 ResultSet results = pStmnt.executeQuery();
                 while (results.next())
                 {

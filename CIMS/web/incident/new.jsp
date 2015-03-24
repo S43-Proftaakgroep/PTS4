@@ -59,7 +59,7 @@
                 </div>
                 <div class="form-group">
                     <label for="addresspicker_map">Locatie:</label>
-                    <input name="address" class="form-control" id="addresspicker_map" />
+                    <input name="address" class="form-control" id="addresspicker_map" autocomplete="off" />
                     <div style="width:300px;height:300px;margin-top:20px;">
                         <div id="map_canvas" style="width:100%; height:100%"></div>
                         <div id="location" class=""></div>
