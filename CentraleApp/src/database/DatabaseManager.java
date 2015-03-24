@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +36,9 @@ public class DatabaseManager {
                     Property.DBUSERNAME.getProperty(),
                     Property.DBPASSWORD.getProperty());
             result = true;
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             connection = null;
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             System.out.println("Connection failed");
             result = false;
         }
@@ -50,13 +51,12 @@ public class DatabaseManager {
     private static void closeConnection() {
         try {
             connection.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public static List<String> getUnApprovedUsers()
-    {
+
+    public static List<String> getUnApprovedUsers() {
         List<String> users = new ArrayList<>();
         if (openConnection()) {
             try {
@@ -65,12 +65,11 @@ public class DatabaseManager {
                 while (rs.next()) {
                     users.add(rs.getString("username"));
                 }
-            }
-            catch(Exception e)
-            {
+            } catch (SQLException e) {
                 return null;
+            } finally {
+                closeConnection();
             }
-            finally {closeConnection();}
         }
         return users;
     }
@@ -92,15 +91,16 @@ public class DatabaseManager {
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println(e.getMessage());
+            } finally {
+                closeConnection();
             }
-            finally{closeConnection();}
         }
         return result;
     }
-    
-     public static boolean authIncident(String type, String locatie ) {
+
+    public static boolean authIncident(String type, String locatie) {
         boolean result = false;
         //Open the connection
         if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty()) {
@@ -112,15 +112,16 @@ public class DatabaseManager {
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println(e.getMessage());
+            } finally {
+                closeConnection();
             }
-            finally{closeConnection();}
         }
         return result;
     }
-     
-      public static boolean denyIncident(String type , String locatie) {
+
+    public static boolean denyIncident(String type, String locatie) {
         boolean result = false;
         //Open the connection
         if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty()) {
@@ -128,18 +129,19 @@ public class DatabaseManager {
                 PreparedStatement pStmnt = connection.prepareStatement("DELETE FROM incident WHERE type = ? AND location = ?;;");
                 pStmnt.setString(1, type);
                 pStmnt.setString(2, locatie);
-                
+
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println(e.getMessage());
+            } finally {
+                closeConnection();
             }
-            finally{closeConnection();}
         }
         return result;
     }
-    
+
     /**
      * Denies a user with the given username
      *
@@ -157,37 +159,57 @@ public class DatabaseManager {
                 if (pStmnt.executeUpdate() > 0) {
                     result = true;
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println(e.getMessage());
-            }
-            finally{closeConnection();}
-        }
-        return result;
-    }
-    
-    public static List<Incident> getIncidents(int approved)
-    {
-        List<Incident> unapprovedIncidents = new ArrayList<>();
-        if(openConnection())
-        {
-            try
-            {
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, submitter, description, date FROM incident WHERE approved = " + approved+ ";");
-                ResultSet results = pStmnt.executeQuery();
-                while (results.next()) {
-                    Incident incident = new Incident(results.getString("location"), results.getString("submitter"), results.getString("type"), results.getString("description"), results.getString("date"));
-                    unapprovedIncidents.add(incident);
-                }
-            }
-            catch(Exception ex)
-            {
-                System.out.println("Database exception: " + ex.getMessage());
-            }
-            finally
-            {
+            } finally {
                 closeConnection();
             }
         }
-        return unapprovedIncidents;
+        return result;
+    }
+
+    public static List<Incident> getIncidents(int approved) {
+        List<Incident> incidents = new ArrayList<>();
+        if (openConnection()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, longitude, latitude, submitter, description, date FROM incident WHERE approved = " + approved + ";");
+                ResultSet results = pStmnt.executeQuery();
+                while (results.next()) {
+                    Incident incident = new Incident(
+                            results.getString("location"),
+                            results.getString("longitude"),
+                            results.getString("latitude"),
+                            results.getString("submitter"),
+                            results.getString("type"),
+                            results.getString("description"),
+                            results.getString("date"));
+                    incidents.add(incident);
+                }
+            } catch (SQLException ex) {
+                System.out.println("Database exception: " + ex.getMessage());
+            } finally {
+                closeConnection();
+            }
+        }
+        return incidents;
+    }
+
+    public static List<String> getAdviceById(int id) {
+        List<String> advice = new ArrayList<>();
+        if (openConnection()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT adviceText FROM advice WHERE id = ?");
+                pStmnt.setInt(1, id);
+                ResultSet results = pStmnt.executeQuery();
+                while (results.next()) {
+                    advice.add(results.getString("adviceText"));
+                }
+            } catch (SQLException ex) {
+                System.out.println("Exception: " + ex.getMessage());
+            } finally {
+                closeConnection();
+            }
+        }
+        return advice;
     }
 }

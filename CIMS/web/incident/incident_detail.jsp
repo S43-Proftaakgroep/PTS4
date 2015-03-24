@@ -36,13 +36,12 @@
                     {
                         this.incidentId = Integer.parseInt(id);
                         this.currentIncident = incident;
+                        advice = DatabaseManager.getAdviceById(Integer.parseInt(id));
                     }
                     else
                     {
                         response.sendRedirect("all.jsp");
                     }
-
-                    advice = DatabaseManager.getAdviceById(Integer.parseInt(id));
 
                 }
             %>

@@ -9,7 +9,6 @@ import incident.IncidentContainer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
@@ -51,10 +50,13 @@ public class ConnectionThread implements Runnable, Observer {
                 String location = incidentInfo[1];
                 String description = incidentInfo[2];
                 String submitter = incidentInfo[3];
-                container.addIncident(location, submitter, typeIncident, description, "Today");
+                String longitude = incidentInfo[4];
+                String latitude = incidentInfo[5];
+                container.addIncident(location, longitude, latitude, submitter, typeIncident, description, "Today");
                 insocket.close();
             }
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 

@@ -17,28 +17,56 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
+@WebServlet(name = "LoginServlet", urlPatterns =
+{
+    "/LoginServlet"
+})
 public class LoginServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
+            throws ServletException, IOException
+    {
+        try
+        {
             UserBean user = new UserBean();
             user.setUserName(request.getParameter("username"));
             user.setPassword(request.getParameter("password"));
-
-            user = DatabaseManager.authenticateUser(user);
-
-            if (user != null && user.isValid()) {
+            
+            
+            
+            String fb = "";
+            fb = request.getParameter("faceBook");
+            System.out.println("FB:" + fb);
+            if ("FB".equals(fb))
+            {
+                user.setValid(true);
+                System.out.println("Password userbean: " + user.getPassword());
 
                 HttpSession session = request.getSession(true);
                 session.setAttribute("currentSessionUser", user);
-                response.sendRedirect("index.jsp"); //logged-in page      		
-            } else {
-                response.sendRedirect("index.jsp"); //error page 
+                response.sendRedirect("index.jsp"); //logged-in page  
             }
-        } catch (Throwable theException) {
+            else
+            {
+                user = DatabaseManager.authenticateUser(user);
+
+                if (user != null && user.isValid())
+                {
+
+                    HttpSession session = request.getSession(true);
+                    session.setAttribute("currentSessionUser", user);
+                    response.sendRedirect("index.jsp"); //logged-in page      		
+                }
+                else
+                {
+                    response.sendRedirect("index.jsp"); //error page 
+                }
+            }
+
+        }
+        catch (Throwable theException)
+        {
             System.out.println(theException);
         }
     }

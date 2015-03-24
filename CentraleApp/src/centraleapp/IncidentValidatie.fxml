@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.collections.*?>
@@ -7,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="659.0" prefWidth="1102.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="centraleapp.IncidentValidatieController">
+<AnchorPane id="AnchorPane" prefHeight="659.0" prefWidth="1102.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="centraleapp.IncidentValidatieController">
   <children>
     <TabPane prefHeight="661.0" prefWidth="1106.0" tabClosingPolicy="UNAVAILABLE">
       <tabs>
@@ -15,7 +17,7 @@
           <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="573.0" prefWidth="1001.0">
               <children>
-                <ListView fx:id="lvIncidents" prefHeight="589.0" prefWidth="426.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="666.0" AnchorPane.topAnchor="14.0" />
+                <ListView fx:id="lvApproveIncidents" prefHeight="589.0" prefWidth="426.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="666.0" AnchorPane.topAnchor="14.0" />
                 <Label layoutX="460.0" layoutY="43.0" text="Naam:" />
                 <Label layoutX="460.0" layoutY="74.0" text="Datum:" />
                 <Label fx:id="lblLocation" layoutX="620.0" layoutY="110.0" text="&lt;Locatie&gt;" />
@@ -48,10 +50,11 @@
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <Pane layoutX="16.0" layoutY="14.0" prefHeight="602.0" prefWidth="1074.0">
-                  <children>
-                    <TableView fx:id="table" layoutX="14.0" layoutY="14.0" prefHeight="385.0" prefWidth="541.0" />
-                  </children>
+                <Pane prefHeight="632.0" prefWidth="1106.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <TableView fx:id="tableIncidents" layoutX="14.0" layoutY="14.0" prefHeight="607.0" prefWidth="948.0" />
+                              <Button layoutX="975.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnDetailsIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Meer info" />
+                           </children>
                 </Pane>
               </children>
             </AnchorPane>

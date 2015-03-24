@@ -47,13 +47,13 @@ public class IncidentContainer extends Observable {
     public List<Incident> getIncidents() {
         return this.incidents;
     }
-    
+
     public List<Incident> getApprovedIncidents() {
         return approved;
     }
 
-    public void addIncident(String location, String submitter, String typeOfIncident, String situationDescription, String date) {
-        Incident incident = new Incident(location, submitter, typeOfIncident, situationDescription, date);
+    public void addIncident(String location, String longitude, String latitude, String submitter, String typeOfIncident, String situationDescription, String date) {
+        Incident incident = new Incident(location, longitude, latitude, submitter, typeOfIncident, situationDescription, date);
         this.incidents.add(incident);
         Platform.runLater(new Runnable() {
 
@@ -63,7 +63,7 @@ public class IncidentContainer extends Observable {
                 notifyObservers(getIncidents());
             }
         });
-        
+
     }
 
     public void deleteIncident(Incident incident) {

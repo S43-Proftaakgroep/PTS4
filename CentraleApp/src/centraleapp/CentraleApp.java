@@ -6,10 +6,12 @@
 package centraleapp;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import server.CentralServer;
 
 /**
@@ -24,8 +26,19 @@ public class CentraleApp extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("IncidentValidatie.fxml"));
         
         Scene scene = new Scene(root);
+<<<<<<< HEAD
+=======
+        CentralServer server = new CentralServer();
+        server.init();
+>>>>>>> origin/master
         stage.setScene(scene);
         stage.show();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+          public void handle(WindowEvent we) {
+              server.stop();
+              System.exit(1);
+          }
+      }); 
     }
 
     /**
