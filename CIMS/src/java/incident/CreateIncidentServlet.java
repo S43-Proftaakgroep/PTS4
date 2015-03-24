@@ -10,6 +10,8 @@ import cims.DatabaseManager;
 import cims.Property;
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -50,7 +52,11 @@ public class CreateIncidentServlet extends HttpServlet {
             catch(NumberFormatException e){
                 e.printStackTrace();
             }
-            try {
+            Thread t = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                                try {
                 int port = Integer.parseInt(Property.IPPORT.getProperty());
                 Socket socket = new Socket(Property.IPADRESS.getProperty(), port);
                 OutputStream outSocket = socket.getOutputStream();
@@ -58,10 +64,16 @@ public class CreateIncidentServlet extends HttpServlet {
                 outWriter.writeObject(infoString);
                 outWriter.close();
                 socket.close();
-                response.sendRedirect("incident/new.jsp");
+                
             } catch (ConnectException e) {
                 e.printStackTrace();
-            }
+            }       catch (IOException ex) {
+                        Logger.getLogger(CreateIncidentServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            t.start();
+            response.sendRedirect("incident/new.jsp");
         } catch (Throwable theException) {
             System.out.println(theException);
         }
