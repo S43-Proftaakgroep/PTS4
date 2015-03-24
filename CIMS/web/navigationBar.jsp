@@ -2,6 +2,7 @@
 <%@ page pageEncoding="UTF-8" import="authentication.UserBean" %>
 <%!
     public boolean isLoggedIn = false;
+    public UserBean currentUser;
 %>
 <script>
     // This is called with the results from from FB.getLoginStatus().
@@ -91,7 +92,10 @@
             else
             {
                 console.log("Al ingelogd");
-                location.href = '/CIMS/index.jsp';
+                if(<%=currentUser%> !== null)
+                {
+                    location.href = '/CIMS/index.jsp';
+                }
             }
 
         });
@@ -102,7 +106,7 @@
     {
         FB.logout(function (response) {
             // Person is now logged out
-    <% isLoggedIn = false;
+            <% isLoggedIn = false; 
             System.out.println(isLoggedIn); %>
             location.href = '/CIMS/LogoutServlet';
         });
@@ -125,7 +129,7 @@
 
             <ul class="nav navbar-nav">
                 <%
-                    UserBean currentUser = (UserBean) session.getAttribute("currentSessionUser");
+                    currentUser = (UserBean) session.getAttribute("currentSessionUser");
                     if (currentUser != null && currentUser.isValid())
                     {
                         System.out.println("Userbean: " + currentUser + " name: " + currentUser.getUsername());
