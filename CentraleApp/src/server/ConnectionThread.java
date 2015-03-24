@@ -41,7 +41,7 @@ public class ConnectionThread implements Runnable {
                 container.addIncident(location, submitter, typeIncident, description, "Today");
                 insocket.close();
             } else if(instring.startsWith("@2#")) {
-                out.writeObject(container.getApprovedIncidents());
+                out.writeObject("nieuwe incidenten");
             }
         } catch (Exception e) {
         }
