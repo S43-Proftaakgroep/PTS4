@@ -21,13 +21,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-<<<<<<< HEAD
 import server.CentralServer;
-=======
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
->>>>>>> origin/master
 
 /**
  *
@@ -105,20 +102,7 @@ public class IncidentValidatieController implements Initializable, Observer {
         instance.addObserver(this);
         OLincidents.clear();
         OLincidents.addAll(instance.getIncidents());
-<<<<<<< HEAD
-        CentralServer server = new CentralServer();
-        server.initServer();
-        lvIncidents.setItems(OLincidents);
-=======
-        //test data
-//        instance.addIncident("Eindhoven", "Eric", "Explosion", "Er was een dikke explosie", "Today");
-//        instance.addIncident("Weert", "Meny", "Gaslek", "Er was een dikke explosie", "Today");
-//        instance.addIncident("Best", "Joris", "Gifwolk", "Er was een dikke explosie", "Today");
-//        instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie", "Today");
-//        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "wauw", "Today");
-
         lvApproveIncidents.setItems(OLincidents);
->>>>>>> origin/master
         updateUsers();
         lvApproveIncidents.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -205,7 +189,6 @@ public class IncidentValidatieController implements Initializable, Observer {
     }
 
     @Override
-<<<<<<< HEAD
     public void update(Observable o, Object arg) {
         if (!arg.equals("")) {
             int sizeOldList = OLincidents.size();
@@ -215,19 +198,8 @@ public class IncidentValidatieController implements Initializable, Observer {
             if (sizeOldList > sizeNewList) {
                 selectFirstFromListView();
             }
-=======
-    public void update(Observable o, Object arg
-    ) {
-        int sizeOldList = OLincidents.size();
-        OLincidents.clear();
-        OLincidents.addAll((List<Incident>) arg);
-        int sizeNewList = OLincidents.size();
-        if (sizeOldList > sizeNewList) {
-            selectFirstFromListView();
->>>>>>> origin/master
         }
     }
-
     public void selectFirstFromListView() {
         if (lvApproveIncidents.getItems().size() > 0) {
             lvApproveIncidents.getSelectionModel().select(0);

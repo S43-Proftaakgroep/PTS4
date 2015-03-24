@@ -26,11 +26,8 @@ public class CentraleApp extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("IncidentValidatie.fxml"));
         
         Scene scene = new Scene(root);
-<<<<<<< HEAD
-=======
         CentralServer server = new CentralServer();
         server.init();
->>>>>>> origin/master
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
