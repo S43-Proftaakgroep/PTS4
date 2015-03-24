@@ -48,7 +48,7 @@
     <body>
         <%@include file="/navigationBar.jsp" %>
         <div class="container">
-            <form role="form" class="form-create" action="incident/CreateIncidentServlet" method="POST">
+            <form role="form" class="form-create" action="/CIMS/CreateIncidentServlet" method="POST">
                 <h2 class="form-signin-heading">Meld incident</h2>
                 <div class="form-group">
                     <label for="name">Incident naam:</label>
