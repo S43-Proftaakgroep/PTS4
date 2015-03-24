@@ -33,6 +33,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import server.CentralServer;
 
 /**
  *
@@ -113,13 +114,8 @@ public class IncidentValidatieController implements Initializable, Observer {
         instance.addObserver(this);
         OLincidents.clear();
         OLincidents.addAll(instance.getIncidents());
-        //test data
-//        instance.addIncident("Eindhoven", "Eric", "Explosion", "Er was een dikke explosie", "Today");
-//        instance.addIncident("Weert", "Meny", "Gaslek", "Er was een dikke explosie", "Today");
-//        instance.addIncident("Best", "Joris", "Gifwolk", "Er was een dikke explosie", "Today");
-//        instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie", "Today");
-//        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "wauw", "Today");
-
+        CentralServer server = new CentralServer();
+        server.initServer();
         lvIncidents.setItems(OLincidents);
         updateUsers();
         lvIncidents.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -188,12 +184,14 @@ public class IncidentValidatieController implements Initializable, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        int sizeOldList = OLincidents.size();
-        OLincidents.clear();
-        OLincidents.addAll((List<Incident>) arg);
-        int sizeNewList = OLincidents.size();
-        if (sizeOldList > sizeNewList) {
-            selectFirstFromListView();
+        if (!arg.equals("")) {
+            int sizeOldList = OLincidents.size();
+            OLincidents.clear();
+            OLincidents.addAll((List<Incident>) arg);
+            int sizeNewList = OLincidents.size();
+            if (sizeOldList > sizeNewList) {
+                selectFirstFromListView();
+            }
         }
     }
 

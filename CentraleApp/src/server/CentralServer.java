@@ -12,9 +12,10 @@ import incident.IncidentContainer;
  * @author Sasa2905
  */
 public class CentralServer {
-
+    private Thread connectionThread;
+    
     public void initServer() {
-        Thread thread = new Thread(new ConnectionSearcher());
-        thread.start();
+        connectionThread = new Thread(new ConnectionSearcher());
+        connectionThread.start();
     }
 }

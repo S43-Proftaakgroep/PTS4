@@ -76,5 +76,7 @@ public class IncidentContainer extends Observable {
         incident.approve();
         approved.add(incident);
         deleteIncident(incident);
+        setChanged();
+        notifyObservers("");
     }
 }

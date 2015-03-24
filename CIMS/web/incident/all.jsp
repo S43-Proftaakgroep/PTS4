@@ -1,3 +1,9 @@
+<%@page import="incident.SocketRunnable"%>
+<%@page import="java.util.concurrent.Executors"%>
+<%@page import="java.util.concurrent.ExecutorService"%>
+<%@page import="java.util.concurrent.Callable"%>
+<%@page import="java.io.ObjectOutputStream"%>
+<%@page import="cims.Property"%>
 <%@page import="java.io.IOException"%>
 <%@page import="java.net.UnknownHostException"%>
 <%@page import="java.io.ObjectInputStream"%>
@@ -39,22 +45,9 @@
                     this.closestIncident = coord.getClosestIncident(incidentList);
                     this.closestIncidentId = closestIncident.getId();
                 }
-                Thread thread = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                        Socket socket = new Socket("127.0.0.1", 1099);
-                        ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-                        String socketString = (String) input.readObject();
-                        System.out.println(socketString);
-                        }
-                        catch(ClassNotFoundException exception){
-                            exception.printStackTrace();
-                        }
-                        catch(IOException ex) {}
-                    }
-                });
+                Thread thread = new Thread(new SocketRunnable(out));
+                thread.start();
+                
             %>
             <h1>
                 <a  class="btn btn-primary" href="incident_detail.jsp?incident=<%=closestIncidentId%>">
