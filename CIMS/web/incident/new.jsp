@@ -4,6 +4,8 @@
     Author     : Joris
 --%>
 
+<%@page import="incident.CreateIncidentServlet"%>
+<%@page import="java.io.IOException"%>
 <%@page import="cims.DatabaseManager"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -46,7 +48,7 @@
     <body>
         <%@include file="/navigationBar.jsp" %>
         <div class="container">
-            <form role="form" class="form-create" action="/CIMS/CreateIncidentServlet" method="POST">
+            <form role="form" class="form-create" action="incident/CreateIncidentServlet" method="POST">
                 <h2 class="form-signin-heading">Meld incident</h2>
                 <div class="form-group">
                     <label for="name">Incident naam:</label>
@@ -57,18 +59,17 @@
                     <input name="descr" type="text" class="form-control" id="descr">
                 </div>
                 <div class="form-group">
-                    <label for="addresspicker_map">Locatie:</label>
-<<<<<<< HEAD
-                    <input name="address" class="form-control" id="addresspicker_map" required/>
-=======
-                    <input name="address" class="form-control" id="addresspicker_map" autocomplete="off" />
->>>>>>> origin/master
+                    <label for="addresspicker_map">Locatie:</label><br>
+                    <p>
+                    Type een deel van u locatie in en kies hem uit de suggesties.
+                    </p>
+                    <input name="address" class="form-control" id="addresspicker_map" autocomplete="off" required/>
+                    <input name="longtitude" hidden = "true" id="longtitude"/>
+                    <input name="latitude" hidden = "true" id="latitude"/>
                     <div style="width:300px;height:300px;margin-top:20px;">
                         <div id="map_canvas" style="width:100%; height:100%"></div>
                         <div id="location" class=""></div>
                     </div>
-                    <input name="longtitude" hidden="true" id="longtitude" />
-                    <input name="latitude" hidden="true" id="latitude" />
                 </div>
                 <button type="submit" class="btn btn-default">Melden</button>
             </form>

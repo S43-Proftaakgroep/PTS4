@@ -240,6 +240,9 @@ public class DatabaseManager {
     public static boolean addIncident(String type, String locatie, String submitter, String description, double longitude, double latitude)
     {
         boolean result = false;
+        if(type == null || locatie == null || submitter == null) {
+            return false;
+        }
         //Open the connection
         if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty() && !submitter.trim().isEmpty())
         {

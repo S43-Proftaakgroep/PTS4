@@ -39,4 +39,15 @@ public class DatabaseManagerTest {
     public void testAddUser() {
         Assert.assertTrue(DatabaseManager.addUser("test", "maikelhoeks@hotmail.com", "test"));
     }
+    
+    @Test
+    public void testAddIncident() {
+        Assert.assertTrue(DatabaseManager.addIncident("unitTest", "noplace", "Meny", "new description", 5.0002, 6.0002));
+        Assert.assertTrue(DatabaseManager.addIncident("unitTest", "noplace", "Meny", "", 5.0002, 6.0002));
+        
+        Assert.assertFalse(DatabaseManager.addIncident(null, null, null, null, 0, 0));
+        Assert.assertFalse(DatabaseManager.addIncident("", "een plaats", "Meny", "niet adden", 0, 0));
+        Assert.assertFalse(DatabaseManager.addIncident("testing", "", "Meny", "niet adden", 0, 0));
+        Assert.assertFalse(DatabaseManager.addIncident("testing", "something", "", "niet adden", 0, 0));
+    }
 }
