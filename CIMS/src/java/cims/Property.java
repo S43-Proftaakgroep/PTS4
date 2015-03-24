@@ -14,7 +14,9 @@ public enum Property {
     DBPORT("dbport"),
     DBUSERNAME("dbusername"),
     DBPASSWORD("dbpassword"),
-    DBNAME("dbname");
+    DBNAME("dbname"),
+    IPADRESS("ipadress"),
+    IPPORT("ipport");
     
     private String propertyName;
     private Property(final String propertyName){

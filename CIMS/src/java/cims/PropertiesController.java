@@ -91,7 +91,7 @@ public final class PropertiesController {
      * @return If succesfully written or not
      */
     public static boolean writeProperties(
-            String dbUrl, String dbPort, String dbUsername, String dbPassword, String dbName) {
+            String dbUrl, String dbPort, String dbUsername, String dbPassword, String dbName, String ipAdress, String ipPort) {
         OutputStream output = null;
         if (dbUrl.isEmpty() || dbPort.isEmpty() || dbUsername.isEmpty() || dbPassword.isEmpty() || dbName.isEmpty()) {
             return false;
@@ -106,6 +106,8 @@ public final class PropertiesController {
                 props.setProperty("dbusername", dbUsername);
                 props.setProperty("dbpassword", dbPassword);
                 props.setProperty("dbname", dbName);
+                props.setProperty("ipadress", ipAdress);
+                props.setProperty("ipport", ipPort);
 
                 if (!isCorrectlyConfigured()) {
                     resetProperties();
@@ -154,6 +156,12 @@ public final class PropertiesController {
         if (!props.containsKey("dbname")) {
             return false;
         }
+        if (!props.containsKey("ipadress")) {
+            return false;
+        }
+        if (!props.containsKey("ipport")) {
+            return false;
+        }
         return true;
     }
 
@@ -180,6 +188,8 @@ public final class PropertiesController {
             props.setProperty("dbpassword", "watdenkjezelf");
             props.setProperty("dbname", "deb82648_cims");
 
+            props.setProperty("ipadress", "145.93.104.191");
+            props.setProperty("ipport", "1099");
             //Save properties to project root folder
             props.store(output, null);
         } catch (Exception e) {

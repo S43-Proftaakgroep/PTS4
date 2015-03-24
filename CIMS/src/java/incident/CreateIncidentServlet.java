@@ -7,6 +7,7 @@ package incident;
 
 import authentication.UserBean;
 import cims.DatabaseManager;
+import cims.Property;
 import java.io.*;
 import java.net.*;
 import javax.servlet.ServletException;
@@ -46,7 +47,8 @@ public class CreateIncidentServlet extends HttpServlet {
                 e.printStackTrace();
             }
             try {
-                Socket socket = new Socket("127.0.0.1", 1099);
+                int port = Integer.parseInt(Property.IPPORT.getProperty());
+                Socket socket = new Socket(Property.IPADRESS.getProperty(), port);
                 OutputStream outSocket = socket.getOutputStream();
                 ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
                 outWriter.writeObject(infoString);
