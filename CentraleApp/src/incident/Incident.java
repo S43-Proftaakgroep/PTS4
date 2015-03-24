@@ -12,17 +12,22 @@ import java.util.List;
  *
  * @author Sasa2905
  */
-public class Incident implements Serializable{
+public class Incident implements Serializable {
+
     private String location;
+    private String longitude;
+    private String latitude;
     private String date;
     private String submitter;
     private String typeOfIncident;
     private String situationDescription;
     private IncidentInfo detailInfo;
     private boolean approved;
-    
-    public Incident(String location, String submitter, String typeOfIncident, String situationDescription, String date) {
+
+    public Incident(String location, String longitude, String latitude, String submitter, String typeOfIncident, String situationDescription, String date) {
         this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.date = date;
         this.submitter = submitter;
         this.typeOfIncident = typeOfIncident;
@@ -30,50 +35,53 @@ public class Incident implements Serializable{
         this.approved = false;
         this.situationDescription = situationDescription;
     }
-    
+
     public void approve() {
         approved = true;
     }
-    
+
     public boolean requestReinforcement(List<RescuerType> reinforcement, String extraBriefing) {
-        if(reinforcement.isEmpty()) {
+        if (reinforcement.isEmpty()) {
             return false;
         }
-        ReinforcementRequest request = new ReinforcementRequest(extraBriefing,this);
+        ReinforcementRequest request = new ReinforcementRequest(extraBriefing, this);
         return request.mapReinforcements(reinforcement);
     }
-    
+
     @Override
-    public String toString()
-    {
-        return this.typeOfIncident + " (" + location +")";
+    public String toString() {
+        return this.typeOfIncident + " (" + location + ")";
     }
-    
+
     public boolean isApproved() {
         return this.approved;
     }
-    
+
     public String getType() {
         return this.typeOfIncident;
     }
-    
-    public String getDate()
-    {
+
+    public String getDate() {
         return this.date;
     }
-    
-    public String getLocation()
-    {
+
+    public String getLocation() {
         return this.location;
     }
-    
-    public String getDescription()
-    {
+
+    public String getLongitude() {
+        return this.longitude;
+    }
+
+    public String getLatitude() {
+        return this.latitude;
+    }
+
+    public String getDescription() {
         return this.situationDescription;
     }
-    
-    public String getSubmitter()
-    {
+
+    public String getSubmitter() {
         return this.submitter;
     }
 }

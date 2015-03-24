@@ -8,8 +8,6 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -17,9 +15,10 @@ import java.util.logging.Logger;
  */
 public class ConnectionSearcher implements Runnable {
 
+    boolean listening = true;
+    
     @Override
     public void run() {
-        boolean listening = true;
         try {
             ServerSocket socket = new ServerSocket(1099);
             while(listening)
@@ -30,8 +29,12 @@ public class ConnectionSearcher implements Runnable {
                 newThread.start();
             }
         } catch (IOException ex) {
-            Logger.getLogger(ConnectionSearcher.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
+    }
+    
+    public void stop(){
+        listening = false;
     }
 
 }

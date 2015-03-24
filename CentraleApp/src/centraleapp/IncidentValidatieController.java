@@ -8,31 +8,22 @@ package centraleapp;
 import database.DatabaseManager;
 import incident.Incident;
 import incident.IncidentContainer;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import javafx.collections.*;
+import javafx.event.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  *
@@ -56,19 +47,16 @@ public class IncidentValidatieController implements Initializable, Observer {
     Label lblDescription;
 
     @FXML
-    ListView lvIncidents;
+    ListView lvApproveIncidents;
+
+    @FXML
+    TableView tableIncidents;
 
     @FXML
     ListView listViewNewUsers;
 
     @FXML
     Tab tabGebruiker;
-
-    @FXML
-    TableView table;
-
-    @FXML
-    TableColumn columName;
 
     IncidentContainer instance = IncidentContainer.getInstance();
     ObservableList<Incident> OLincidents = FXCollections.observableArrayList();
@@ -120,13 +108,13 @@ public class IncidentValidatieController implements Initializable, Observer {
 //        instance.addIncident("'s-Hertogenbosch", "Aanslag", "Explosion", "Er was een dikke explosie", "Today");
 //        instance.addIncident("Breda", "Henk", "Is Breda (niks aan te doen)", "wauw", "Today");
 
-        lvIncidents.setItems(OLincidents);
+        lvApproveIncidents.setItems(OLincidents);
         updateUsers();
-        lvIncidents.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        lvApproveIncidents.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
-                if (lvIncidents.getItems().size() > 0) {
+                if (lvApproveIncidents.getItems().size() > 0) {
                     showInfoSelectedIncident();
                 }
             }
@@ -141,7 +129,7 @@ public class IncidentValidatieController implements Initializable, Observer {
             }
         });
         ObservableList<Incident> incidents = FXCollections.observableArrayList(DatabaseManager.getIncidents(1));
-        table.setEditable(true);
+        tableIncidents.setEditable(false);
 
         TableColumn firstNameCol = new TableColumn("Naam");
         firstNameCol.setMinWidth(100);
@@ -158,8 +146,8 @@ public class IncidentValidatieController implements Initializable, Observer {
         emailCol.setCellValueFactory(
                 new PropertyValueFactory<>("description"));
 
-        table.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
-        table.setItems(incidents);
+        tableIncidents.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+        tableIncidents.setItems(incidents);
 //        try {
 //            initMap();
 //        } catch (IOException ex) {
@@ -186,8 +174,29 @@ public class IncidentValidatieController implements Initializable, Observer {
         updateUsers();
     }
 
+    @FXML
+    public void btnDetailsIncident_Click(ActionEvent event) {
+        try {
+            Incident incidentCurrent = (Incident) tableIncidents.getSelectionModel().getSelectedItem();
+            
+            if (incidentCurrent != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("IncidentDetail.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle(incidentCurrent.toString());
+                stage.setScene(new Scene((Pane) loader.load()));
+                IncidentDetailController controller = loader.<IncidentDetailController>getController();
+                stage.show();
+                controller.init(incidentCurrent);
+            }
+        } catch (IOException ex) {
+            System.out.println("Error changing scene from IncidentValidatie to IncidentDetail " + ex.toString());
+        }
+
+    }
+
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg
+    ) {
         int sizeOldList = OLincidents.size();
         OLincidents.clear();
         OLincidents.addAll((List<Incident>) arg);
@@ -198,8 +207,8 @@ public class IncidentValidatieController implements Initializable, Observer {
     }
 
     public void selectFirstFromListView() {
-        if (lvIncidents.getItems().size() > 0) {
-            lvIncidents.getSelectionModel().select(0);
+        if (lvApproveIncidents.getItems().size() > 0) {
+            lvApproveIncidents.getSelectionModel().select(0);
             showInfoSelectedIncident();
         } else {
             showNoInfo();
@@ -207,7 +216,7 @@ public class IncidentValidatieController implements Initializable, Observer {
     }
 
     public void showInfoSelectedIncident() {
-        String incidentName = lvIncidents.getSelectionModel().getSelectedItem().toString();
+        String incidentName = lvApproveIncidents.getSelectionModel().getSelectedItem().toString();
 
         Incident incidentCurrent = instance.getIncidentByName(incidentName);
         if (incidentCurrent != null) {
@@ -239,4 +248,5 @@ public class IncidentValidatieController implements Initializable, Observer {
         list.addAll(users);
         listViewNewUsers.setItems(list);
     }
+
 }

@@ -13,8 +13,16 @@ import incident.IncidentContainer;
  */
 public class CentralServer {
 
-    public void initServer() {
-        Thread thread = new Thread(new ConnectionSearcher());
+    private Thread thread;
+    private ConnectionSearcher connectionSearcher;
+    
+    public void init() {
+        connectionSearcher = new ConnectionSearcher();
+        thread = new Thread(connectionSearcher);
         thread.start();
+    }
+    
+    public void stop(){
+        connectionSearcher.stop();
     }
 }
