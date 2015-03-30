@@ -66,7 +66,8 @@
                 <% }
                 %>
                 <p><%
-                    WeatherFeed wf = new WeatherFeed(this.currentIncident.getLocation(), WeatherFeed.Query.TEMPERATURE);
+		    String location = this.currentIncident.getLocation().replace(", Nederland", "");
+                    WeatherFeed wf = new WeatherFeed(location, WeatherFeed.Query.TEMPERATURE);
                     out.println("Weer: " + wf.getData() + " en ");
                     wf.setQuery(WeatherFeed.Query.DESCRIPTION);
                     out.println(wf.getData());%></p>
