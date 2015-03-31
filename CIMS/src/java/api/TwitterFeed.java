@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.logging.*;
 import javax.net.ssl.*;
 import org.scribe.services.*;
+import org.apache.commons.lang3.*;
 
 /**
  * Class for aggregating Twitter data.
@@ -19,6 +20,7 @@ public class TwitterFeed {
 	
 	private static final String ACCESS_TOKEN = "sDRtOlkEE8L1SvjGdVMaj9s1Y";
 	private static final String SECRET_ACCESS_TOKEN = "OZgde6l5P0teMYkNoyQ4LvxCnuE0d3HIsZGhXnNVRth4RxH5bd";
+	private static final String BASE_URL = "https://api.twitter.com/";
 	
 	/**
 	 * The URL for requesting data about the amount of requests left for the current timeframe.
@@ -76,24 +78,55 @@ public class TwitterFeed {
 		String text_tag = "\"text\":\""; // Marks the beginning of the tweet in the JSON feed.
 		String query = "?q=" + keyword; // Builds the search query.
 		query += "&result_type=recent";
-		query += "&count=" + count;
-		
-		// Escape single quotes properly.
+		query += "&count=" + 25; // Twitter only counts the amount of requests, not the amount of data requested.
+				
 		String data = request(SEARCH + query);
-		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_
+		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_   
 		
-		// Start looping through the data, adding all found tweets to the list.
+		// Sanitize output.
 		int start = 1; 
 		int end = 1;
 		while ( start > 0 && end > 0) {
 			start = data.indexOf(text_tag, end);
 			end = data.indexOf("\",", start);
 			String tweet = data.substring(start + text_tag.length(), end);
+			tweet = tweet.replaceAll("/\n/gi", "<br>"); // Replace _'_ with _\'_
+			tweet = tweet.replace("\\/", "/"); // Replace _\/_ with _/_
+			tweet = unescape(tweet);
+			tweet = StringEscapeUtils.unescapeJava(tweet);
+			//tweet = StringEscapeUtils.ESCAPE_JAVA.translate(tweet);
 			tweets.add(tweet);
 		}
+		tweets.remove(tweets.size() -1); // Remove junk data.
 		return tweets;
 	}
-		
+	
+	/**
+	 * Replaces double slash in javacode with single slashes.
+	 * @param s
+	 * @return 
+	 */
+	String unescape(String s) {
+		int i = 0, len = s.length();
+		char c;
+		StringBuffer sb = new StringBuffer(len);
+		while (i < len) {
+			c = s.charAt(i++);
+			if (c == '\\') {
+				if (i < len) {
+					c = s.charAt(i++);
+					if (c == 'u') {
+						// TODO: check that 4 more chars exist and are all hex digits
+						c = (char) Integer.parseInt(s.substring(i, i + 4), 16);
+						i += 4;
+					} // add other cases here as desired...
+				}
+			} // fall through: \ escapes itself, quotes any character but u
+			sb.append(c);
+		}
+		return sb.toString();
+	}
+	
 	/**
 	 * Returns tweets based on their GPS coordinates. Currently being debugged (23-03)
 	 * @param latitude
@@ -127,21 +160,23 @@ public class TwitterFeed {
 	 * Search tweets by hashtag.
 	 * @param tags an hashtag without the '#' sign.
 	 */
-	public String getByTag(String tag){
-		String query = SEARCH + "%23" + tag + "%20";		
-		return request(query);
+	public ArrayList<String> getByTag(String tag){
+		String query = /*SEARCH + */"%23" + tag /*+ "%20"*/;		
+		//return request(query);
+		return getTweets(query, 25);
 	}
 	
 	/**
 	 * Search tweets by hashtags.
 	 * @param tags an array of hashtags without the '#' sign.
 	 */
-	public String getByTags(String[] tags){
-		String query = SEARCH;
+	public ArrayList<String> getByTags(String[] tags){
+		String query = ""; //= SEARCH;
 		for (String tag : tags) {
 			query += "%23" + tag + "%20";
 		}
-		return request(query);
+		//return request(query);
+		return getTweets(query, 25);
 	}
 	
 	/**
@@ -192,15 +227,16 @@ public class TwitterFeed {
 			
 			// Request data.						
 			URL url = new URL(query);
-	        connection = (HttpsURLConnection) url.openConnection();          
-	        connection.setDoOutput(true);
-	        connection.setDoInput(true);
-	        connection.setRequestMethod("GET");
-	        connection.setRequestProperty("Host", "api.twitter.com");
-	        connection.setRequestProperty("User-Agent", "CIMS");
-	        connection.setRequestProperty("Authorization", "Bearer " + token);
-	        connection.setUseCaches(false);
-	        System.out.println("Connection: " + connection.toString()); // If you feel like checking: http://codebeautify.org/jsonvalidate
+			connection = (HttpsURLConnection) url.openConnection();          
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Host", "api.twitter.com");
+			connection.setRequestProperty("User-Agent", "CIMS");
+		        connection.setRequestProperty("Authorization", "Bearer " + token);
+			connection.setUseCaches(false);
+		        System.out.println("Connection: " + connection.toString()); 
+			// If you feel like checking: http://codebeautify.org/jsonvalidate
 			String out = readResponse(connection);
 			return out;   
 		} catch (IOException ex) {
