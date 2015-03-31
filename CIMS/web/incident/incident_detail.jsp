@@ -4,6 +4,8 @@
     Author     : Eric
 --%>
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="api.TwitterFeed"%>
 <%@page import="api.WeatherFeed"%>
 <%@page import="java.util.List"%>
 <%@page import="incident.Incident"%>
@@ -71,6 +73,18 @@
                     out.println("Weer: " + wf.getData() + " en ");
                     wf.setQuery(WeatherFeed.Query.DESCRIPTION);
                     out.println(wf.getData());%></p>
+		<div style="height:400px;overflow:scroll;">
+		    <h3>Laatste updates over dit incident op Twitter:</h3>		    
+		    <ul>
+			<%
+			    // Veel kun je niet meer aan de query toevoegen; de tweets moeten wel bestaan en recent zijn.
+			    ArrayList<String> tweets = new TwitterFeed().getTweets(location /*+ "incident"*/, 25);
+			    for(String tweet : tweets){
+				    out.println("<li><a href='http://twitter.com/search?q=" + tweet + "'>" + tweet + "</a></li>" + "<br>");
+			    }
+			%>
+		    </ul>
+		</div>
             </div>
 
             <footer>
