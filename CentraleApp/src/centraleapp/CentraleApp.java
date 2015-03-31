@@ -24,10 +24,15 @@ public class CentraleApp extends Application {
     public void start(Stage stage) throws Exception
     {
         Parent root = FXMLLoader.load(getClass().getResource("IncidentValidatie.fxml"));
+        Parent root2 = FXMLLoader.load(getClass().getResource("CallFXML.fxml"));
         
         Scene scene = new Scene(root);
+        Scene scene2 = new Scene(root2);
         CentralServer server = new CentralServer();
         server.init();
+        Stage s =  new Stage();
+        s.setScene(scene2);
+        s.show();
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
