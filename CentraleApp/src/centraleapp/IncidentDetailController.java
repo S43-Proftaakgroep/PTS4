@@ -12,8 +12,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,10 +20,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.*;
@@ -37,39 +32,24 @@ import javafx.scene.web.*;
  */
 public class IncidentDetailController implements Initializable {
 
-    @FXML
-    Label lblIncidentName;
-
-    @FXML
-    Label lblIncidentDescription;
-
-    @FXML
-    Label lblIncidentWeather;
-
-    @FXML
-    ProgressIndicator piAdvice;
-
-    @FXML
-    ProgressIndicator piWeather;
-
-    @FXML
-    ProgressIndicator piSocialMedia;
-
-    @FXML
-    VBox vbox;
-
-    @FXML
-    GridPane grid;
-
-    @FXML
-    ListView<String> lvAdvices;
-
-    @FXML
-    ListView<String> lvSocialMedia;
-
-    @FXML
-    WebView webView;
+    //Tab Incident
+    @FXML Label lblIncidentName;
+    @FXML Label lblIncidentDescription;
+    @FXML Label lblIncidentWeather;
+    @FXML ProgressIndicator piAdvice;
+    @FXML ProgressIndicator piWeather;
+    @FXML ProgressIndicator piSocialMedia;
+    @FXML VBox vbox;
+    @FXML GridPane grid;
+    @FXML ListView<String> lvAdvices;
+    @FXML ListView<String> lvSocialMedia;
+    @FXML WebView webView;
     private WebEngine webEngine;
+    
+    //Tab Advices
+    @FXML Button btnAddAdvice;
+    @FXML ListView lvAdvicepage;
+    @FXML TextArea taAdvicetext;
 
     private Incident incident;
     private ObservableList<String> advices;
