@@ -89,6 +89,8 @@ public class IncidentDetailController implements Initializable {
 
     public void init(Incident incident) {
         this.incident = incident;
+        
+        //TAB 1 - Incident
         lblIncidentName.setText(incident.getType());
         lblIncidentDescription.setText(incident.getDescription());
         lvAdvices.setItems(advices);
@@ -162,10 +164,11 @@ public class IncidentDetailController implements Initializable {
         adviceThread.start();
         Thread weatherThread = new Thread(weatherTask);
         weatherThread.start();
-
         webEngine.loadContent(GoogleMaps.getURL(incident.getLatitude(), incident.getLongitude()));
-
         lblIncidentWeather.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        
+        //TAB 2 - Advice
+        //TODO
     }
 
     private String getWeatherInfo(String location) {
