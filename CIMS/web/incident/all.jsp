@@ -19,6 +19,7 @@
 <%@page import="incident.Incident" %>
 <%@page import="websockets.Coordinates" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix = "c" uri= "http://java.sun.com/jsp/jstl/core" %>
 <%!
     public Incident closestIncident;
     public int closestIncidentId;
@@ -38,6 +39,8 @@
             <h1>Dichtsbijzijnde incident</h1>
             <p>Dit is het dichtsbijzijnde incident. Andere incidenten staan hieronder.</p>
             <div id="output"></div>            
+            <input type="submit" id="socketString">
+            <div id ="newIncidents"></div>
             <%
                 List<Incident> incidentList = DatabaseManager.getIncidents();
                 Coordinates coord = (Coordinates) session.getAttribute("geolocation");
@@ -45,8 +48,6 @@
                     this.closestIncident = coord.getClosestIncident(incidentList);
                     this.closestIncidentId = closestIncident.getId();
                 }
-                Thread thread = new Thread(new SocketRunnable(out));
-                thread.start();
                 
             %>
             <h1>
@@ -90,5 +91,11 @@
         </div> <!-- /container -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="/CIMS/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            $("#socketString").click(function() {
+               $("#newIncidents").html("<p>"+"${incident}"+"</p>");
+            });
+        </script>
+
     </body>
 </html>

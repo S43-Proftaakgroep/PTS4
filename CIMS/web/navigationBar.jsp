@@ -149,7 +149,7 @@
                     {
                         out.write("class=\"active\"");
                     }%>
-                    ><a href="/CIMS/incident/all.jsp">Incidenten</a></li>
+                    ><a href="/CIMS/ViewIncidentsServlet">Incidenten</a></li>
                 <li <% if (request.getServletPath().equals("/about.jsp"))
                     {
                         out.write("class=\"active\"");

@@ -21,9 +21,9 @@ import org.apache.jasper.runtime.JspWriterImpl;
  */
 public class SocketRunnable implements Runnable {
 
-    Object object;
-    public SocketRunnable(Object object) {
-        this.object = object;
+    String socketString;
+    public SocketRunnable() {
+        socketString = "geen nieuwe incidenten";
     }
     @Override
     public void run() {
@@ -32,11 +32,13 @@ public class SocketRunnable implements Runnable {
             int port = Integer.valueOf(Property.IPPORT.getProperty());
             Socket socket = new Socket(ipadress, port);
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-            String socketString = (String) input.readObject();
-            JspWriter writer = (JspWriter)object;
-            writer.write(socketString);
+            socketString = (String) input.readObject();
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public String getString() {
+        return socketString;
     }
 }
