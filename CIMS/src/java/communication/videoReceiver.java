@@ -5,9 +5,13 @@
  */
 package communication;
 
+import java.io.*;
+import java.net.*;
 import java.nio.ByteBuffer;
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 
 /**
@@ -19,13 +23,13 @@ public class videoReceiver {
 
     @OnMessage
     public void processVideo(byte[] imageData, Session session) {
-        System.out.println("INsite process Video");
+        System.out.println("Message received.");
         try {
-            // Wrap a byte array into a buffer
-            ByteBuffer buf = ByteBuffer.wrap(imageData);
-            
-        } catch (Throwable ioe) {
-            System.out.println("Error sending message " + ioe.getMessage());
+            Socket socket = new Socket(InetAddress.getByName("145.144.250.43"), 1100);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            out.write(imageData);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 }
