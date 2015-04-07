@@ -30,17 +30,17 @@ public class CentraleApp extends Application {
         Scene scene2 = new Scene(root2);
         CentralServer server = new CentralServer();
         server.init();
-        Stage s =  new Stage();
-        s.setScene(scene2);
-        s.show();
         stage.setScene(scene);
-        stage.show();
+        stage.show();        
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
           public void handle(WindowEvent we) {
               server.stop();
               System.exit(1);
           }
       }); 
+        Stage s =  new Stage();
+        s.setScene(scene2);
+        s.show();
     }
 
     /**
