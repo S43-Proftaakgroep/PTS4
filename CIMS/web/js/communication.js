@@ -8,7 +8,8 @@
     window.addEventListener('DOMContentLoaded', function () {
         var isStreaming = false,
                 v = document.getElementById('v'),
-                c = document.getElementById('c');
+                c = document.getElementById('c'),
+                r = document.getElementById('r');
         con = c.getContext('2d');
         w = 600, h = 420;
 
@@ -67,10 +68,10 @@
                     return;
                 con.fillRect(0, 0, w, h);
                 con.drawImage(v, 0, 0, w, h);
-                var data = c.toDataURL('image/jpeg', 1.0);
+                var data = c.toDataURL('image/png');
                 newblob = convertToBinary(data);
                 ws.send(newblob);
-            }, 33);
+            }, 30);
         }, false);
 
     });
@@ -92,6 +93,6 @@ function convertToBinary(dataURI) {
     }
 
     // write the ArrayBuffer to a blob, and you're done
-    var bb = new Blob([ab]);
+    var bb = new Blob([ab], {type: mimeString});
     return bb;
 }

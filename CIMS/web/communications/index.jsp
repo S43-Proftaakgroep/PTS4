@@ -20,7 +20,7 @@
             <h1>Audio!</h1>
             <video hidden="true" id="v"></video>	
             <canvas id="c"></canvas>
-            <canvas id="receiver"></canvas>
+            <canvas id="r"></canvas>
             <footer>
                 <p>&copy; <b>CIMS</b> 2015</p>
             </footer>
