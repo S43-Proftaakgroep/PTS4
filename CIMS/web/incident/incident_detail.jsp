@@ -78,8 +78,10 @@
 		    <ul>
 			<%
 			    // Veel kun je niet meer aan de query toevoegen; de tweets moeten wel bestaan en recent zijn.
-			    ArrayList<String> tweets = new TwitterFeed().getTweets(location /*+ "incident"*/, 25);
-			    for(String tweet : tweets){
+			    double latitude = this.currentIncident.getLatitude();
+			    double longitude = this.currentIncident.getLongitude();
+			    ArrayList<String> tweets = new TwitterFeed().getByLocation(latitude, longitude, 5, "", 25);
+			    for (String tweet : tweets) {
 				    out.println("<li><a href='http://twitter.com/search?q=" + tweet + "'>" + tweet + "</a></li>" + "<br>");
 			    }
 			%>
