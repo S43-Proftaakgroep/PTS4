@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ViewIncidentsServlet", urlPatterns = {"/ViewIncidentsServlet"})
 public class ViewIncidentsServlet extends HttpServlet {
 
+    SocketRunnable runnable;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -58,11 +59,11 @@ public class ViewIncidentsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        SocketRunnable runnable = new SocketRunnable();
+        runnable = new SocketRunnable();
         Thread thread = new Thread(runnable);
         thread.start();
         String returnString = runnable.getString();
-        request.setAttribute("incident", returnString);
+        request.setAttribute("incident", runnable);
         request.getRequestDispatcher("incident/all.jsp").forward(request, response);
     }
 
@@ -77,7 +78,7 @@ public class ViewIncidentsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.getWriter().write(runnable.getString());
     }
 
     /**

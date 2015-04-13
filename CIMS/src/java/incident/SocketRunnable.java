@@ -33,6 +33,7 @@ public class SocketRunnable implements Runnable {
             Socket socket = new Socket(ipadress, port);
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             socketString = (String) input.readObject();
+            System.out.println(socketString);
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }

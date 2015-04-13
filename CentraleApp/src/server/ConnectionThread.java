@@ -64,7 +64,7 @@ public class ConnectionThread implements Runnable, Observer {
     public void update(Observable o, Object arg) {
         try {
             out = new ObjectOutputStream(insocket.getOutputStream());
-            out.writeObject("nieuw");
+            out.writeObject("Niewe incidenten zijn toegevoegd, ververs de pagina voor meer informatie.");
         } catch (IOException ex) {
             Logger.getLogger(ConnectionThread.class.getName()).log(Level.SEVERE, null, ex);
         }
