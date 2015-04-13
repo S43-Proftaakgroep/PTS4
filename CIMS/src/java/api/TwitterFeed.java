@@ -67,11 +67,12 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 		//return tweets; // TODO check API docs for search returns
 		
 		// TODO: loop this.
-		JSONObject json = (JSONObject) request(SEARCH + query);
-		JSONArray a = (JSONArray) json.get("statuses");
-		json = (JSONObject) a.get(1);
-		json.get("text");
-		tweets.add((String)json.get("text"));
+		JSONObject json = (JSONObject) request(SEARCH + query);		
+		JSONArray list = (JSONArray) json.get("statuses"); //iz accualy lis, arry pls
+		for (int i = 0; i < list.size(); i++) {
+			json = (JSONObject) list.get(i);
+			tweets.add((String)json.get("text"));
+		}
 		return tweets;
 		/*
 		ArrayList<String> tweets = new ArrayList<>();
@@ -363,7 +364,7 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 	public static void main(String[] args) throws Exception {
 		TwitterFeed t = new TwitterFeed();
 		
-		// TODO: make this a unit test.
+		// TODO: make this a unit test.		
 		JSONArray out = (JSONArray) t.request("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2");
 		for (int i = 0; i < out.size(); i++) {
 			if (!(out.get(i) instanceof JSONArray)) {
@@ -371,7 +372,8 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 				System.out.println(obj.get("text"));
 			}
 			System.out.println("");
-		}		
+		}
+		
 		
 		// TwitterFeed.getStatus():
 		System.out.println(t.getStatus());
@@ -383,7 +385,7 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 		System.out.println(t.getByTags(new String[]{"fontysict", "fontys"}));
 		
 		// TwitterFeed.getTweets():
-		ArrayList<String> tweets = t.getTweets("incident", 5);
+		ArrayList<String> tweets = t.getTweets("incident", 50);
 		for (String tweet : tweets) {System.out.println(tweet);}
 		
 		// TwitterFeed.getByLocation():
