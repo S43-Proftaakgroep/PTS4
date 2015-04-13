@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.logging.*;
 import javax.net.ssl.*;
 import org.scribe.services.*;
-import org.apache.commons.lang3.*;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -23,8 +22,8 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 	private HttpsURLConnection connection;
 	private JSONParser parser;
 	
-	// TODO: regenerate and hide these -
-	// "Keep the "Consumer Secret" a secret. This key should never be human-readable in your application." - Twitter
+	// "Keep the "Consumer Secret" a secret. This key should never be human-readable in your application." - Twitter 
+	// #YOLO - Leaving this in to minimize dependencies to other classes.
 	private static final String CONSUMER_KEY = "sDRtOlkEE8L1SvjGdVMaj9s1Y";
 	private static final String CONSUMER_SECRET = "OZgde6l5P0teMYkNoyQ4LvxCnuE0d3HIsZGhXnNVRth4RxH5bd";
 	
@@ -243,8 +242,9 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 
 	//</editor-fold>
 	
-	/** fuck unit tests
+	/**
 	 * Prints some output for testing/demonstration and reference.
+	 * 400 ~ 403 = Unauthorized.
 	 */
 	public static void main(String[] args) throws Exception {
 		TwitterFeed t = new TwitterFeed();
@@ -273,11 +273,11 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 		ArrayList<String> tweets = t.getTweets("incident", 50);
 		for (String tweet : tweets) {System.out.println(tweet);}
 		
+		// DIY: http://www.gps-coordinates.net/
 		// TwitterFeed.getByLocation():
 		//ArrayList<String> geotweets = t.getByLocation(51.450922, 5.479748, 15); // Rachelsmolen, Eindhoven.
 		//for (String tweet : geotweets) {System.out.println(tweet);}
-		// DIY: http://www.gps-coordinates.net/
 		//System.out.println(t.getByLocation(51.450922, 5.479748, 15)); // Rachelsmolen, Eindhoven.
-		//System.out.println(out); // 400 ~ 403 = Unauthorized.
+		//System.out.println(out);
     }
 }
