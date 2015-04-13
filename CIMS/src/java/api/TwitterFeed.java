@@ -1,5 +1,6 @@
 package api;
 
+import static api.Connection.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -7,153 +8,156 @@ import java.util.logging.*;
 import javax.net.ssl.*;
 import org.scribe.services.*;
 import org.apache.commons.lang3.*;
+import org.json.simple.*;
+import org.json.simple.parser.*;
 
 /**
- * Class for aggregating Twitter data.
+ * Class for aggregating Twitter data. 
+ * OAuth and HTTPS is built-in.
  * Uses Twitter's Search API using App authentication.
  * @author Etienne
  */
-public class TwitterFeed {
+public class TwitterFeed {// If you feel like checking: http://codebeautify.org/jsonvalidate
 	
-	private URL url;
+	private URL url;	
 	private HttpsURLConnection connection;
+	private JSONParser parser;
 	
-	private static final String ACCESS_TOKEN = "sDRtOlkEE8L1SvjGdVMaj9s1Y";
-	private static final String SECRET_ACCESS_TOKEN = "OZgde6l5P0teMYkNoyQ4LvxCnuE0d3HIsZGhXnNVRth4RxH5bd";
-	private static final String BASE_URL = "https://api.twitter.com/";
+	// TODO: regenerate and hide these -
+	// "Keep the "Consumer Secret" a secret. This key should never be human-readable in your application." - Twitter
+	private static final String CONSUMER_KEY = "sDRtOlkEE8L1SvjGdVMaj9s1Y";
+	private static final String CONSUMER_SECRET = "OZgde6l5P0teMYkNoyQ4LvxCnuE0d3HIsZGhXnNVRth4RxH5bd";
 	
-	/**
-	 * The URL for requesting data about the amount of requests left for the current timeframe.
-	 */
+	private static final String API_URL = "https://api.twitter.com/";
+	
+	/** The URL for requesting data about the amount of requests left for the current timeframe. */
 	private static final String RATE_LIMIT_STATUS = "https://api.twitter.com/1.1/application/rate_limit_status.json";
 	
-	/**
-	 * The URL for requesting data about a specific search.
-	 * Basic URL for query without any parameters.
-	 */
+	/** The base URL for requesting data. */
 	private static final String SEARCH = "https://api.twitter.com/1.1/search/tweets.json";
 	
 	/**
-	 * A custom feed for Twitter API v1.1.
+	 * Creates a new TwitterFeed instance.
 	 */
 	public TwitterFeed() {
+		parser = new JSONParser();
 		try {
-			this.url = new URL("https://api.twitter.com/");
+			this.url = new URL(API_URL);
 		} catch (MalformedURLException ex) {
 			Logger.getLogger(TwitterFeed.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
+
+	//<editor-fold defaultstate="collapsed" desc="Actual API shit.">
 	
 	/**
-	 * Connects to the stream.
-	 */
-	private HttpsURLConnection connect(){
-		try {
-			connection = (HttpsURLConnection)url.openConnection();
-			return connection;
-		} catch (IOException ex) {
-			Logger.getLogger(TwitterFeed.class.getName()).log(Level.SEVERE, null, ex);
-			return null;
-		}
-	}
-	
-	/**
-	 * Reconnects to the stream.
-	 */
-	private void reconnect(){
-		if (connection != null) {
-			connection.disconnect();
-		}
-		connect();
-	}
-	
-	/**
-	 *
-	 * @param keyword
-	 * @param count the amount of tweets to return.
+	 * Find a given number of most recent tweets containing the given keyword.
+	 * @param keyword a word to search for. For hashtags, see getByHashtag().
+	 * @param count the amount of tweets to return. Twitter counts the amount of requests, not the amount of data requested. Use sensibly.
 	 * @return a list of tweets found by most recent date.
 	 */
 	public ArrayList<String> getTweets(String keyword, int count){
+		ArrayList<String> tweets = new ArrayList<>();
+		String query = "?q=" + keyword; // Builds the search query.
+		query += "&result_type=recent";
+		query += "&count=" + count; // 
+		//JSONObject json = (JSONObject) request(SEARCH + query);
+		//tweets.add(json.toJSONString());
+		//tweets.add("\n");
+		//return tweets; // TODO check API docs for search returns
+		
+		// TODO: loop this.
+		JSONObject json = (JSONObject) request(SEARCH + query);
+		JSONArray a = (JSONArray) json.get("statuses");
+		json = (JSONObject) a.get(1);
+		json.get("text");
+		tweets.add((String)json.get("text"));
+		return tweets;
+		/*
 		ArrayList<String> tweets = new ArrayList<>();
 		String text_tag = "\"text\":\""; // Marks the beginning of the tweet in the JSON feed.
 		String query = "?q=" + keyword; // Builds the search query.
 		query += "&result_type=recent";
 		query += "&count=" + 25; // Twitter only counts the amount of requests, not the amount of data requested.
-				
+
 		String data = request(SEARCH + query);
-		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_   
+		if (data.isEmpty()) {
+			System.out.println("TWITTER // DATA // Data is empty!");
+			return tweets;
+		}
 		
+		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_   
+
 		// Sanitize output.
-		int start = 1; 
+		int start = 1;
 		int end = 1;
-		while ( start > 0 && end > 0) {
+		while (start > 0 && end > 0) {
 			start = data.indexOf(text_tag, end);
 			end = data.indexOf("\",", start);
-			String tweet = data.substring(start + text_tag.length(), end);
-			tweet = tweet.replaceAll("/\n/gi", "<br>"); // Replace _'_ with _\'_
-			tweet = tweet.replace("\\/", "/"); // Replace _\/_ with _/_
-			tweet = unescape(tweet);
-			tweet = StringEscapeUtils.unescapeJava(tweet);
-			//tweet = StringEscapeUtils.ESCAPE_JAVA.translate(tweet);
-			tweets.add(tweet);
+			System.out.println("TWITTER // DATA // " + data);
+			if(!data.isEmpty()){
+				String tweet = data.substring(start + text_tag.length(), end);
+				tweet = tweet.replaceAll("/\n/gi", ""); // Replace _'_ with _\'_
+				tweet = tweet.replace("\\/", "/"); // Replace _\/_ with _/_
+				tweet = unescape(tweet);
+				tweet = StringEscapeUtils.unescapeJava(tweet);
+				tweets.add(tweet);
+			}
+			else
+				tweets.add("Empty string.");
 		}
-		tweets.remove(tweets.size() -1); // Remove junk data.
+		tweets.remove(tweets.size() - 1); // Remove junk data.		
 		return tweets;
+		*/
 	}
-	
+
 	/**
-	 * Replaces double slash in javacode with single slashes.
-	 * @param s
-	 * @return 
-	 */
-	String unescape(String s) {
-		int i = 0, len = s.length();
-		char c;
-		StringBuffer sb = new StringBuffer(len);
-		while (i < len) {
-			c = s.charAt(i++);
-			if (c == '\\') {
-				if (i < len) {
-					c = s.charAt(i++);
-					if (c == 'u') {
-						// TODO: check that 4 more chars exist and are all hex digits
-						c = (char) Integer.parseInt(s.substring(i, i + 4), 16);
-						i += 4;
-					} // add other cases here as desired...
-				}
-			} // fall through: \ escapes itself, quotes any character but u
-			sb.append(c);
-		}
-		return sb.toString();
-	}
-	
-	/**
-	 * Returns tweets based on their GPS coordinates. Currently being debugged (23-03)
+	 * Returns tweets based on their GPS coordinates. TODO Currently being debugged (23-03)
 	 * @param latitude
 	 * @param longitude
 	 * @param radius range from the coordinates in kilometres.
 	 * @return
 	 */	
-	public String getByLocation(double latitude, double longitude, int radius){
-		String query = "&geocode=" + latitude + "," + longitude + "," + radius + "km";
-		return request(SEARCH + query);/*
+	public ArrayList<String> getByLocation(double latitude, double longitude, int radius, String keyword, int count){
+		String geolocating = "&geocode=" + latitude + "," + longitude + "," + radius + "km";
+		
 		ArrayList<String> tweets = new ArrayList<>();
 		String text_tag = "\"text\":\""; // Marks the beginning of the tweet in the JSON feed.
-		
-		// Escape single quotes properly.
+		String query = "?q=" + keyword; // Builds the search query.
+		query += "&result_type=recent";
+		query += "&count=" + 25; // Twitter only counts the amount of requests, not the amount of data requested.
+		query += geolocating;
+		return tweets;//////
+		/*
 		String data = request(SEARCH + query);
-		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_
+		if (data.isEmpty()) {
+			System.out.println("TWITTER // DATA // Data is empty! :(");
+			return tweets;
+		}
 		
-		// Start looping through the data, adding all found tweets to the list.
-		int start = 1; 
+		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_   
+
+		// Sanitize output.
+		int start = 1;
 		int end = 1;
 		while (start > 0 && end > 0) {
-			start = data.indexOf(text_tag, end) + text_tag.length();
+			start = data.indexOf(text_tag, end);
 			end = data.indexOf("\",", start);
-			String tweet = data.substring(start, end);
-			tweets.add(tweet);
+			System.out.println("TWITTER // DATA // " + data);
+			if(!data.isEmpty()){
+				String tweet = data.substring(start + text_tag.length(), end);
+				tweet = tweet.replaceAll("/\n/gi", "<br>"); // Replace _'_ with _\'_
+				tweet = tweet.replace("\\/", "/"); // Replace _\/_ with _/_
+				tweet = unescape(tweet);
+				tweet = StringEscapeUtils.unescapeJava(tweet);
+				tweets.add(tweet);
+			}
+			else				
+				tweets.add("Empty string.");
 		}
-		return tweets;*/
+		tweets.remove(tweets.size() - 1); // Remove junk data.
+		return tweets;
+		*/
 	}
 
 	/**
@@ -180,15 +184,22 @@ public class TwitterFeed {
 	}
 	
 	/**
-	 * Returns the rate limit status of the feed.
-	 * @return a JSON feed with the data.
+	 * Gets the amount of requests still available for the current timeframe.
+	 * @return a formatted String with the rate limit status of the feed
+	 * in the format of [Available / Remaining].
 	 */
-	public String getStatus(){		
-		String query = RATE_LIMIT_STATUS;
-		String remaining_tag = "\"remaining\":";
-		String limit_tag = "\"limit\":";
-		String search_tag = "\"search\":";
-		
+	public String getStatus(){
+		String query = RATE_LIMIT_STATUS + "?resources=search";
+		JSONObject out = (JSONObject) request(query);
+		System.out.println(out.toString());
+		out = (JSONObject) out.get("resources");
+		out = (JSONObject) out.get("search");
+		System.out.println(out.toJSONString());
+		out = (JSONObject) out.get("/search/tweets");
+		long limit = (long) out.get("limit");
+		long remaining = (long) out.get("remaining");
+		return "API usage status: " + limit + " / " + remaining + " remaining.";
+		/*
 		String data = request(query);
 		
 		int start = 1;
@@ -206,40 +217,65 @@ public class TwitterFeed {
 		String remaining = data.substring(start, end);
 		
 		return "Usage: " + remaining + " / " + limit + " requests.";
+		* */
 	}
 
+	//</editor-fold>	
+	
+	//<editor-fold defaultstate="collapsed" desc="Miscellanous.">
+	
+	/**
+	 * Replaces double slash in javacode with single slashes.
+	 * @param s
+	 * @return 
+	 */
+	String unescape(String s) {
+		int i = 0, len = s.length();
+		char c;
+		StringBuilder sb = new StringBuilder(len);
+		while (i < len) {
+			c = s.charAt(i++);
+			if (c == '\\') {
+				if (i < len) {
+					c = s.charAt(i++);
+					if (c == 'u') {
+						// TODO: check that 4 more chars exist and are all hex digits
+						c = (char) Integer.parseInt(s.substring(i, i + 4), 16);
+						i += 4;
+					} // add other cases here as desired...
+				}
+			} // fall through: \ escapes itself, quotes any character but u
+			sb.append(c);
+		}
+		return sb.toString();
+	}			
+		
 	/**
 	 * Requests data for a given query from the API.
-	 * @param query what to search for.
-	 * @return the JSON feed as a String.
+	 * @param query the full URL including the search parameters.
+	 * @return the full JSON feed. This can either be a JSONObject or JSONArray.
 	 */
-	public String request(String query){
+	@SuppressWarnings("LocalVariableHidesMemberVariable")
+	public Object request(String query){
 		try {
-			// Connect
-			URL url2 = new URL("https://api.twitter.com/oauth2/token");
-			HttpsURLConnection conn = (HttpsURLConnection) url2.openConnection();
 			// Authenticate.
+			URL oauth = new URL("https://api.twitter.com/oauth2/token");
+			HttpsURLConnection conn = (HttpsURLConnection) oauth.openConnection();			
 			String token = requestBearerToken("https://api.twitter.com/oauth2/token");
-			
 			writeRequest(conn, token);
 			
-			System.out.println(readResponse(conn));
-			
-			// Request data.						
+			// Request data.	
 			URL url = new URL(query);
 			connection = (HttpsURLConnection) url.openConnection();          
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
+			connection.setUseCaches(false);
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("Host", "api.twitter.com");
 			connection.setRequestProperty("User-Agent", "CIMS");
 		        connection.setRequestProperty("Authorization", "Bearer " + token);
-			connection.setUseCaches(false);
-		        System.out.println("Connection: " + connection.toString()); 
-			// If you feel like checking: http://codebeautify.org/jsonvalidate
-			String out = readResponse(connection);
-			return out;   
-		} catch (IOException ex) {
+			return parser.parse(readResponse(connection));
+		} catch (IOException | ParseException ex) {
 			Logger.getLogger(TwitterFeed.class.getName()).log(Level.SEVERE, null, ex);
 		} finally {
 			if (connection != null)
@@ -248,7 +284,9 @@ public class TwitterFeed {
 		return null;
 	}
 	
-	//<editor-fold defaultstate="collapsed" desc="/***** Encoding and authorization *****************************************/">
+	//</editor-fold>
+	
+	//<editor-fold defaultstate="collapsed" desc="Authorization.">
 	
 	/** 
 	 * Encodes the consumer key and secret to create the basic authorization key.
@@ -275,101 +313,65 @@ public class TwitterFeed {
 	 * Constructs the request for requesting a bearer token and returns that token as a string.
 	 * Used for authorizing for the Twitter API.
 	 * @param endPointUrl the API URL.
-	 * @throws IOException 
+	 * @throws IOException either if JSON is broken or the endpoint URL is incorrect.
 	 * @return the Bearer token.
 	 */
+	@SuppressWarnings("LocalVariableHidesMemberVariable")
 	private String requestBearerToken(String endPointUrl) throws IOException {
-	    HttpsURLConnection connection2 = null;
-	    String encodedCredentials = encodeKeys(ACCESS_TOKEN, SECRET_ACCESS_TOKEN);
+	    HttpsURLConnection connection = null;
+	    String encodedCredentials = encodeKeys(CONSUMER_KEY, CONSUMER_SECRET);
 	         
 	    try {
 	        URL url = new URL(endPointUrl);
-	        connection2 = (HttpsURLConnection) url.openConnection();          
-	        connection2.setDoOutput(true);
-	        connection2.setDoInput(true);
-	        connection2.setRequestMethod("POST");
-	        connection2.setRequestProperty("Host", "api.twitter.com");
-	        connection2.setRequestProperty("User-Agent", "CIMS");
-	        connection2.setRequestProperty("Authorization", "Basic " + encodedCredentials);
-	        connection2.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-	        connection2.setRequestProperty("Content-Length", "29");
-	        connection2.setUseCaches(false);
+	        connection = (HttpsURLConnection) url.openConnection();
+	        connection.setDoOutput(true);
+	        connection.setDoInput(true);
+	        connection.setRequestMethod("POST");
+	        connection.setRequestProperty("Host", "api.twitter.com");
+	        connection.setRequestProperty("User-Agent", "CIMS");
+	        connection.setRequestProperty("Authorization", "Basic " + encodedCredentials);
+	        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+	        connection.setRequestProperty("Content-Length", "29");
+	        connection.setUseCaches(false);
 	             
-	        writeRequest(connection2, "grant_type=client_credentials");
+	        writeRequest(connection, "grant_type=client_credentials");
 	             
-	        String json = readResponse(connection2);
-	        /*
-	        if (json != null) {
-	            String tokenType = (String)obj.get("token_type");
-	            String token = (String)obj.get("access_token");
-	         
-	            return ((tokenType.equals("bearer")) && (token != null)) ? token : "";
-	        }*/
-			//System.out.println("JSON feed: ");
-			//System.out.println(json;
-			String field = "\"access_token\":\"";
-			int len = field.length();
-			String value = json.substring(json.indexOf(field) + len);
-			//System.out.println(value);
-			field = value.trim().substring(0, (value.length()-4));
-			//System.out.println(field);
-	        return field.trim();
+	        JSONObject json = (JSONObject) parser.parse(readResponse(connection));
+		
+		if (json != null) {
+		    String tokenType = (String) json.get("token_type");
+		    String token = (String) json.get("access_token");
+		    
+		    return ((tokenType.equals("bearer")) && (token != null)) ? token : "";
+		}
+	        return "";
 	    } catch (MalformedURLException e) {
 	        throw new IOException("Invalid endpoint URL specified.", e);
+	    }	catch (ParseException e) {
+		throw new IOException("Invalid JSON response.", e);
 	    } finally {
-	        if (connection2 != null)
-	            connection2.disconnect();
+	        if (connection != null)
+	            connection.disconnect();
 	    }
-	}
-	
-	/** 
-	 * Writes a request to a connection
-	 * @param connection the connection to write the request over.
-	 * @param request the httprequest for a response.
-	 * @return true if succeeded, false otherwise.
-	 */
-	private boolean writeRequest(HttpsURLConnection connection, String request) {
-	    try {
-	        BufferedWriter wr = new BufferedWriter
-					(new OutputStreamWriter(connection.getOutputStream()));
-	        wr.write(request);
-	        wr.flush();
-	        wr.close();
-	             
-	        return true;
-	    }
-	    catch (IOException e) { return false; }
-	}
-	     	  
-	/** 
-	 * Reads a response for a given connection and returns it as a string.
-	 * @param connection the connection to read from.
-	 * @return 
-	 */
-	private String readResponse(HttpsURLConnection connection) {
-	    try {
-	        StringBuilder str = new StringBuilder();
-	             
-	        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	        String line = "";
-	        while((line = br.readLine()) != null) {
-	            str.append(line + System.getProperty("line.separator"));
-	        }
-	        return str.toString();
-	    }
-	    catch (IOException e) { return new String(); }
-	}
+	}	
 
 	//</editor-fold>
 	
-	/** 
+	/** fuck unit tests
 	 * Prints some output for testing/demonstration and reference.
 	 */
 	public static void main(String[] args) throws Exception {
 		TwitterFeed t = new TwitterFeed();
-		String out = t.request("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2");
 		
-		// Commented functions still work - they merely return the full JSON.
+		// TODO: make this a unit test.
+		JSONArray out = (JSONArray) t.request("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2");
+		for (int i = 0; i < out.size(); i++) {
+			if (!(out.get(i) instanceof JSONArray)) {
+				JSONObject obj = (JSONObject) out.get(i);
+				System.out.println(obj.get("text"));
+			}
+			System.out.println("");
+		}		
 		
 		// TwitterFeed.getStatus():
 		System.out.println(t.getStatus());
@@ -388,7 +390,7 @@ public class TwitterFeed {
 		//ArrayList<String> geotweets = t.getByLocation(51.450922, 5.479748, 15); // Rachelsmolen, Eindhoven.
 		//for (String tweet : geotweets) {System.out.println(tweet);}
 		// DIY: http://www.gps-coordinates.net/
-		System.out.println(t.getByLocation(51.450922, 5.479748, 15)); // Rachelsmolen, Eindhoven.
+		//System.out.println(t.getByLocation(51.450922, 5.479748, 15)); // Rachelsmolen, Eindhoven.
 		//System.out.println(out); // 400 ~ 403 = Unauthorized.
     }
 }
