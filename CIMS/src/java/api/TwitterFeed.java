@@ -58,107 +58,44 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 	 */
 	public ArrayList<String> getTweets(String keyword, int count){
 		ArrayList<String> tweets = new ArrayList<>();
-		String query = "?q=" + keyword; // Builds the search query.
-		query += "&result_type=recent";
-		query += "&count=" + count; // 
-		//JSONObject json = (JSONObject) request(SEARCH + query);
-		//tweets.add(json.toJSONString());
-		//tweets.add("\n");
-		//return tweets; // TODO check API docs for search returns
-		
-		// TODO: loop this.
-		JSONObject json = (JSONObject) request(SEARCH + query);		
+		String query = "?q=" + keyword  
+				     + "&result_type=recent"	
+				     + "&count=" + count;		
+		JSONObject json = (JSONObject) request(SEARCH + query);
 		JSONArray list = (JSONArray) json.get("statuses"); //iz accualy lis, arry pls
-		for (int i = 0; i < list.size(); i++) {
-			json = (JSONObject) list.get(i);
+		
+		for (Object item : list) {
+			json = (JSONObject) item;
 			tweets.add((String)json.get("text"));
 		}
-		return tweets;
-		/*
-		ArrayList<String> tweets = new ArrayList<>();
-		String text_tag = "\"text\":\""; // Marks the beginning of the tweet in the JSON feed.
-		String query = "?q=" + keyword; // Builds the search query.
-		query += "&result_type=recent";
-		query += "&count=" + 25; // Twitter only counts the amount of requests, not the amount of data requested.
-
-		String data = request(SEARCH + query);
-		if (data.isEmpty()) {
-			System.out.println("TWITTER // DATA // Data is empty!");
-			return tweets;
-		}
 		
-		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_   
-
-		// Sanitize output.
-		int start = 1;
-		int end = 1;
-		while (start > 0 && end > 0) {
-			start = data.indexOf(text_tag, end);
-			end = data.indexOf("\",", start);
-			System.out.println("TWITTER // DATA // " + data);
-			if(!data.isEmpty()){
-				String tweet = data.substring(start + text_tag.length(), end);
-				tweet = tweet.replaceAll("/\n/gi", ""); // Replace _'_ with _\'_
-				tweet = tweet.replace("\\/", "/"); // Replace _\/_ with _/_
-				tweet = unescape(tweet);
-				tweet = StringEscapeUtils.unescapeJava(tweet);
-				tweets.add(tweet);
-			}
-			else
-				tweets.add("Empty string.");
-		}
-		tweets.remove(tweets.size() - 1); // Remove junk data.		
 		return tweets;
-		*/
 	}
 
 	/**
-	 * Returns tweets based on their GPS coordinates. TODO Currently being debugged (23-03)
+	 * Returns tweets based on their GPS coordinates. 
 	 * @param latitude
 	 * @param longitude
 	 * @param radius range from the coordinates in kilometres.
+	 * @param keyword 
 	 * @return
 	 */	
 	public ArrayList<String> getByLocation(double latitude, double longitude, int radius, String keyword, int count){
 		String geolocating = "&geocode=" + latitude + "," + longitude + "," + radius + "km";
+		ArrayList<String> tweets = new ArrayList<>();		
+		String query = "?q=" + keyword
+			+ "&result_type=recent"
+			+ "&count=" + count 
+			+ geolocating;		
+		JSONObject json = (JSONObject) request(SEARCH + query);
+		JSONArray list = (JSONArray) json.get("statuses"); //iz accualy lis, arry pls
 		
-		ArrayList<String> tweets = new ArrayList<>();
-		String text_tag = "\"text\":\""; // Marks the beginning of the tweet in the JSON feed.
-		String query = "?q=" + keyword; // Builds the search query.
-		query += "&result_type=recent";
-		query += "&count=" + 25; // Twitter only counts the amount of requests, not the amount of data requested.
-		query += geolocating;
-		return tweets;//////
-		/*
-		String data = request(SEARCH + query);
-		if (data.isEmpty()) {
-			System.out.println("TWITTER // DATA // Data is empty! :(");
-			return tweets;
+		for (Object item : list) {
+			json = (JSONObject) item;
+			tweets.add((String)json.get("text"));
 		}
 		
-		data = data.replaceAll("/'/gi", "\'"); // Replace _'_ with _\'_   
-
-		// Sanitize output.
-		int start = 1;
-		int end = 1;
-		while (start > 0 && end > 0) {
-			start = data.indexOf(text_tag, end);
-			end = data.indexOf("\",", start);
-			System.out.println("TWITTER // DATA // " + data);
-			if(!data.isEmpty()){
-				String tweet = data.substring(start + text_tag.length(), end);
-				tweet = tweet.replaceAll("/\n/gi", "<br>"); // Replace _'_ with _\'_
-				tweet = tweet.replace("\\/", "/"); // Replace _\/_ with _/_
-				tweet = unescape(tweet);
-				tweet = StringEscapeUtils.unescapeJava(tweet);
-				tweets.add(tweet);
-			}
-			else				
-				tweets.add("Empty string.");
-		}
-		tweets.remove(tweets.size() - 1); // Remove junk data.
 		return tweets;
-		*/
 	}
 
 	/**
@@ -166,8 +103,7 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 	 * @param tags an hashtag without the '#' sign.
 	 */
 	public ArrayList<String> getByTag(String tag){
-		String query = /*SEARCH + */"%23" + tag /*+ "%20"*/;		
-		//return request(query);
+		String query = /*SEARCH + */"%23" + tag /*+ "%20"*/;
 		return getTweets(query, 25);
 	}
 	
@@ -192,64 +128,13 @@ public class TwitterFeed {// If you feel like checking: http://codebeautify.org/
 	public String getStatus(){
 		String query = RATE_LIMIT_STATUS + "?resources=search";
 		JSONObject out = (JSONObject) request(query);
-		System.out.println(out.toString());
-		out = (JSONObject) out.get("resources");
-		out = (JSONObject) out.get("search");
-		System.out.println(out.toJSONString());
-		out = (JSONObject) out.get("/search/tweets");
+			   out = (JSONObject) out.get("resources");
+			   out = (JSONObject) out.get("search");
+			   out = (JSONObject) out.get("/search/tweets");
 		long limit = (long) out.get("limit");
 		long remaining = (long) out.get("remaining");
-		return "API usage status: " + limit + " / " + remaining + " remaining.";
-		/*
-		String data = request(query);
-		
-		int start = 1;
-		int end = 1;
-		
-		// Find amount of requests remaining for the Search API.
-		start = data.indexOf(search_tag); 
-		
-		start = data.indexOf(limit_tag, start) + limit_tag.length();
-		end = data.indexOf(",", start);
-		String limit = data.substring(start, end);
-		
-		start = data.indexOf(remaining_tag, start) + remaining_tag.length();
-		end = data.indexOf(",", start);
-		String remaining = data.substring(start, end);
-		
-		return "Usage: " + remaining + " / " + limit + " requests.";
-		* */
+		return "API usage status: " + remaining + " / " + limit + " remaining.";
 	}
-
-	//</editor-fold>	
-	
-	//<editor-fold defaultstate="collapsed" desc="Miscellanous.">
-	
-	/**
-	 * Replaces double slash in javacode with single slashes.
-	 * @param s
-	 * @return 
-	 */
-	String unescape(String s) {
-		int i = 0, len = s.length();
-		char c;
-		StringBuilder sb = new StringBuilder(len);
-		while (i < len) {
-			c = s.charAt(i++);
-			if (c == '\\') {
-				if (i < len) {
-					c = s.charAt(i++);
-					if (c == 'u') {
-						// TODO: check that 4 more chars exist and are all hex digits
-						c = (char) Integer.parseInt(s.substring(i, i + 4), 16);
-						i += 4;
-					} // add other cases here as desired...
-				}
-			} // fall through: \ escapes itself, quotes any character but u
-			sb.append(c);
-		}
-		return sb.toString();
-	}			
 		
 	/**
 	 * Requests data for a given query from the API.
