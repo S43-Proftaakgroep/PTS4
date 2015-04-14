@@ -32,7 +32,7 @@ public class videoReceiver {
     @OnMessage
     public void processVideo(byte[] imageData, Session session) {
         try {
-            System.out.println("Sending data!" + System.currentTimeMillis());
+            System.out.println("Sending data!" + System.currentTimeMillis() + "Bytes: " + imageData.length);
             socket.getOutputStream().write(imageData);
             socket.getOutputStream().flush();
         } catch (IOException ex) {

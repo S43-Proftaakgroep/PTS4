@@ -11,6 +11,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
@@ -24,6 +26,7 @@ public class VideoThread implements Runnable {
     Socket insocket;
     ObjectInputStream in;
     CallFXMLController controller;
+    int count = 0;
 
     public VideoThread(Socket socket, CallFXMLController controller) {
         this.insocket = socket;
@@ -36,15 +39,15 @@ public class VideoThread implements Runnable {
             try {
                 BufferedImage bi = ImageIO.read(insocket.getInputStream());
                 if (bi != null) {
-                    Thread t = new Thread(() -> {
-                        Image i = SwingFXUtils.toFXImage(bi, null);
-                        controller.setImage(i);
-                    });
-                    t.start();
-
+                    System.out.println(count + "Recieved data!" + System.currentTimeMillis());
+                    Image i = SwingFXUtils.toFXImage(bi, null);
+                    controller.setImage(i);
+                    System.out.println(count + "Verwerkt data!" + System.currentTimeMillis());
+                    count++;
                 }
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+
+            } catch (IOException ex) {
+                Logger.getLogger(VideoThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
