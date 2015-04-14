@@ -8,8 +8,12 @@ package centraleapp;
 import api.WeatherFeed;
 import database.DatabaseManager;
 import incident.Incident;
+import incident.Message;
+import incident.MessageContainer;
 import java.net.URL;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javafx.application.Platform;
@@ -21,6 +25,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.*;
@@ -30,7 +35,7 @@ import javafx.scene.web.*;
  *
  * @author Joris
  */
-public class IncidentDetailController implements Initializable {
+public class IncidentDetailController implements Observer, Initializable {
 
     //Tab Incident
     @FXML Label lblIncidentName;
@@ -50,10 +55,15 @@ public class IncidentDetailController implements Initializable {
     @FXML Button btnAddAdvice;
     @FXML ListView lvAdvicepage;
     @FXML TextArea taAdvicetext;
+    
+    //Tab Sent Information
+    @FXML TableView tableIncidentInfo;
 
     private Incident incident;
     private ObservableList<String> advices;
     private String mapsHTML;
+    private MessageContainer messageContainer;
+    ObservableList<Message> messages;
 
     /**
      * Initializes the controller class.
@@ -65,6 +75,8 @@ public class IncidentDetailController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         webEngine = webView.getEngine();
         advices = FXCollections.observableArrayList();
+        messageContainer = MessageContainer.getInstance();
+        messageContainer.addObserver(this);
     }
 
     public void init(Incident incident) {
@@ -149,6 +161,28 @@ public class IncidentDetailController implements Initializable {
         
         //TAB 2 - Advice
         //TODO
+        
+        // TAB 4 - Sent Information
+        messages = FXCollections.observableArrayList(DatabaseManager.getMessagesWithId(incident.getId()));
+        
+        tableIncidentInfo.setEditable(false);
+        
+        TableColumn nameCol = new TableColumn("Naam");
+        nameCol.setMinWidth(200);
+        nameCol.setCellFactory(new PropertyValueFactory<>("sender"));
+        
+        TableColumn messageCol = new TableColumn("Bericht");
+        messageCol.setMinWidth(500);
+        messageCol.setCellValueFactory(new PropertyValueFactory<>("messageText"));
+        
+        TableColumn dateCol = new TableColumn("Datum");
+        dateCol.setMinWidth(200);
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateCol.setSortType(TableColumn.SortType.DESCENDING);
+        tableIncidentInfo.getColumns().addAll(nameCol, messageCol, dateCol);
+        tableIncidentInfo.setItems(messages);
+        tableIncidentInfo.getSortOrder().add(dateCol);
+        
     }
 
     private String getWeatherInfo(String location) {
@@ -165,5 +199,20 @@ public class IncidentDetailController implements Initializable {
         wf.setQuery(WeatherFeed.Query.WINDDIRECTION);
         String deg = wf.getData();
         return "<html><p style=\"font-family: 'Lucida Bright', 'Lucida Bright'\">" + temp + " " + desc + " <b>Luchtvochtigheid:</b> " + humi + " <b>Luchtdruk:</b> " + pres + " <b>Wind:</b> " + speed + "@" + deg + "</p></html>";
+    }
+
+    @Override
+    public void update(Observable o, Object arg)
+    {
+        if(arg != null)
+        {
+            Message message = (Message) arg;
+            if(incident.getId() == message.getIncidentId())
+            {
+                //synchronised?
+                messages.add(message);
+            }
+        }
+        
     }
 }

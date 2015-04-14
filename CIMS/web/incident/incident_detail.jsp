@@ -58,7 +58,7 @@
                     {%>
                 <p><%out.println("Advies: "); %></p>
                 <% for (String singleAdvice : advice)
-                            { %>
+                    { %>
                 <p><% out.println(singleAdvice); %></p>
                 <% }
                 }
@@ -68,24 +68,23 @@
                 <% }
                 %>
                 <p><%
-		    String location = this.currentIncident.getLocation().replace(", Nederland", "");
+                    String location = this.currentIncident.getLocation().replace(", Nederland", "");
                     WeatherFeed wf = new WeatherFeed(location, WeatherFeed.Query.TEMPERATURE);
                     out.println("Weer: " + wf.getData() + " en ");
                     wf.setQuery(WeatherFeed.Query.DESCRIPTION);
                     out.println(wf.getData());%></p>
-		<div style="height:400px;overflow:scroll;">
-		    <h3>Laatste updates over dit incident op Twitter:</h3>		    
-		    <ul>
-			<%
-			    // Veel kun je niet meer aan de query toevoegen; de tweets moeten wel bestaan en recent zijn.
-			    ArrayList<String> tweets = new TwitterFeed().getTweets(location /*+ "incident"*/, 25);
-			    for(String tweet : tweets){
-				    out.println("<li><a href='http://twitter.com/search?q=" + tweet + "'>" + tweet + "</a></li>" + "<br>");
-			    }
-			%>
-		    </ul>
-		</div>
+                <div style="height:400px;overflow:scroll;">
+                    
+                </div>
             </div>
+                    
+            <form action="/CIMS/SendInfoToCentral" role="form" class="form-create" method="POST">
+                <p><input type="text" name="messageText"></p>
+                <input type="hidden" name="incidentId" value="<%=incidentId %>">
+                <p><input type="submit" value="Send" name="submit"></p>
+            </form>
+
+            
 
             <footer>
                 <p>&copy; <b>CIMS</b> 2015</p>

@@ -51,7 +51,7 @@
                 
             %>
             <h1>
-                <a  class="btn btn-primary" href="incident_detail.jsp?incident=<%=closestIncidentId%>">
+                <a  class="btn btn-primary" href="incident/incident_detail.jsp?incident=<%=closestIncidentId%>">
                     <%
                         if (closestIncident != null) {
                             out.println(closestIncident.toString() + " " + closestIncident.getDate());
@@ -72,7 +72,7 @@
                 </tr>
                 <%
                     for (Incident i : incidentList) {
-                        String url = "incident_detail.jsp?incident=" + i.getId();
+                        String url = "incident/incident_detail.jsp?incident=" + i.getId();
                 %>
                 <tr>
                     <td><a href=<%=url%>><%out.write(i.getType() + "(" + i.getLocation() + ") ");%></a></td>

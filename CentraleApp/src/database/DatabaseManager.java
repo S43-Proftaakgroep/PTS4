@@ -7,12 +7,14 @@ package database;
 
 //import authentication.UserBean;
 import incident.Incident;
+import incident.Message;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,15 +30,19 @@ public class DatabaseManager {
      *
      * @return Returns true if succesfull, else returns false
      */
-    private static boolean openConnection() {
+    private static boolean openConnection()
+    {
         boolean result;
-        try {
+        try
+        {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" + Property.DBADDRESS.getProperty() + ":" + Property.DBPORT.getProperty() + "/" + Property.DBNAME.getProperty(),
                     Property.DBUSERNAME.getProperty(),
                     Property.DBPASSWORD.getProperty());
             result = true;
-        } catch (ClassNotFoundException | SQLException e) {
+        }
+        catch (ClassNotFoundException | SQLException e)
+        {
             connection = null;
             System.out.println(e.getMessage());
             System.out.println("Connection failed");
@@ -48,26 +54,37 @@ public class DatabaseManager {
     /**
      * Closes the database connection
      */
-    private static void closeConnection() {
-        try {
+    private static void closeConnection()
+    {
+        try
+        {
             connection.close();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             System.out.println(e.getMessage());
         }
     }
 
-    public static List<String> getUnApprovedUsers() {
+    public static List<String> getUnApprovedUsers()
+    {
         List<String> users = new ArrayList<>();
-        if (openConnection()) {
-            try {
+        if (openConnection())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT username FROM user WHERE approved = 0");
                 ResultSet rs = pStmnt.executeQuery();
-                while (rs.next()) {
+                while (rs.next())
+                {
                     users.add(rs.getString("username"));
                 }
-            } catch (SQLException e) {
+            }
+            catch (SQLException e)
+            {
                 return null;
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
@@ -80,62 +97,83 @@ public class DatabaseManager {
      * @param username Username for the user
      * @return Boolean. True if succesfull, false if not
      */
-    public static boolean authUser(String username) {
+    public static boolean authUser(String username)
+    {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !username.trim().isEmpty()) {
-            try {
+        if (openConnection() && !username.trim().isEmpty())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("UPDATE user SET approved = 1 WHERE username = ?;");
                 pStmnt.setString(1, username);
 
-                if (pStmnt.executeUpdate() > 0) {
+                if (pStmnt.executeUpdate() > 0)
+                {
                     result = true;
                 }
-            } catch (SQLException e) {
+            }
+            catch (SQLException e)
+            {
                 System.out.println(e.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
         return result;
     }
 
-    public static boolean authIncident(String type, String locatie) {
+    public static boolean authIncident(String type, String locatie)
+    {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty()) {
-            try {
+        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = 1 WHERE type = ? AND location = ?;");
                 pStmnt.setString(1, type);
                 pStmnt.setString(2, locatie);
 
-                if (pStmnt.executeUpdate() > 0) {
+                if (pStmnt.executeUpdate() > 0)
+                {
                     result = true;
                 }
-            } catch (SQLException e) {
+            }
+            catch (SQLException e)
+            {
                 System.out.println(e.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
         return result;
     }
 
-    public static boolean denyIncident(String type, String locatie) {
+    public static boolean denyIncident(String type, String locatie)
+    {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty()) {
-            try {
+        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("DELETE FROM incident WHERE type = ? AND location = ?;;");
                 pStmnt.setString(1, type);
                 pStmnt.setString(2, locatie);
 
-                if (pStmnt.executeUpdate() > 0) {
+                if (pStmnt.executeUpdate() > 0)
+                {
                     result = true;
                 }
-            } catch (SQLException e) {
+            }
+            catch (SQLException e)
+            {
                 System.out.println(e.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
@@ -148,33 +186,44 @@ public class DatabaseManager {
      * @param username Username for the user
      * @return Boolean. True if succesfull, false if not
      */
-    public static boolean denyUser(String username) {
+    public static boolean denyUser(String username)
+    {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !username.trim().isEmpty()) {
-            try {
+        if (openConnection() && !username.trim().isEmpty())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("UPDATE user SET approved = -1 WHERE username = ?;");
                 pStmnt.setString(1, username);
 
-                if (pStmnt.executeUpdate() > 0) {
+                if (pStmnt.executeUpdate() > 0)
+                {
                     result = true;
                 }
-            } catch (SQLException e) {
+            }
+            catch (SQLException e)
+            {
                 System.out.println(e.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
         return result;
     }
 
-    public static List<Incident> getIncidents(int approved) {
+    public static List<Incident> getIncidents(int approved)
+    {
         List<Incident> incidents = new ArrayList<>();
-        if (openConnection()) {
-            try {
+        if (openConnection())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, longitude, latitude, submitter, description, date FROM incident WHERE approved = " + approved + ";");
                 ResultSet results = pStmnt.executeQuery();
-                while (results.next()) {
+                while (results.next())
+                {
                     Incident incident = new Incident(
                             results.getString("location"),
                             results.getString("longitude"),
@@ -185,49 +234,120 @@ public class DatabaseManager {
                             results.getString("date"));
                     incidents.add(incident);
                 }
-            } catch (SQLException ex) {
+            }
+            catch (SQLException ex)
+            {
                 System.out.println("Database exception: " + ex.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
         return incidents;
     }
 
-    public static List<String> getAdviceById(int id) {
+    public static List<String> getAdviceById(int id)
+    {
         List<String> advice = new ArrayList<>();
-        if (openConnection()) {
-            try {
+        if (openConnection())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT adviceText FROM advice WHERE id = ?");
                 pStmnt.setInt(1, id);
                 ResultSet results = pStmnt.executeQuery();
-                while (results.next()) {
+                while (results.next())
+                {
                     advice.add(results.getString("adviceText"));
                 }
-            } catch (SQLException ex) {
+            }
+            catch (SQLException ex)
+            {
                 System.out.println("Exception: " + ex.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
         return advice;
     }
 
-    public static int getId(String typeOfIncident, String location, String submitter) {
+    public static int getId(String typeOfIncident, String location, String submitter)
+    {
         int id = -1;
-        if (openConnection()) {
-            try {
+        if (openConnection())
+        {
+            try
+            {
                 PreparedStatement pStmnt = connection.prepareStatement("SELECT id FROM incident WHERE type = '" + typeOfIncident + "' AND location = '" + location + "' AND submitter = '" + submitter + "'");
                 ResultSet results = pStmnt.executeQuery();
-                while (results.next()) {
+                while (results.next())
+                {
                     id = results.getInt("id");
                 }
-            } catch (SQLException ex) {
+            }
+            catch (SQLException ex)
+            {
                 System.out.println("Exception: " + ex.getMessage());
-            } finally {
+            } finally
+            {
                 closeConnection();
             }
         }
         return id;
+    }
+
+    public static List<Message> getMessagesWithId(int id)
+    {
+        List<Message> messages = new ArrayList<>();
+        if (openConnection())
+        {
+            try
+            {
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT sender, messageText, datum FROM message WHERE incidentId = '" + id + "'");
+                ResultSet results = pStmnt.executeQuery();
+                while (results.next())
+                {
+                    String sender = results.getString("sender");
+                    String messageText = results.getString("messageText");
+                    String date = results.getString("datum");
+                    Message message = new Message(sender, messageText, id, date);
+                    messages.add(message);
+                }
+            }
+            catch (SQLException ex)
+            {
+                ex.printStackTrace();
+            } finally
+            {
+                closeConnection();
+            }
+        }
+        return messages;
+    }
+
+    public void addMessage(Message message)
+    {
+        if (openConnection())
+        {
+            try
+            {
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO message(incidentId, sender, messageText, datum) VALUES(?, ?, ?, ?)");
+                pStmnt.setInt(1, message.getIncidentId());
+                pStmnt.setString(2, message.getSender());
+                pStmnt.setString(3, message.getMessageText());
+                pStmnt.setString(4, message.getDate());
+                pStmnt.executeQuery();
+            }
+            catch (SQLException ex)
+            {
+                ex.printStackTrace();
+            } finally
+            {
+                closeConnection();
+            }
+
+        }
+
     }
 }
