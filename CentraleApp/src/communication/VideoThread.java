@@ -7,6 +7,7 @@ package communication;
 
 import centraleapp.CallFXMLController;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
