@@ -68,10 +68,10 @@
                     return;
                 con.fillRect(0, 0, w, h);
                 con.drawImage(v, 0, 0, w, h);
-                var data = c.toDataURL('image/jpeg', 0.1);
+                var data = c.toDataURL('image/jpeg', 0.5);
                 newblob = convertToBinary(data);
                 ws.send(newblob);
-            }, 30);
+            }, 120);
         }, false);
 
     });
