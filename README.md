@@ -10,6 +10,5 @@ Ons team bestaat uit:
 - Maikel Hoeks
 - Meny Metekia
 - Eric de Regter
-- Frank van Hoof
 
 Tom Broumels (Product Owner)
