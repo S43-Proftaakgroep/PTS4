@@ -240,7 +240,8 @@ public class DatabaseManager {
     public static boolean addIncident(String type, String locatie, String submitter, String description, double longitude, double latitude)
     {
         boolean result = false;
-        if(type == null || locatie == null || submitter == null) {
+        if (type == null || locatie == null || submitter == null)
+        {
             return false;
         }
         //Open the connection
@@ -362,11 +363,11 @@ public class DatabaseManager {
         }
         return incident;
     }
-    
+
     public static List<String> getAdviceById(int id)
     {
         List<String> advice = new ArrayList<>();
-        if(openConnection())
+        if (openConnection())
         {
             try
             {
@@ -378,15 +379,39 @@ public class DatabaseManager {
                     advice.add(results.getString("adviceText"));
                 }
             }
-            catch(SQLException ex)
+            catch (SQLException ex)
             {
                 System.out.println("Exception: " + ex.getMessage());
-            }
-            finally
+            } finally
             {
                 closeConnection();
             }
         }
         return advice;
+    }
+
+    public static void addMessage(String sender, String messageText, String date, int id)
+    {
+        if (openConnection())
+        {
+            try
+            {
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO message(incidentId, sender, messageText, datum) VALUES(?, ?, ?, ?)");
+                pStmnt.setInt(1, id);
+                pStmnt.setString(2, sender);
+                pStmnt.setString(3, messageText);
+                pStmnt.setString(4, date);
+                pStmnt.execute();
+            }
+            catch (SQLException ex)
+            {
+                ex.printStackTrace();
+            } finally
+            {
+                closeConnection();
+            }
+
+        }
+
     }
 }

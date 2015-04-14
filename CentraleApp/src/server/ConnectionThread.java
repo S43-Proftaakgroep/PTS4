@@ -6,10 +6,14 @@
 package server;
 
 import incident.IncidentContainer;
+import incident.Message;
+import incident.MessageContainer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -27,23 +31,33 @@ public class ConnectionThread implements Runnable, Observer {
     ObjectInputStream in;
     ObjectOutputStream out;
     IncidentContainer container;
+    MessageContainer messageContainer;
 
-    public ConnectionThread(Socket socket) {
+    public ConnectionThread(Socket socket)
+    {
         this.insocket = socket;
         container = IncidentContainer.getInstance();
         container.addObserver(this);
-        try {
+        
+        messageContainer = MessageContainer.getInstance();
+        try
+        {
             in = new ObjectInputStream(insocket.getInputStream());
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             Logger.getLogger(ConnectionThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
-    public void run() {
-        try {
+    public void run()
+    {
+        try
+        {
             String instring = (String) in.readObject();
-            if (instring.startsWith("@1#")) {
+            if (instring.startsWith("@1#"))
+            {
                 instring = instring.replace("@1#", "");
                 String[] incidentInfo = instring.split(Pattern.quote("|"));
                 String typeIncident = incidentInfo[0];
@@ -55,18 +69,37 @@ public class ConnectionThread implements Runnable, Observer {
                 container.addIncident(location, longitude, latitude, submitter, typeIncident, description, "Today");
                 insocket.close();
             }
-        } catch (IOException | ClassNotFoundException e) {
+            else if (instring.startsWith("@2#"))
+            {
+                // Als er een bericht binnen komt van een eenheid via de website
+                instring = instring.replace("@2#", "");
+                String[] incidentInfo = instring.split(Pattern.quote("|"));
+                String sender = incidentInfo[0];
+                String messageText = incidentInfo[1];
+                int incidentId = Integer.parseInt(incidentInfo[2]);
+                messageContainer.addMessage(sender, messageText, incidentId);
+                System.out.println(sender + ", " + messageText + ", id:" + incidentId);
+                insocket.close();
+            }
+        }
+        catch (IOException | ClassNotFoundException e)
+        {
             System.out.println(e.getMessage());
         }
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        try {
+    public void update(Observable o, Object arg)
+    {
+        try
+        {
             out = new ObjectOutputStream(insocket.getOutputStream());
             out.writeObject("nieuw");
-        } catch (IOException ex) {
-            Logger.getLogger(ConnectionThread.class.getName()).log(Level.SEVERE, null, ex);
+            out.writeObject("Niewe incidenten zijn toegevoegd, ververs de pagina voor meer informatie.");
+        }
+        catch (IOException ex)
+        {
+            
         }
     }
 

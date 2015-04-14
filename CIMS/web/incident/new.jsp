@@ -18,18 +18,32 @@
         <script src="/CIMS/js/jquery-1.8.3.min.js" type="text/javascript"></script>
         <!-- Addresspicker -->
         <script>
+            var similarAdresses;
+            var geocoder;
+            var similarAdress1 = "";
+            var similarAdress2 = "";
+            var addresspickerMap;
             $(function () {
-                var addresspickerMap = $("#addresspicker_map").addresspicker(
+                geocoder = new google.maps.Geocoder();
+                addresspickerMap = $("#addresspicker_map").addresspicker(
                         {
                             regionBias: "nl",
                             map: "#map_canvas",
-                            typeaheaddelay: 1000,
+                            typeaheaddelay: 500,
                             mapOptions: {
                                 zoom: 6,
                                 center: new google.maps.LatLng(52.090737, 5.1214201)
                             }
 
                         });
+                $("#addresspicker_map").change(function () {
+                    if ($.trim($("#longtitude").val()) === "" || $.trim($("#latitude").val()) === "") {
+                        getLatLong($("#addresspicker_map").val());
+                    }
+                    else {
+                        $("#submitForm").submit();
+                    }
+                });
                 addresspickerMap.on("addressChanged", function (evt, address) {
                     $("#longtitude").val(address.geometry.location.lng());
                     $("#latitude").val(address.geometry.location.lat());
@@ -43,12 +57,22 @@
                     });
                 });
             });
+
+            function getLatLong(adress) {
+                geocoder.geocode({
+                    'address': adress
+                }, function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        $("#addresspicker_map").trigger("addressChanged", results[0]);
+                    }
+                });
+            }
         </script>
     </head>
     <body>
         <%@include file="/navigationBar.jsp" %>
         <div class="container">
-            <form role="form" class="form-create" action="/CIMS/CreateIncidentServlet" method="POST">
+            <form id = "submitForm" role="form" class="form-create" action="/CIMS/CreateIncidentServlet" method = "POST">
                 <h2 class="form-signin-heading">Meld incident</h2>
                 <div class="form-group">
                     <label for="name">Incident naam:</label>
@@ -61,17 +85,18 @@
                 <div class="form-group">
                     <label for="addresspicker_map">Locatie:</label><br>
                     <p>
-                    Type een deel van u locatie in en kies hem uit de suggesties.
+                        Type een deel van u locatie in en kies hem uit de suggesties.
                     </p>
                     <input name="address" class="form-control" id="addresspicker_map" autocomplete="off" required/>
-                    <input name="longtitude" hidden = "true" id="longtitude"/>
-                    <input name="latitude" hidden = "true" id="latitude"/>
+                    <input name="longtitude" hidden = "false" id="longtitude"/>
+                    <input name="latitude" hidden = "false" id="latitude"/>
                     <div style="width:300px;height:300px;margin-top:20px;">
                         <div id="map_canvas" style="width:100%; height:100%"></div>
                         <div id="location" class=""></div>
                     </div>
+                    <div id = "suggestion" style="float: right;position: relative;bottom: 302px;left: 330px;"></div>
                 </div>
-                <button type="submit" class="btn btn-default">Melden</button>
+                <button id= "meldButton" type="submit" class="btn btn-default">Melden</button>
             </form>
             <br>
             <footer>
