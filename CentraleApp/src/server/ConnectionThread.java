@@ -77,8 +77,8 @@ public class ConnectionThread implements Runnable, Observer {
                 String sender = incidentInfo[0];
                 String messageText = incidentInfo[1];
                 int incidentId = Integer.parseInt(incidentInfo[2]);
-                messageContainer.addMessage(sender, messageText, incidentId);
                 System.out.println(sender + ", " + messageText + ", id:" + incidentId);
+                messageContainer.addMessage(sender, messageText, incidentId);
                 insocket.close();
             }
         }
@@ -94,7 +94,6 @@ public class ConnectionThread implements Runnable, Observer {
         try
         {
             out = new ObjectOutputStream(insocket.getOutputStream());
-            out.writeObject("nieuw");
             out.writeObject("Niewe incidenten zijn toegevoegd, ververs de pagina voor meer informatie.");
         }
         catch (IOException ex)

@@ -8,6 +8,7 @@ package incident;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
@@ -19,6 +20,7 @@ public class Message {
     private String messageText;
     private String date;
     private int incidentId;
+    
 
     public Message(String sender, String messageText, int incidentId)
     {
