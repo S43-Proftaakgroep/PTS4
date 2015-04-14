@@ -20,10 +20,11 @@ import javax.websocket.server.ServerEndpoint;
 public class videoReceiver {
 
     Socket socket;
-
+    ObjectOutputStream out;
     public videoReceiver() {
         try {
             socket = new Socket(InetAddress.getByName("localhost"), 1100);
+            out = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -33,7 +34,7 @@ public class videoReceiver {
     public void processVideo(byte[] imageData, Session session) {
         try {
             System.out.println("Sending data!" + System.currentTimeMillis() + "Bytes: " + imageData.length);
-            socket.getOutputStream().write(imageData);
+            out.writeObject(imageData);
             socket.getOutputStream().flush();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());

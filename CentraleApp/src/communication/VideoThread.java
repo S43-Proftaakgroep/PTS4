@@ -35,18 +35,24 @@ public class VideoThread implements Runnable {
 
     @Override
     public void run() {
+        try {
+            this.in = new ObjectInputStream(insocket.getInputStream());
+        } catch (IOException ex) {
+            Logger.getLogger(VideoThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
         while (true) {
             try {
-                BufferedImage bi = ImageIO.read(insocket.getInputStream());
-                if (bi != null) {
+                byte[] buffer = (byte[])in.readObject();
+                BufferedImage img = ImageIO.read(new ByteArrayInputStream(buffer));
+                if (img != null) {
                     System.out.println(count + "Recieved data!" + System.currentTimeMillis());
-                    Image i = SwingFXUtils.toFXImage(bi, null);
+                    Image i = SwingFXUtils.toFXImage(img, null);
                     controller.setImage(i);
                     System.out.println(count + "Verwerkt data!" + System.currentTimeMillis());
                     count++;
                 }
 
-            } catch (IOException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(VideoThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
