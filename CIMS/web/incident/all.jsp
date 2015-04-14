@@ -39,7 +39,7 @@
             <h1>Dichtsbijzijnde incident</h1>
             <p>Dit is het dichtsbijzijnde incident. Andere incidenten staan hieronder.</p>
             <div id="output"></div>            
-            <input type="submit" id="socketString">
+            <input type="submit" id="socketString" value="Check voor nieuwe incidenten"> 
             <div id ="newIncidents"></div>
             <%
                 List<Incident> incidentList = DatabaseManager.getIncidents();
@@ -93,9 +93,19 @@
         <script src="/CIMS/js/bootstrap.min.js"></script>
         <script type="text/javascript">
             $("#socketString").click(function() {
-               $("#newIncidents").html("<p>"+"${incident}"+"</p>");
+                $.ajax({
+                url : "ViewIncidentsServlet", // Your Servlet mapping or JSP(not suggested)
+                data : null, 
+                type : "POST",
+                dataType : "html", // Returns HTML as plain text; included script tags are evaluated when inserted in the DOM.
+                success : function(response) {
+                    $('#newIncidents').html(response); // create an empty div in your page with some id
+                },
+                error : function(request, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
             });
+        });
         </script>
-
     </body>
 </html>

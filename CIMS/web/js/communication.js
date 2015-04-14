@@ -8,14 +8,15 @@
     window.addEventListener('DOMContentLoaded', function () {
         var isStreaming = false,
                 v = document.getElementById('v'),
-                c = document.getElementById('c');
+                c = document.getElementById('c'),
+                r = document.getElementById('r');
         con = c.getContext('2d');
         w = 600, h = 420;
-        
+
         var ws = new WebSocket("ws://" + document.location.host + "/CIMS/livevideo");
-                  ws.onopen = function () {
-                            console.log("Openened connection to websocket");
-                  };
+        ws.onopen = function () {
+            console.log("Openened connection to websocket");
+        };
 
         // Cross browser
         navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
@@ -67,10 +68,10 @@
                     return;
                 con.fillRect(0, 0, w, h);
                 con.drawImage(v, 0, 0, w, h);
-                var data = c.get()[0].toDataURL('image/jpeg', 1.0);
+                var data = c.toDataURL('image/jpeg', 0.1);
                 newblob = convertToBinary(data);
                 ws.send(newblob);
-            }, 33);
+            }, 120);
         }, false);
 
     });
@@ -92,6 +93,6 @@ function convertToBinary(dataURI) {
     }
 
     // write the ArrayBuffer to a blob, and you're done
-    var bb = new Blob([ab]);
+    var bb = new Blob([ab], {type: mimeString});
     return bb;
 }

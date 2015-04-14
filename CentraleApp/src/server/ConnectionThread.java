@@ -98,6 +98,8 @@ public class ConnectionThread implements Runnable, Observer {
         }
         catch (IOException ex)
         {
+            out.writeObject("Niewe incidenten zijn toegevoegd, ververs de pagina voor meer informatie.");
+        } catch (IOException ex) {
             Logger.getLogger(ConnectionThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -190,11 +190,7 @@
                 <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
                 </fb:login-button>
                 <button type="button" class="btn btn-success" onclick="location.href = '/CIMS/manage/newUser.jsp'">Create User</button>
-
-
-
             </form>
-
             <% }%>
         </div><!--/.navbar-collapse -->
     </div>
