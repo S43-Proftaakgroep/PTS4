@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package call;
+package communication;
 
 import centraleapp.CallFXMLController;
 import java.awt.image.BufferedImage;
