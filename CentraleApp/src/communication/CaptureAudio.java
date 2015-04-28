@@ -45,6 +45,7 @@ public class CaptureAudio implements Runnable {
         }
     }
 
+    @Override
     public void run() {
 
         duration = 0;
