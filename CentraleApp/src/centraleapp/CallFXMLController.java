@@ -5,6 +5,7 @@
  */
 package centraleapp;
 
+import communication.AudioReceiver;
 import communication.VideoReceiver;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,13 +27,19 @@ public class CallFXMLController implements Initializable {
      * Initializes the controller class.
      */
     private Thread thread;
+    private Thread audioThread;
     private VideoReceiver videoReciever;
+    private AudioReceiver audioReceiver;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         videoReciever = new VideoReceiver(this);
         thread = new Thread(videoReciever);
         thread.start();
+        
+        audioReceiver = new AudioReceiver();
+        audioThread = new Thread(audioReceiver);
+        audioThread.start();
     }    
     
     public void setImage(Image image)

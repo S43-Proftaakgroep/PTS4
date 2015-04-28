@@ -45,10 +45,10 @@ public class VideoThread implements Runnable {
                 byte[] buffer = (byte[])in.readObject();
                 BufferedImage img = ImageIO.read(new ByteArrayInputStream(buffer));
                 if (img != null) {
-                    System.out.println(count + "Recieved data!" + System.currentTimeMillis());
+                    //System.out.println(count + "Recieved data!" + System.currentTimeMillis());
                     Image i = SwingFXUtils.toFXImage(img, null);
                     controller.setImage(i);
-                    System.out.println(count + "Verwerkt data!" + System.currentTimeMillis());
+                    //System.out.println(count + "Verwerkt data!" + System.currentTimeMillis());
                     count++;
                 }
 

@@ -140,6 +140,12 @@
                         out.write("class=\"active\"");
                     }%>
                     ><a href="/CIMS/incident/new.jsp">Nieuw incident</a></li>
+                
+                <li <% if (request.getServletPath().equals("/communications/index.jsp"))
+                    {
+                        out.write("class=\"active\"");
+                    }%>
+                    ><a href="/CIMS//communications/index.jsp">Call</a></li>
                     <% }
                         else
                         {
@@ -150,16 +156,6 @@
                         out.write("class=\"active\"");
                     }%>
                     ><a href="/CIMS/ViewIncidentsServlet">Incidenten</a></li>
-                <li <% if (request.getServletPath().equals("/about.jsp"))
-                    {
-                        out.write("class=\"active\"");
-                    }%>
-                    ><a href="/CIMS/about.jsp">About</a></li>
-                <li <% if (request.getServletPath().equals("/contact.jsp"))
-                    {
-                        out.write("class=\"active\"");
-                    }%>
-                    ><a href="/CIMS/contact.jsp">Contact</a></li>
             </ul>
             <%
                 if (currentUser != null && currentUser.isValid())
