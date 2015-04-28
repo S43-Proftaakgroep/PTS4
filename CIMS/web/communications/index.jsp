@@ -13,6 +13,7 @@
         <link href="/CIMS/css/bootstrap.min.css" rel="stylesheet">
         <link href="/CIMS/css/Site.css" rel="stylesheet">
         <script src="/CIMS/js/communication.js"></script>
+        <script src="/CIMS/js/MediaStreamRecorder.js"></script>
     </head>
     <body>
         <%@include file="/navigationBar.jsp" %>

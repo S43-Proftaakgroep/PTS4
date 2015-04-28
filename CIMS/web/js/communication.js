@@ -12,12 +12,13 @@
                 r = document.getElementById('r');
         con = c.getContext('2d');
         w = 600, h = 420;
-
+        var audioContext = new AudioContext();
         var ws = new WebSocket("ws://" + document.location.host + "/CIMS/livevideo");
         ws.onopen = function () {
             console.log("Openened connection to websocket");
         };
-
+        
+        var ws2 = new WebSocket("ws://" + document.location.host + "/CIMS/liveaudio");
         // Cross browser
         navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
         if (navigator.getUserMedia) {
@@ -32,6 +33,7 @@
                 var url = window.URL || window.webkitURL;
                 v.src = url ? url.createObjectURL(stream) : stream;
                 // Set the video to play
+                gotAudio(stream);
                 v.play();
             },
                     function (error) {
@@ -43,6 +45,27 @@
         else {
             alert('Sorry, the browser you are using doesn\'t support getUserMedia');
             return;
+        }
+
+        var streamRecorder;
+        function gotAudio(stream) {
+            var microphone = audioContext.createMediaStreamSource(stream);
+            var analyser = audioContext.createAnalyser();
+            microphone.connect(analyser);
+            analyser.connect(audioContext.destination);
+            streamRecorder = new MediaStreamRecorder(stream);
+            streamRecorder.mimeType = 'audio/wav';
+            streamRecorder.audioChannels = 1;
+            var reader = new window.FileReader();
+            streamRecorder.ondataavailable = function (blob) {
+                // POST/PUT "Blob" using FormData/XHR2
+                reader.readAsDataURL(blob);
+                reader.onloadend = function () {
+                    var base64data = reader.result;
+                    ws2.send(convertToBinary(base64data));
+                };
+            };
+            streamRecorder.start(3000);
         }
 
         // Wait until the video stream can play
