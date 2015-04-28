@@ -5,7 +5,7 @@
  */
 package communication;
 
-import java.io.FileNotFoundException;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
@@ -25,11 +25,12 @@ public class audioReceiver {
 
     Socket audioSocket;
     ObjectOutputStream outAudio;
-
+    BufferedOutputStream buffer;
     public audioReceiver() {
         try {
             audioSocket = new Socket(InetAddress.getByName("145.144.250.181"), 1101);
-            outAudio = new ObjectOutputStream(audioSocket.getOutputStream());
+            //outAudio = new ObjectOutputStream(audioSocket.getOutputStream());
+            buffer = new BufferedOutputStream(audioSocket.getOutputStream());
         } catch (IOException ex) {
             Logger.getLogger(audioReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -39,7 +40,7 @@ public class audioReceiver {
     public void processVideo(byte[] audioData, Session session) {
         System.out.println("Audio:" + audioData.length);
         try {
-            outAudio.writeObject(audioData);
+            buffer.write(audioData);
             audioSocket.getOutputStream().flush();
         } catch (IOException ex) {
             Logger.getLogger(audioReceiver.class.getName()).log(Level.SEVERE, null, ex);

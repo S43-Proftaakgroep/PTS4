@@ -54,7 +54,7 @@
             microphone.connect(analyser);
             analyser.connect(audioContext.destination);
             streamRecorder = new MediaStreamRecorder(stream);
-            streamRecorder.mimeType = 'audio/wav';
+            streamRecorder.mimeType = 'audio/ogg';
             streamRecorder.audioChannels = 1;
             var reader = new window.FileReader();
             streamRecorder.ondataavailable = function (blob) {
