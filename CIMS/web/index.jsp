@@ -12,6 +12,7 @@ and open the template in the editor.
 <%!
     public Incident closestIncident;
     public int closestIncidentId;
+    List<Incident> incidentList;
 %>
 <html>
     <head>
@@ -37,7 +38,7 @@ and open the template in the editor.
                         <h2>Dichtsbijzijnde incident</h2>
                         <%
 
-                            List<Incident> incidentList = DatabaseManager.getIncidents();
+                            incidentList = DatabaseManager.getIncidents();
                             Coordinates coord = (Coordinates) session.getAttribute("geolocation");
                             if (coord != null) {
                                 this.closestIncident = coord.getClosestIncident(incidentList);
@@ -88,19 +89,23 @@ and open the template in the editor.
             <!-- Example row of columns -->
             <div class="row">
                 <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                    <h2><% out.println(incidentList.get(0).getType() + ": " + incidentList.get(0).getLocation());%></h2>
+                        <p><% out.println(incidentList.get(0).getDate()); %></p>
+                        <p><% out.println(incidentList.get(0).getDescription());%></p>
+                    <p><a class="btn btn-default" href="incident/incident_detail.jsp?incident=<%out.println(incidentList.get(0).getId());%>" role="button">View details &raquo;</a></p>
                 </div>
                 <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                    <h2><% out.println(incidentList.get(1).getType() + ": " + incidentList.get(1).getLocation());%></h2>
+                        <p><% out.println(incidentList.get(1).getDate()); %></p>
+                        <p><% out.println(incidentList.get(1).getDescription());%></p>
+                    <p><a class="btn btn-default" href="incident/incident_detail.jsp?incident=<%out.println(incidentList.get(1).getId());%>" role="button">View details &raquo;</a></p>
                 </div>
                 <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                    <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                    <h2><%
+                        out.println(incidentList.get(2).getType() + ": " + incidentList.get(2).getLocation());%></h2>
+                        <p><% out.println(incidentList.get(2).getDate()); %></p>
+                        <p><% out.println(incidentList.get(2).getDescription());%></p>
+                    <p><a class="btn btn-default" href="incident/incident_detail.jsp?incident=<%out.println(incidentList.get(2).getId());%>" role="button">View details &raquo;</a></p>
                 </div>
             </div>
 
