@@ -35,7 +35,6 @@ and open the template in the editor.
                                 }
                             }%>
                         <h2>Dichtsbijzijnde incident</h2>
-                        <p>Dit is het dichtsbijzijnde incident.</p>
                         <%
 
                             List<Incident> incidentList = DatabaseManager.getIncidents();
@@ -64,7 +63,7 @@ and open the template in the editor.
                                         out.println(closestIncident.getType());
                                     }%></h5>
                             <br />
-                            <p><a class="btn btn-success btn-lg" href="/CIMS/communications/index.jsp" role="button">Call about this incident &raquo;</a></p>
+                            <h5><a class="btn btn-success" href="/CIMS/communications/index.jsp" role="button">Call about this incident &raquo;</a></h5>
                             <hr style="border-color: #cccccc"/> 
                             <!--  Action is nog niet ingevuld, nog overleggen waar we de afbeeldingen/files opslaan-->
                             <form method="post" action="" enctype="multipart/form-data">
@@ -79,7 +78,8 @@ and open the template in the editor.
             </div>
             <div class="col-md-6" id="col2">
                 <div class="jumbotron" id="jum2">
-                    <p><a class="btn btn-success btn-lg" href="/CIMS/communications/index.jsp" role="button">Call HQ &raquo;</a></p>
+                    <h2>Bellen voor nieuw incident</h2>
+                    <h5><a class="btn btn-success" href="/CIMS/communications/index.jsp" role="button">Call HQ &raquo;</a></h5>
                 </div>
             </div>
         </div>
