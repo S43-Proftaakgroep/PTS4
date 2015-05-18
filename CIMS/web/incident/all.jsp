@@ -75,7 +75,7 @@
                         String url = "incident/incident_detail.jsp?incident=" + i.getId();
                 %>
                 <tr>
-                    <td><a href=<%=url%>><%out.write(i.getType() + "(" + i.getLocation() + ") ");%></a></td>
+                    <td><a href=<%=url%><%out.write(i.getType() + "(" + i.getLocation() + ") ");%></a></td>
                     <td><%out.write(i.getDate());%> </td>
                     <td><%out.write(i.getLocation());%> </td>
                     <td><%out.write(i.getDescription());%></td>

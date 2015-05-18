@@ -43,7 +43,6 @@ public class SendInfoToCentral extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        System.out.println("yay");
         try
         {
             UserBean currentUser = (UserBean) request.getSession().getAttribute("currentSessionUser");
