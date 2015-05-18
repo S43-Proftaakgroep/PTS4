@@ -74,7 +74,7 @@
                         String url = "incident/incident_detail.jsp?incident=" + i.getId();
                 %>
                 <tr>
-                    <td><a href=<%=url%><%out.write(i.getType() + "(" + i.getLocation() + ") ");%></a></td>
+                    <td><a href=<%=url%>> <%out.write(i.getType() + "(" + i.getLocation() + ") ");%></a></td>
                     <td><%out.write(i.getDate());%> </td>
                     <td><%out.write(i.getLocation());%> </td>
                     <td><%out.write(i.getDescription());%></td>
@@ -92,7 +92,6 @@
         <script src="/CIMS/js/bootstrap.min.js"></script>
         <script type="text/javascript">
             $(function updateIncidents() {
-                alert("test");
                 $.ajax({
                     url: "ViewIncidentsServlet", // Your Servlet mapping or JSP(not suggested)
                     data: null,
