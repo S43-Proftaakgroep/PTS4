@@ -26,9 +26,13 @@ public class audioReceiver {
     Socket audioSocket;
     ObjectOutputStream outAudio;
     BufferedOutputStream buffer;
+    CentralAudio audioReceiver;
     public audioReceiver() {
         try {
-            audioSocket = new Socket(InetAddress.getByName("145.144.250.181"), 1101);
+            audioReceiver = new CentralAudio();
+            Thread t = new Thread(audioReceiver);
+            t.start();
+            audioSocket = new Socket(InetAddress.getByName("145.144.252.55"), 1101);
             //outAudio = new ObjectOutputStream(audioSocket.getOutputStream());
             buffer = new BufferedOutputStream(audioSocket.getOutputStream());
         } catch (IOException ex) {
@@ -38,7 +42,7 @@ public class audioReceiver {
 
     @OnMessage
     public void processVideo(byte[] audioData, Session session) {
-        System.out.println("Audio:" + audioData.length);
+        //System.out.println("Audio:" + audioData.length);
         try {
             buffer.write(audioData);
             audioSocket.getOutputStream().flush();
