@@ -70,6 +70,7 @@ and open the template in the editor.
                                 <h5><strong>Info verzenden</strong></h5>
                                 <h5>Verstuur bericht: <input type="text" name="message" /></h5>
                                 <h5>Verzend bestand: <input type="file" name="file" /></h5>
+                                <input type="hidden" name="incidentId" value="<%=closestIncident.getId()%>"/>
                                 <h5><button type="submit" class="btn btn-success">Send &raquo;</button></h5>
                             </form>
 
