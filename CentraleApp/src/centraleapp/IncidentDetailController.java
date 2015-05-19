@@ -23,6 +23,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -66,11 +67,19 @@ public class IncidentDetailController implements Observer, Initializable {
     ListView<String> lvSocialMedia;
     @FXML
     WebView webView;
+    @FXML
+    CheckBox cbWeather;
+    @FXML
+    CheckBox cbSocialMedia;
     private WebEngine webEngine;
 
     //Tab Advices
     @FXML
     Button btnAddAdvice;
+    @FXML
+    Button btnEditAdvice;
+    @FXML
+    Button btnRemoveAdvice;
     @FXML
     ListView lvAdvicepage;
     @FXML
@@ -93,16 +102,29 @@ public class IncidentDetailController implements Observer, Initializable {
      * @param rb
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
+    public void initialize(URL url, ResourceBundle rb) {
         webEngine = webView.getEngine();
         advices = FXCollections.observableArrayList();
         messageContainer = MessageContainer.getInstance();
         messageContainer.addObserver(this);
+        cbWeather.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                lblIncidentWeather.setVisible(cbWeather.isSelected());
+                //Set weather to irrelevant in webpages too
+            }
+        });
+        cbSocialMedia.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                lblIncidentSocial.setVisible(cbSocialMedia.isSelected());
+                //Set social media to irrelevant in webpages too
+            }
+        });
     }
 
-    public void init(Incident incident)
-    {
+    public void init(Incident incident) {
         this.incident = incident;
 
         //TAB 1 - Incident
@@ -112,11 +134,9 @@ public class IncidentDetailController implements Observer, Initializable {
         Task<List<String>> adviceTask = new Task<List<String>>() {
 
             @Override
-            protected List<String> call() throws Exception
-            {
+            protected List<String> call() throws Exception {
                 List<String> data = DatabaseManager.getAdviceById(incident.getId());
-                if (data.size() < 1)
-                {
+                if (data.size() < 1) {
                     data.add("<Geen adviezen>");
                 }
                 super.succeeded();
@@ -126,8 +146,7 @@ public class IncidentDetailController implements Observer, Initializable {
 
         Task<String> weatherTask = new Task<String>() {
             @Override
-            protected String call() throws Exception
-            {
+            protected String call() throws Exception {
                 String result = getWeatherInfo(incident.getLocation());
                 super.succeeded();
                 return result;
@@ -137,8 +156,7 @@ public class IncidentDetailController implements Observer, Initializable {
         Task<String> socialMediaTask = new Task<String>() {
 
             @Override
-            protected String call() throws Exception
-            {
+            protected String call() throws Exception {
                 // TODO add Twitter handling.
                 TwitterFeed twitterFeed = new TwitterFeed();
                 super.succeeded();
@@ -148,19 +166,14 @@ public class IncidentDetailController implements Observer, Initializable {
 
         adviceTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event)
-            {
+            public void handle(WorkerStateEvent event) {
                 Platform.runLater(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        try
-                        {
+                    public void run() {
+                        try {
                             grid.getChildren().remove(piAdvice);
                             advices.addAll(adviceTask.get());
-                        }
-                        catch (InterruptedException | ExecutionException ex)
-                        {
+                        } catch (InterruptedException | ExecutionException ex) {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -170,21 +183,16 @@ public class IncidentDetailController implements Observer, Initializable {
 
         weatherTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event)
-            {
+            public void handle(WorkerStateEvent event) {
                 Platform.runLater(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        try
-                        {
+                    public void run() {
+                        try {
                             vbox.getChildren().remove(piWeather);
                             WebView wv = new WebView();
                             wv.getEngine().loadContent(weatherTask.get());
                             lblIncidentWeather.setGraphic(wv);
-                        }
-                        catch (InterruptedException | ExecutionException ex)
-                        {
+                        } catch (InterruptedException | ExecutionException ex) {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -194,22 +202,17 @@ public class IncidentDetailController implements Observer, Initializable {
 
         socialMediaTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event)
-            {
+            public void handle(WorkerStateEvent event) {
                 Platform.runLater(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        try
-                        {
+                    public void run() {
+                        try {
                             vbox.getChildren().remove(piSocialMedia);
                             WebView wv = new WebView();
                             wv.getEngine().loadContent(socialMediaTask.get());
                             // set contents
                             lblIncidentSocial.setGraphic(wv);
-                        }
-                        catch (InterruptedException | ExecutionException ex)
-                        {
+                        } catch (InterruptedException | ExecutionException ex) {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -225,6 +228,8 @@ public class IncidentDetailController implements Observer, Initializable {
         lblIncidentWeather.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
         //TAB 2 - Advice
+        lvAdvicepage.setItems(advices);
+        
         //TODO
         // TAB 4 - Sent Information
         messages = FXCollections.observableArrayList(DatabaseManager.getMessagesWithId(incident.getId()));
@@ -235,8 +240,7 @@ public class IncidentDetailController implements Observer, Initializable {
         nameCol.setMinWidth(200);
         nameCol.setCellValueFactory(new Callback<CellDataFeatures<Message, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Message, String> p)
-            {
+            public ObservableValue<String> call(CellDataFeatures<Message, String> p) {
                 // p.getValue() returns the Person instance for a particular TableView row
                 return new SimpleStringProperty(p.getValue().getSender());
             }
@@ -246,8 +250,7 @@ public class IncidentDetailController implements Observer, Initializable {
         messageCol.setMinWidth(500);
         messageCol.setCellValueFactory(new Callback<CellDataFeatures<Message, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Message, String> p)
-            {
+            public ObservableValue<String> call(CellDataFeatures<Message, String> p) {
                 // p.getValue() returns the Person instance for a particular TableView row
                 return new SimpleStringProperty(p.getValue().getMessageText());
             }
@@ -257,8 +260,7 @@ public class IncidentDetailController implements Observer, Initializable {
         dateCol.setMinWidth(200);
         dateCol.setCellValueFactory(new Callback<CellDataFeatures<Message, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Message, String> p)
-            {
+            public ObservableValue<String> call(CellDataFeatures<Message, String> p) {
                 // p.getValue() returns the Person instance for a particular TableView row
                 return new SimpleStringProperty(p.getValue().getDate());
             }
@@ -270,8 +272,7 @@ public class IncidentDetailController implements Observer, Initializable {
 
     }
 
-    private String getWeatherInfo(String location)
-    {
+    private String getWeatherInfo(String location) {
         WeatherFeed wf = new WeatherFeed(location, WeatherFeed.Query.TEMPERATURE);
         String temp = wf.getData();
         wf.setQuery(WeatherFeed.Query.DESCRIPTION);
@@ -288,18 +289,13 @@ public class IncidentDetailController implements Observer, Initializable {
     }
 
     @Override
-    public void update(Observable o, Object arg)
-    {
+    public void update(Observable o, Object arg) {
         Platform.runLater(new Runnable() {
-
             @Override
-            public void run()
-            {
-                if (arg != null)
-                {
+            public void run() {
+                if (arg != null) {
                     Message message = (Message) arg;
-                    if (incident.getId() == message.getIncidentId())
-                    {
+                    if (incident.getId() == message.getIncidentId()) {
                         //synchronised?
                         messages.add(message);
                         tableIncidentInfo.setItems(messages);
