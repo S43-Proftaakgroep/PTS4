@@ -66,19 +66,11 @@ and open the template in the editor.
                             <h5><a class="btn btn-success" href="/CIMS/communications/index.jsp" role="button">Bel over dit incident &raquo;</a></h5>
                             <hr style="border-color: #cccccc"/> 
                             <!--  Action is nog niet ingevuld, nog overleggen waar we de afbeeldingen/files opslaan-->
-<<<<<<< HEAD
                             <form method="post" action="/CIMS/UploadFileFtp" enctype="multipart/form-data">
-                                <h5><strong>Send Info</strong></h5>
-                                <h5>Send message: <input type="text" name="message" /></h5>
-                                <h5>Send file: <input type="file" name="file" /></h5>
-                                <h5><button type="submit" class="btn btn-success">Send &raquo;</button></h5>
-=======
-                            <form method="post" action="" enctype="multipart/form-data">
                                 <h5><strong>Info verzenden</strong></h5>
-                                <h5>Verzend bericht: <input type="text" name="message" /></h5>
+                                <h5>Verstuur bericht: <input type="text" name="message" /></h5>
                                 <h5>Verzend bestand: <input type="file" name="file" /></h5>
-                                <h5><submit class="btn btn-success">Verstuur &raquo;</submit></h5>
->>>>>>> origin/master
+                                <h5><button type="submit" class="btn btn-success">Send &raquo;</button></h5>
                             </form>
 
                     </div>
