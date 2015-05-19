@@ -14,7 +14,6 @@ and open the template in the editor.
     public Incident closestIncident;
     public int closestIncidentId;
     List<Incident> incidentList;
-    public UserBean thisUser;
 %>
 <html>
     <head>
@@ -27,6 +26,14 @@ and open the template in the editor.
     <body>
         <%@include file="/navigationBar.jsp" %>
         <!-- Main jumbotron for a primary marketing message or call to action -->
+        <%
+            incidentList = DatabaseManager.getIncidents();
+            Coordinates coord = (Coordinates) session.getAttribute("geolocation");
+            if (coord != null) {
+                this.closestIncident = coord.getClosestIncident(incidentList);
+                this.closestIncidentId = closestIncident.getId();
+            }
+            if (currentUser != null && currentUser.isValid()) {%>
         <div class="row container" id="rowCall" style="width:100%">
             <div class="col-md-6" id="col1">
                 <div class="jumbotron" id="jum1">
@@ -38,16 +45,6 @@ and open the template in the editor.
                                 }
                             }%>
                         <h2>Dichtstbijzijnde incident</h2>
-                        <%
-
-                            incidentList = DatabaseManager.getIncidents();
-                            Coordinates coord = (Coordinates) session.getAttribute("geolocation");
-                            if (coord != null) {
-                                this.closestIncident = coord.getClosestIncident(incidentList);
-                                this.closestIncidentId = closestIncident.getId();
-                            }
-
-                        %>
                         <h1>
                             <a  class="btn btn-primary" href="incident/incident_detail.jsp?incident=<%=closestIncidentId%>">
                                 <%
@@ -86,7 +83,8 @@ and open the template in the editor.
                 </div>
             </div>
         </div>
-        
+        <% } %>
+
         <div class="container">
             <!-- Example row of columns -->
             <div class="row">
