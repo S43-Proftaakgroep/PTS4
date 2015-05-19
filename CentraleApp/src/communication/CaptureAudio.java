@@ -64,7 +64,7 @@ public class CaptureAudio implements Runnable {
         // and make sure a compatible line is supported.
         AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
         float rate = 44100.0f;
-        int channels = 1;
+        int channels = 2;
         int sampleSize = 16;
         boolean bigEndian = true;
 
@@ -103,52 +103,17 @@ public class CaptureAudio implements Runnable {
         int numBytesRead;
 
         line.start();
-
         while (true) {
-            if ((numBytesRead = line.read(data, 0, bufferLengthInBytes)) == -1) {
-                break;
-            }
-            out.write(data, 0, numBytesRead);
+            numBytesRead = line.read(data, 0, bufferLengthInBytes);
             try {
                 buffer.write(out.toByteArray());
                 socket.getOutputStream().flush();
-                System.out.println("test");
+                System.out.println("test: " + numBytesRead + " + " + data.length);
             } catch (IOException ex) {
                 Logger.getLogger(CaptureAudio.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
-        // we reached the end of the stream.
-        // stop and close the line.
-        line.stop();
-        line.close();
-        line = null;
-
-        // stop and close the output stream
-        try {
-            out.flush();
-            out.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        // load bytes into the audio input stream for playback
-        byte audioBytes[] = out.toByteArray();
-        System.out.println("Length" + audioBytes.length);
-        ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
-        audioInputStream = new AudioInputStream(bais, format, audioBytes.length / frameSizeInBytes);
-
-        long milliseconds = (long) ((audioInputStream.getFrameLength() * 1000) / format
-                .getFrameRate());
-        duration = milliseconds / 1000.0;
-
-        try {
-            audioInputStream.reset();
-            System.out.println("fafda");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return;
-        }
 
     }
 } // End class Capture

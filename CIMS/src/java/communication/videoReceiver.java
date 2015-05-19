@@ -23,7 +23,7 @@ public class videoReceiver {
     ObjectOutputStream out;
     public videoReceiver() {
         try {
-            socket = new Socket(InetAddress.getByName("145.144.250.181"), 1100);
+            socket = new Socket(InetAddress.getByName("127.0.0.1"), 1100);
             out = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -33,7 +33,7 @@ public class videoReceiver {
     @OnMessage
     public void processVideo(byte[] imageData, Session session) {
         try {
-            System.out.println("Sending data!" + System.currentTimeMillis() + "Bytes: " + imageData.length);
+            //System.out.println("Sending data!" + System.currentTimeMillis() + "Bytes: " + imageData.length);
             out.writeObject(imageData);
             socket.getOutputStream().flush();
         } catch (IOException ex) {
