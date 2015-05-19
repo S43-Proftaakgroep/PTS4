@@ -1,3 +1,4 @@
+<%@ page pageEncoding="UTF-8" import="authentication.UserBean" %>
 <%@page import="java.util.List"%>
 <%@page import="websockets.Coordinates"%>
 <%@page import="cims.DatabaseManager"%>
@@ -13,6 +14,7 @@ and open the template in the editor.
     public Incident closestIncident;
     public int closestIncidentId;
     List<Incident> incidentList;
+    public UserBean currentUser;
 %>
 <html>
     <head>
@@ -25,6 +27,8 @@ and open the template in the editor.
     <body>
         <%@include file="/navigationBar.jsp" %>
         <!-- Main jumbotron for a primary marketing message or call to action -->
+        <%currentUser = (UserBean) session.getAttribute("currentSessionUser");
+            if (currentUser != null && currentUser.isValid()) {%>
         <div class="row container" id="rowCall" style="width:100%">
             <div class="col-md-6" id="col1">
                 <div class="jumbotron" id="jum1">
@@ -84,27 +88,27 @@ and open the template in the editor.
                 </div>
             </div>
         </div>
-
+        <% } %>
         <div class="container">
             <!-- Example row of columns -->
             <div class="row">
                 <div class="col-md-4">
                     <h2><% out.println(incidentList.get(0).getType() + ": " + incidentList.get(0).getLocation());%></h2>
-                        <p><% out.println(incidentList.get(0).getDate()); %></p>
-                        <p><% out.println(incidentList.get(0).getDescription());%></p>
+                    <p><% out.println(incidentList.get(0).getDate()); %></p>
+                    <p><% out.println(incidentList.get(0).getDescription());%></p>
                     <p><a class="btn btn-default" href="incident/incident_detail.jsp?incident=<%out.println(incidentList.get(0).getId());%>" role="button">Meer informatie &raquo;</a></p>
                 </div>
                 <div class="col-md-4">
                     <h2><% out.println(incidentList.get(1).getType() + ": " + incidentList.get(1).getLocation());%></h2>
-                        <p><% out.println(incidentList.get(1).getDate()); %></p>
-                        <p><% out.println(incidentList.get(1).getDescription());%></p>
+                    <p><% out.println(incidentList.get(1).getDate()); %></p>
+                    <p><% out.println(incidentList.get(1).getDescription());%></p>
                     <p><a class="btn btn-default" href="incident/incident_detail.jsp?incident=<%out.println(incidentList.get(1).getId());%>" role="button">Meer informatie &raquo;</a></p>
                 </div>
                 <div class="col-md-4">
                     <h2><%
                         out.println(incidentList.get(2).getType() + ": " + incidentList.get(2).getLocation());%></h2>
-                        <p><% out.println(incidentList.get(2).getDate()); %></p>
-                        <p><% out.println(incidentList.get(2).getDescription());%></p>
+                    <p><% out.println(incidentList.get(2).getDate()); %></p>
+                    <p><% out.println(incidentList.get(2).getDescription());%></p>
                     <p><a class="btn btn-default" href="incident/incident_detail.jsp?incident=<%out.println(incidentList.get(2).getId());%>" role="button">Meer informatie &raquo;</a></p>
                 </div>
             </div>

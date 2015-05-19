@@ -141,11 +141,6 @@
                     }%>
                     ><a href="/CIMS/incident/new.jsp">Nieuw incident</a></li>
                 
-                <li <% if (request.getServletPath().equals("/communications/index.jsp"))
-                    {
-                        out.write("class=\"active\"");
-                    }%>
-                    ><a href="/CIMS//communications/index.jsp">Bel</a></li>
                     <% }
                         else
                         {
