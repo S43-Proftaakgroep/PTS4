@@ -58,7 +58,7 @@
                               <ListView fx:id="lvAdvices" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <VBox fx:id="vbox" layoutX="307.0" layoutY="4.260997772216797" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                  <children>
-                                    <CheckBox mnemonicParsing="false" selected="true" text="CheckBox" />
+                                    <CheckBox fx:id="cbWeather" mnemonicParsing="false" selected="true" text="CheckBox" />
                                     <ProgressIndicator fx:id="piWeather" layoutX="333.0" layoutY="14.0" maxHeight="52.0" minHeight="52.0" />
                                     <Label fx:id="lblIncidentWeather" alignment="CENTER" contentDisplay="CENTER" layoutX="307.0" layoutY="31.0" text="Loading weather">
                                        <font>
@@ -77,9 +77,9 @@
                               <ProgressIndicator fx:id="piAdvice" maxHeight="52.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <children>
-                                    <CheckBox mnemonicParsing="false" selected="true" text="CheckBox" />
+                                    <CheckBox fx:id="cbSocialMedia" mnemonicParsing="false" selected="true" text="CheckBox" />
                                     <ProgressIndicator fx:id="piSocialMedia" maxHeight="52.0" />
-                                     <Label fx:id="lblIncidentSocial" alignment="CENTER" contentDisplay="CENTER" layoutX="307.0" layoutY="31.0" text="Loading weather">
+                                     <Label fx:id="lblIncidentSocial" alignment="CENTER" contentDisplay="CENTER" layoutX="307.0" layoutY="31.0" text="Loading Social Media">
                                      <font>
                                          <Font size="12.0" />
                                      </font>
@@ -119,8 +119,8 @@
                               <HBox prefHeight="50.0" prefWidth="362.0" spacing="40.0">
                                  <children>
                                     <Button fx:id="btnAddAdvice" mnemonicParsing="false" text="Voeg toe" />
-                                    <Button mnemonicParsing="false" text="Wijzig" />
-                                    <Button mnemonicParsing="false" text="Verwijder" />
+                                    <Button fx:id="btnEditAdvice" mnemonicParsing="false" text="Wijzig" />
+                                    <Button fx:id="btnRemoveAdvice" mnemonicParsing="false" text="Verwijder" />
                                  </children>
                               </HBox>
                            </children>
