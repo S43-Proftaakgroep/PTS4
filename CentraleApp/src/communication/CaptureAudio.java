@@ -106,7 +106,7 @@ public class CaptureAudio implements Runnable {
         while (true) {
             numBytesRead = line.read(data, 0, bufferLengthInBytes);
             try {
-                buffer.write(data);
+                buffer.write(out.toByteArray());
                 socket.getOutputStream().flush();
                 System.out.println("test: " + numBytesRead + " + " + data.length);
             } catch (IOException ex) {

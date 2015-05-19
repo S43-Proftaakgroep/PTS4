@@ -27,7 +27,7 @@ public class CentralAudio implements Runnable {
 
     public CentralAudio() {
         try {
-            socket = new Socket("145.144.252.55", 1102);
+            socket = new Socket("127.0.0.1", 1102);
             //buffer = new BufferedInputStream(socket.getInputStream());
             //receiveAudio();
         } catch (IOException ex) {
