@@ -5,9 +5,16 @@
  */
 package communication;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -26,17 +33,19 @@ public class CaptureAudio implements Runnable {
     String errStr;
     double duration;
     AudioInputStream audioInputStream;
+    int count = 0;
+    Socket socket;
+    BufferedOutputStream buffer;
 
-    public void start() {
-        errStr = null;
-        thread = new Thread(this);
-        thread.setName("Capture");
-        thread.start();
+    public CaptureAudio(Socket socket) {
+        this.socket = socket;
+        try {
+            buffer = new BufferedOutputStream(socket.getOutputStream());
+        } catch (IOException ex) {
+            Logger.getLogger(CaptureAudio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public void stop() {
-        thread = null;
-    }
 
     private void shutDown(String message) {
         if ((errStr = message) != null && thread != null) {
@@ -51,12 +60,11 @@ public class CaptureAudio implements Runnable {
         duration = 0;
         audioInputStream = null;
 
-      // define the required attributes for our line,
+        // define the required attributes for our line,
         // and make sure a compatible line is supported.
         AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
         float rate = 44100.0f;
-        int channels = 2;
-        int frameSize = 4;
+        int channels = 1;
         int sampleSize = 16;
         boolean bigEndian = true;
 
@@ -70,7 +78,7 @@ public class CaptureAudio implements Runnable {
             return;
         }
 
-      // get and open the target data line for capture.
+        // get and open the target data line for capture.
         try {
             line = (TargetDataLine) AudioSystem.getLine(info);
             line.open(format, line.getBufferSize());
@@ -96,14 +104,21 @@ public class CaptureAudio implements Runnable {
 
         line.start();
 
-        while (thread != null) {
+        while (true) {
             if ((numBytesRead = line.read(data, 0, bufferLengthInBytes)) == -1) {
                 break;
             }
             out.write(data, 0, numBytesRead);
+            try {
+                buffer.write(out.toByteArray());
+                socket.getOutputStream().flush();
+                System.out.println("test");
+            } catch (IOException ex) {
+                Logger.getLogger(CaptureAudio.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
-      // we reached the end of the stream.
+        // we reached the end of the stream.
         // stop and close the line.
         line.stop();
         line.close();
@@ -117,8 +132,9 @@ public class CaptureAudio implements Runnable {
             ex.printStackTrace();
         }
 
-      // load bytes into the audio input stream for playback
+        // load bytes into the audio input stream for playback
         byte audioBytes[] = out.toByteArray();
+        System.out.println("Length" + audioBytes.length);
         ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
         audioInputStream = new AudioInputStream(bais, format, audioBytes.length / frameSizeInBytes);
 
@@ -128,6 +144,7 @@ public class CaptureAudio implements Runnable {
 
         try {
             audioInputStream.reset();
+            System.out.println("fafda");
         } catch (Exception ex) {
             ex.printStackTrace();
             return;
@@ -135,5 +152,4 @@ public class CaptureAudio implements Runnable {
 
     }
 } // End class Capture
-
 
