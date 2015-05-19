@@ -145,7 +145,7 @@
                     {
                         out.write("class=\"active\"");
                     }%>
-                    ><a href="/CIMS//communications/index.jsp">Call</a></li>
+                    ><a href="/CIMS//communications/index.jsp">Bel</a></li>
                     <% }
                         else
                         {
@@ -167,7 +167,7 @@
                         out.write("class=\"active\"");
                     }%>
                     ><a href="/CIMS/manage/index.jsp" title="Beheer je account">Hallo, <%=currentUser.getUsername()%></a></li>
-                <li><button type="button" class="btn btn-success" onclick="logOut();">Log out</button></li>
+                <li><button type="button" class="btn btn-success" onclick="logOut();">Log uit</button></li>
 
             </ul>
             <% }
@@ -185,7 +185,7 @@
                 <button type="submit" class="btn btn-success">Log in</button>
                 <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
                 </fb:login-button>
-                <button type="button" class="btn btn-success" onclick="location.href = '/CIMS/manage/newUser.jsp'">Create User</button>
+                <button type="button" class="btn btn-success" onclick="location.href = '/CIMS/manage/newUser.jsp'">Maak account</button>
             </form>
             <% }%>
         </div><!--/.navbar-collapse -->
