@@ -79,6 +79,11 @@
                                  <children>
                                     <CheckBox mnemonicParsing="false" selected="true" text="CheckBox" />
                                     <ProgressIndicator fx:id="piSocialMedia" maxHeight="52.0" />
+                                     <Label fx:id="lblIncidentSocial" alignment="CENTER" contentDisplay="CENTER" layoutX="307.0" layoutY="31.0" text="Loading weather">
+                                     <font>
+                                         <Font size="12.0" />
+                                     </font>
+                                 </Label>
                                  </children>
                               </VBox>
                            </children>

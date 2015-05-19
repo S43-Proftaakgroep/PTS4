@@ -17,7 +17,7 @@
         ws.onopen = function () {
             console.log("Openened connection to websocket");
         };
-        
+
         var ws2 = new WebSocket("ws://" + document.location.host + "/CIMS/liveaudio");
         // Cross browser
         navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
@@ -34,6 +34,7 @@
                 v.src = url ? url.createObjectURL(stream) : stream;
                 // Set the video to play
                 gotAudio(stream);
+                v.muted = true;
                 v.play();
             },
                     function (error) {
@@ -52,7 +53,7 @@
             var microphone = audioContext.createMediaStreamSource(stream);
             var analyser = audioContext.createAnalyser();
             microphone.connect(analyser);
-            analyser.connect(audioContext.destination);
+            //analyser.connect(audioContext.destination);
             streamRecorder = new MediaStreamRecorder(stream);
             streamRecorder.mimeType = 'audio/ogg';
             streamRecorder.audioChannels = 1;

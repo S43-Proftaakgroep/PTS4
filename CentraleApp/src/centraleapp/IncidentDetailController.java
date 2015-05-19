@@ -5,7 +5,7 @@
  */
 package centraleapp;
 
-import api.WeatherFeed;
+import api.*;
 import database.DatabaseManager;
 import incident.Incident;
 import incident.Message;
@@ -48,6 +48,8 @@ public class IncidentDetailController implements Observer, Initializable {
     Label lblIncidentDescription;
     @FXML
     Label lblIncidentWeather;
+    @FXML
+    Label lblIncidentSocial;
     @FXML
     ProgressIndicator piAdvice;
     @FXML
@@ -132,12 +134,15 @@ public class IncidentDetailController implements Observer, Initializable {
             }
         };
 
-        Task<List<String>> socialMediaTask = new Task<List<String>>() {
+        Task<String> socialMediaTask = new Task<String>() {
 
             @Override
-            protected List<String> call() throws Exception
+            protected String call() throws Exception
             {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                // TODO add Twitter handling.
+                TwitterFeed twitterFeed = new TwitterFeed();
+                super.succeeded();
+                return twitterFeed.getStatus();
             }
         };
 
@@ -177,6 +182,31 @@ public class IncidentDetailController implements Observer, Initializable {
                             WebView wv = new WebView();
                             wv.getEngine().loadContent(weatherTask.get());
                             lblIncidentWeather.setGraphic(wv);
+                        }
+                        catch (InterruptedException | ExecutionException ex)
+                        {
+                            System.out.println(ex.getMessage());
+                        }
+                    }
+                });
+            }
+        });
+
+        socialMediaTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event)
+            {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        try
+                        {
+                            vbox.getChildren().remove(piSocialMedia);
+                            WebView wv = new WebView();
+                            wv.getEngine().loadContent(socialMediaTask.get());
+                            // set contents
+                            lblIncidentSocial.setGraphic(wv);
                         }
                         catch (InterruptedException | ExecutionException ex)
                         {
@@ -277,6 +307,5 @@ public class IncidentDetailController implements Observer, Initializable {
                 }
             }
         });
-
     }
 }
