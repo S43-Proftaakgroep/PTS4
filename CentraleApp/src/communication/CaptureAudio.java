@@ -64,8 +64,8 @@ public class CaptureAudio implements Runnable {
         // and make sure a compatible line is supported.
         AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
         float rate = 44100.0f;
-        int channels = 2;
-        int sampleSize = 16;
+        int channels = 1;
+        int sampleSize = 8;
         boolean bigEndian = true;
 
         AudioFormat format = new AudioFormat(encoding, rate, sampleSize, channels, (sampleSize / 8)
@@ -106,7 +106,7 @@ public class CaptureAudio implements Runnable {
         while (true) {
             numBytesRead = line.read(data, 0, bufferLengthInBytes);
             try {
-                buffer.write(out.toByteArray());
+                buffer.write(data);
                 socket.getOutputStream().flush();
                 System.out.println("test: " + numBytesRead + " + " + data.length);
             } catch (IOException ex) {
