@@ -5,6 +5,7 @@
  */
 package incident;
 
+import cims.DatabaseManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -49,6 +50,10 @@ public class UploadFileFtp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
+        int incidentId = -1;
+        String message = "";
+        boolean succes = false;
+        String nameOfFile = "";
         boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
         if (!isMultipartContent)
         {
@@ -76,6 +81,12 @@ public class UploadFileFtp extends HttpServlet {
                 if (isFormField)
                 {
                     out.println("FieldName: " + fileItem.getFieldName() + ", Fileitem String: " + fileItem.getString());
+                    if(fileItem.getFieldName().equals("incidentId")) {
+                        incidentId = Integer.parseInt(fileItem.getString());
+                    }
+                    else if(fileItem.getFieldName().equals("message")) {
+                        message = fileItem.getString();
+                    }
                 }
                 else
                 {
@@ -96,6 +107,8 @@ public class UploadFileFtp extends HttpServlet {
                             String filename = path + fileItem.getName();
                             client.storeFile(filename, is);
                             client.logout();
+                            succes = true;
+                            nameOfFile = filename;
                         }
                         catch (Exception ex)
                         {
@@ -124,6 +137,10 @@ public class UploadFileFtp extends HttpServlet {
         catch (FileUploadException ex)
         {
             ex.printStackTrace();
+        }
+        
+        if(succes && !message.equals("") && incidentId != -1 && !nameOfFile.equals("")) {
+            //Voeg filename toe aan bijbehorend incident in de database.
         }
     }
 

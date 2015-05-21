@@ -414,4 +414,22 @@ public class DatabaseManager {
         }
 
     }
+    
+    public static void addFileNameToIncident(String filename, int incidentId) {
+        if(openConnection()) {
+            try { 
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incidentfile(id, filename) VALUES(?, ?)");
+                pStmnt.setInt(1, incidentId);
+                pStmnt.setString(2, filename);
+                pStmnt.execute();
+            }
+            catch(SQLException ex) {
+                ex.printStackTrace();
+            }
+            finally
+            {
+                closeConnection();
+            }
+        }
+    }
 }
