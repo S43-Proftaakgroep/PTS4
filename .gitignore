@@ -22,5 +22,5 @@ CIMS/nbproject/project.properties
 /CentraleApp/dist/
 
 # Intellij IDEA
-CentraleApp\.idea\vcs.xml
-CentraleApp\.idea\workspace.xml
+CentraleApp/.idea/vcs.xml
+CentraleApp/.idea/workspace.xml
