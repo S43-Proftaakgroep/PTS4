@@ -42,6 +42,9 @@ import javafx.util.Callback;
  */
 public class IncidentDetailController implements Observer, Initializable {
 
+	@FXML
+	Label lblSocial;
+
     //Tab Incident
     @FXML
     Label lblIncidentName;
@@ -124,6 +127,14 @@ public class IncidentDetailController implements Observer, Initializable {
         });
     }
 
+    //--------------------------------------------------------------------------------------------------------------
+
+
+    //      Tasks and init.
+
+
+    //--------------------------------------------------------------------------------------------------------------
+
     public void init(Incident incident) {
         this.incident = incident;
 
@@ -159,10 +170,19 @@ public class IncidentDetailController implements Observer, Initializable {
             protected String call() throws Exception {
                 // TODO add Twitter handling.
                 TwitterFeed twitterFeed = new TwitterFeed();
+                String result = twitterFeed.getStatus();
                 super.succeeded();
-                return twitterFeed.getStatus();
+                return result;
             }
         };
+
+        //--------------------------------------------------------------------------------------------------------------
+
+
+        //      Task handlers.
+
+
+        //--------------------------------------------------------------------------------------------------------------
 
         adviceTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
@@ -209,9 +229,10 @@ public class IncidentDetailController implements Observer, Initializable {
                         try {
                             vbox.getChildren().remove(piSocialMedia);
                             WebView wv = new WebView();
-                            wv.getEngine().loadContent(socialMediaTask.get());
-                            // set contents
-                            lblIncidentSocial.setGraphic(wv);
+                            String preprocessed = socialMediaTask.get();
+                            String html = "<html><p style=\"font-family: 'Lucida Bright', 'Lucida Bright'\">" + preprocessed + "</p></html>";
+                            wv.getEngine().loadContent(html);
+							lblIncidentSocial.setGraphic(wv);
                         } catch (InterruptedException | ExecutionException ex) {
                             System.out.println(ex.getMessage());
                         }
@@ -224,8 +245,11 @@ public class IncidentDetailController implements Observer, Initializable {
         adviceThread.start();
         Thread weatherThread = new Thread(weatherTask);
         weatherThread.start();
+        Thread socialThread = new Thread(socialMediaTask);
+        socialThread.start();
         webEngine.loadContent(GoogleMaps.getURL(incident.getLatitude(), incident.getLongitude()));
         lblIncidentWeather.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        lblIncidentSocial.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
         //TAB 2 - Advice
         lvAdvicepage.setItems(advices);
