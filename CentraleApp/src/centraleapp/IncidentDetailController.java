@@ -11,10 +11,7 @@ import incident.Incident;
 import incident.Message;
 import incident.MessageContainer;
 import java.net.URL;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -164,15 +161,14 @@ public class IncidentDetailController implements Observer, Initializable {
             }
         };
 
-        Task<String> socialMediaTask = new Task<String>() {
+        Task<ArrayList<String>> socialMediaTask = new Task<ArrayList<String>>() {
 
             @Override
-            protected String call() throws Exception {
-                // TODO add Twitter handling.
+            protected ArrayList<String> call() throws Exception {
                 TwitterFeed twitterFeed = new TwitterFeed();
-                String result = twitterFeed.getStatus();
+                ArrayList<String> results = twitterFeed.getByTag("incident"); // generic query because tweets don't exist.
                 super.succeeded();
-                return result;
+                return results;
             }
         };
 
@@ -229,9 +225,21 @@ public class IncidentDetailController implements Observer, Initializable {
                         try {
                             vbox.getChildren().remove(piSocialMedia);
                             WebView wv = new WebView();
-                            String preprocessed = socialMediaTask.get();
-                            String html = "<html><p style=\"font-family: 'Lucida Bright', 'Lucida Bright'\">" + preprocessed + "</p></html>";
-                            wv.getEngine().loadContent(html);
+                            ArrayList<String> results = socialMediaTask.get();
+
+                            String openingtag = "<html>";
+                            String closingtag = "</html>";
+
+                            StringBuffer sb = new StringBuffer(); // muh performance
+                            sb.append(openingtag);
+
+                            for (String result : results) {
+                                sb.append("<p style=\"font-family: 'Lucida Bright', 'Lucida Bright'\">" + result + "</p>");
+                            }
+
+                            sb.append(closingtag);
+
+                            wv.getEngine().loadContent(sb.toString());
 							lblIncidentSocial.setGraphic(wv);
                         } catch (InterruptedException | ExecutionException ex) {
                             System.out.println(ex.getMessage());
