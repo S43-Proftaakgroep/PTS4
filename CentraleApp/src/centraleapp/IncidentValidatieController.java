@@ -83,8 +83,8 @@ public class IncidentValidatieController implements Initializable, Observer {
     @FXML
     private void btnApprove_Click(ActionEvent event) {
         if (selectedIncident != null) {
-            instance.approveIncident(selectedIncident);
             DatabaseManager.authIncident(selectedIncident.getType(), selectedIncident.getLocation());
+            instance.approveIncident(selectedIncident);
         }
     }
 
