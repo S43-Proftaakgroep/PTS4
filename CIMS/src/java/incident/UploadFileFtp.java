@@ -6,22 +6,18 @@
 package incident;
 
 import cims.DatabaseManager;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import static java.lang.System.out;
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.net.ftp.FTPClient;
-import javax.servlet.jsp.PageContext;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
@@ -57,17 +53,17 @@ public class UploadFileFtp extends HttpServlet {
         boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
         if (!isMultipartContent)
         {
-            out.println("You are not trying to upload<br />");
+            out.println("You are not trying to upload");
             return;
         }
 
-        out.println("You are trying to upload <br />");
+        out.println("You are trying to upload");
         FileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         try
         {
             List<FileItem> fields = upload.parseRequest(request);
-            out.println("Number of fields: " + fields.size() + "<br/><br/>");
+            out.println("Number of fields: " + fields.size());
             Iterator<FileItem> it = fields.iterator();
             if (!it.hasNext())
             {
@@ -81,10 +77,12 @@ public class UploadFileFtp extends HttpServlet {
                 if (isFormField)
                 {
                     out.println("FieldName: " + fileItem.getFieldName() + ", Fileitem String: " + fileItem.getString());
-                    if(fileItem.getFieldName().equals("incidentId")) {
+                    if (fileItem.getFieldName().equals("incidentId"))
+                    {
                         incidentId = Integer.parseInt(fileItem.getString());
                     }
-                    else if(fileItem.getFieldName().equals("message")) {
+                    else if (fileItem.getFieldName().equals("message"))
+                    {
                         message = fileItem.getString();
                     }
                 }
@@ -138,10 +136,31 @@ public class UploadFileFtp extends HttpServlet {
         {
             ex.printStackTrace();
         }
-        
-        if(succes && !message.equals("") && incidentId != -1 && !nameOfFile.equals("")) {
+
+        PrintWriter out = response.getWriter();
+        response.setContentType("text/html");
+
+        if (succes && !message.equals("") && incidentId != -1 && !nameOfFile.equals(""))
+        {
             //Voeg filename toe aan bijbehorend incident in de database.
+
+            if (DatabaseManager.addFileNameToIncident(nameOfFile, incidentId))
+            {
+                //Gelukt met toevoegen aan de database.
+                out.println("File upload gelukt!");
+            }
+            else
+            {
+                //Niet gelukt om het toe te voegen aan de database.
+                out.println("File upload niet gelukt!");
+            }
         }
+        else
+        {
+            out.println("Geen bestand geselecteerd!");
+        }
+        
+        response.setHeader("Refresh", "5; index.jsp");
     }
 
 }
