@@ -108,9 +108,8 @@
             // Person is now logged out
             <% isLoggedIn = false; 
             System.out.println(isLoggedIn); %>
-            location.href = '/CIMS/LogoutServlet';
         });
-
+        location.href = '/CIMS/LogoutServlet';
     }
 
 </script>
