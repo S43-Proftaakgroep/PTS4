@@ -23,7 +23,7 @@ public class videoReceiver {
     ObjectOutputStream out;
     public videoReceiver() {
         try {
-            socket = new Socket(InetAddress.getByName("145.144.252.55"), 1100);
+            socket = new Socket(InetAddress.getByName("145.144.251.76"), 1100);
             out = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException ex) {
             System.out.println(ex.getMessage());

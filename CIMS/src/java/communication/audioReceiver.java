@@ -32,7 +32,7 @@ public class audioReceiver {
             audioReceiver = new CentralAudio();
             Thread t = new Thread(audioReceiver);
             t.start();
-            audioSocket = new Socket(InetAddress.getByName("145.144.252.55"), 1101);
+            audioSocket = new Socket(InetAddress.getByName("145.144.251.76"), 1101);
             //outAudio = new ObjectOutputStream(audioSocket.getOutputStream());
             buffer = new BufferedOutputStream(audioSocket.getOutputStream());
         } catch (IOException ex) {
