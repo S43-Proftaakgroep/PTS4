@@ -20,3 +20,8 @@ CIMS/nbproject/build-impl.xml
 CIMS/nbproject/project.properties
 /CentraleApp/build/
 /CentraleApp/dist/
+
+# Intellij IDEA
+CentraleApp/.idea/
+CentraleApp/.idea/vcs.xml
+CentraleApp/.idea/workspace.xml
