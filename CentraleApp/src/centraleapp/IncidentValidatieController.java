@@ -91,8 +91,8 @@ public class IncidentValidatieController implements Initializable, Observer {
     @FXML
     private void btnDeny_Click(ActionEvent event) {
         if (selectedIncident != null) {
-            instance.deleteIncident(selectedIncident);
             DatabaseManager.denyIncident(selectedIncident.getType(), selectedIncident.getLocation());
+            instance.deleteIncident(selectedIncident);
         }
 
     }
