@@ -27,8 +27,8 @@ public class CentralAudio implements Runnable {
 
     public CentralAudio() {
         try {
-            socket = new Socket("127.0.0.1", 1102);
-            //buffer = new BufferedInputStream(socket.getInputStream());
+            socket = new Socket("145.144.252.55", 1102);
+            buffer = new BufferedInputStream(socket.getInputStream());
             //receiveAudio();
         } catch (IOException ex) {
             Logger.getLogger(CentralAudio.class.getName()).log(Level.SEVERE, null, ex);
@@ -47,19 +47,18 @@ public class CentralAudio implements Runnable {
 //            Logger.getLogger(CentralAudio.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
-
     @Override
     public void run() {
-            System.out.println("bier");
-            try {
-                BufferedInputStream in = new BufferedInputStream(socket.getInputStream());
-                AudioInputStream inputStream = AudioSystem.getAudioInputStream(in);
-                Clip clip = AudioSystem.getClip();
-                clip.open(inputStream);
-                clip.start();
-            } catch (IOException | UnsupportedAudioFileException | LineUnavailableException ex) {
-                Logger.getLogger(CentralAudio.class.getName()).log(Level.SEVERE, null, ex);
-            
-            }
+        try {
+            buffer = new BufferedInputStream(socket.getInputStream());
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(buffer);
+            Clip clip = AudioSystem.getClip();
+            clip.open(inputStream);
+            System.out.println(clip.isOpen());
+            clip.start();
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException ex) {
+            Logger.getLogger(CentralAudio.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
     }
 }
