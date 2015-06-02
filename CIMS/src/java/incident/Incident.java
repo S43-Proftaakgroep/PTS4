@@ -113,7 +113,7 @@ public class Incident implements Serializable {
     {
         if(this.id == -1)
         {
-            this.id = DatabaseManager.getId(this.typeOfIncident, this.location, this.submitter);
+            this.id = DatabaseManager.getId(this.typeOfIncident, this.location, this.submitter, this.situationDescription);
         }
         
         return this.id;
