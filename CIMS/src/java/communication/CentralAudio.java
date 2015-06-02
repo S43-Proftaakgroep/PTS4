@@ -6,6 +6,7 @@
 package communication;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -30,7 +31,7 @@ public class CentralAudio implements Runnable {
 
     public CentralAudio() {
         try {
-            socket = new Socket("145.144.251.76", 1102);
+            socket = new Socket("145.144.251.8", 1102);
             buffer = new BufferedInputStream(socket.getInputStream());
             //receiveAudio();
         } catch (IOException ex) {
@@ -65,21 +66,19 @@ public class CentralAudio implements Runnable {
         SourceDataLine line = null;
         AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
         float rate = 44100.0f;
-        final int bufSize = 16384/4;
-        int channels = 1;
-        int sampleSize = 8;
+        final int bufSize = 16384;
+        int channels = 2;
+        int sampleSize = 16;
         boolean bigEndian = true;
 
         AudioFormat format = new AudioFormat(encoding, rate, sampleSize, channels, (sampleSize / 8)
                 * channels, rate, bigEndian);
 
         AudioInputStream playbackInputStream = null;
-        try {
-            playbackInputStream = AudioSystem.getAudioInputStream(buffer);
-        } catch (UnsupportedAudioFileException | IOException ex) {
-            Logger.getLogger(CentralAudio.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+//            byte[] bufferBytes = null;
+//            buffer.read(bufferBytes);
+//            ByteArrayInputStream bais = new ByteArrayInputStream(bufferBytes);
+        playbackInputStream = new AudioInputStream(buffer, format, bufSize);
         // define the required attributes for our line,
         // and make sure a compatible line is supported.
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);

@@ -306,14 +306,14 @@ public class DatabaseManager {
         return approvedIncidents;
     }
 
-    public static int getId(String typeOfIncident, String location, String submitter)
+    public static int getId(String typeOfIncident, String location, String submitter, String description)
     {
         int id = -1;
         if (openConnection())
         {
             try
             {
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT id FROM incident WHERE type = '" + typeOfIncident + "' AND location = '" + location + "' AND submitter = '" + submitter + "'");
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT id FROM incident WHERE type = '" + typeOfIncident + "' AND location = '" + location + "' AND submitter = '" + submitter + "' AND approved = 1 AND description = '" + description + "'");
                 ResultSet results = pStmnt.executeQuery();
                 while (results.next())
                 {
