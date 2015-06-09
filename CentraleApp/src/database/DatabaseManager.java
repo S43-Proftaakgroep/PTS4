@@ -350,4 +350,25 @@ public class DatabaseManager {
         }
 
     }
+    
+    public static List<String> getImagePaths(int id) {
+        List<String> imagePaths = new ArrayList<String>();
+        if(openConnection()) {
+            try {
+                PreparedStatement stmnt = connection.prepareStatement("SELECT * FROM incidentfile where id = ?");
+                stmnt.setInt(1, id);
+                ResultSet results = stmnt.executeQuery();
+                while(results.next()) {
+                    imagePaths.add(results.getString("filename"));
+                }
+            }
+            catch(SQLException ex) {
+                ex.printStackTrace();
+            }
+            
+            return imagePaths;
+        }
+        
+        return null;
+    }
 }

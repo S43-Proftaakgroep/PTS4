@@ -10,7 +10,11 @@ import database.DatabaseManager;
 import incident.Incident;
 import incident.Message;
 import incident.MessageContainer;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import javafx.application.Platform;
@@ -24,13 +28,24 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.web.*;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import javax.imageio.ImageIO;
 
 /**
  * FXML Controller class
@@ -39,8 +54,8 @@ import javafx.util.Callback;
  */
 public class IncidentDetailController implements Observer, Initializable {
 
-	@FXML
-	Label lblSocial;
+    @FXML
+    Label lblSocial;
 
     //Tab Incident
     @FXML
@@ -89,6 +104,10 @@ public class IncidentDetailController implements Observer, Initializable {
     @FXML
     TableView tableIncidentInfo;
 
+    //Tab Sent Images
+    @FXML
+    TilePane tilePane;
+
     private Incident incident;
     private ObservableList<String> advices;
     private String mapsHTML;
@@ -102,14 +121,16 @@ public class IncidentDetailController implements Observer, Initializable {
      * @param rb
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         webEngine = webView.getEngine();
         advices = FXCollections.observableArrayList();
         messageContainer = MessageContainer.getInstance();
         messageContainer.addObserver(this);
         cbWeather.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent event)
+            {
                 lblIncidentWeather.setVisible(cbWeather.isSelected());
                 //Set weather to irrelevant in webpages too
             }
@@ -117,7 +138,8 @@ public class IncidentDetailController implements Observer, Initializable {
         cbSocialMedia.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent event)
+            {
                 lblIncidentSocial.setVisible(cbSocialMedia.isSelected());
                 //Set social media to irrelevant in webpages too
             }
@@ -125,14 +147,10 @@ public class IncidentDetailController implements Observer, Initializable {
     }
 
     //--------------------------------------------------------------------------------------------------------------
-
-
     //      Tasks and init.
-
-
     //--------------------------------------------------------------------------------------------------------------
-
-    public void init(Incident incident) {
+    public void init(Incident incident)
+    {
         this.incident = incident;
 
         //TAB 1 - Incident
@@ -142,9 +160,11 @@ public class IncidentDetailController implements Observer, Initializable {
         Task<List<String>> adviceTask = new Task<List<String>>() {
 
             @Override
-            protected List<String> call() throws Exception {
+            protected List<String> call() throws Exception
+            {
                 List<String> data = DatabaseManager.getAdviceById(incident.getId());
-                if (data.size() < 1) {
+                if (data.size() < 1)
+                {
                     data.add("<Geen adviezen>");
                 }
                 super.succeeded();
@@ -154,7 +174,8 @@ public class IncidentDetailController implements Observer, Initializable {
 
         Task<String> weatherTask = new Task<String>() {
             @Override
-            protected String call() throws Exception {
+            protected String call() throws Exception
+            {
                 String result = getWeatherInfo(incident.getLocation());
                 super.succeeded();
                 return result;
@@ -164,7 +185,8 @@ public class IncidentDetailController implements Observer, Initializable {
         Task<ArrayList<String>> socialMediaTask = new Task<ArrayList<String>>() {
 
             @Override
-            protected ArrayList<String> call() throws Exception {
+            protected ArrayList<String> call() throws Exception
+            {
                 TwitterFeed twitterFeed = new TwitterFeed();
                 ArrayList<String> results = twitterFeed.getByTag("incident"); // generic query because tweets don't exist.
                 super.succeeded();
@@ -173,23 +195,23 @@ public class IncidentDetailController implements Observer, Initializable {
         };
 
         //--------------------------------------------------------------------------------------------------------------
-
-
         //      Task handlers.
-
-
         //--------------------------------------------------------------------------------------------------------------
-
         adviceTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event) {
+            public void handle(WorkerStateEvent event)
+            {
                 Platform.runLater(new Runnable() {
                     @Override
-                    public void run() {
-                        try {
+                    public void run()
+                    {
+                        try
+                        {
                             grid.getChildren().remove(piAdvice);
                             advices.addAll(adviceTask.get());
-                        } catch (InterruptedException | ExecutionException ex) {
+                        }
+                        catch (InterruptedException | ExecutionException ex)
+                        {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -199,16 +221,21 @@ public class IncidentDetailController implements Observer, Initializable {
 
         weatherTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event) {
+            public void handle(WorkerStateEvent event)
+            {
                 Platform.runLater(new Runnable() {
                     @Override
-                    public void run() {
-                        try {
+                    public void run()
+                    {
+                        try
+                        {
                             vbox.getChildren().remove(piWeather);
                             WebView wv = new WebView();
                             wv.getEngine().loadContent(weatherTask.get());
                             lblIncidentWeather.setGraphic(wv);
-                        } catch (InterruptedException | ExecutionException ex) {
+                        }
+                        catch (InterruptedException | ExecutionException ex)
+                        {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -218,11 +245,14 @@ public class IncidentDetailController implements Observer, Initializable {
 
         socialMediaTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event) {
+            public void handle(WorkerStateEvent event)
+            {
                 Platform.runLater(new Runnable() {
                     @Override
-                    public void run() {
-                        try {
+                    public void run()
+                    {
+                        try
+                        {
                             vbox.getChildren().remove(piSocialMedia);
                             WebView wv = new WebView();
                             ArrayList<String> results = socialMediaTask.get();
@@ -233,15 +263,18 @@ public class IncidentDetailController implements Observer, Initializable {
                             StringBuffer sb = new StringBuffer(); // muh performance
                             sb.append(openingtag);
 
-                            for (String result : results) {
+                            for (String result : results)
+                            {
                                 sb.append("<p style=\"font-family: 'Lucida Bright', 'Lucida Bright'\">" + result + "</p>");
                             }
 
                             sb.append(closingtag);
 
                             wv.getEngine().loadContent(sb.toString());
-							lblIncidentSocial.setGraphic(wv);
-                        } catch (InterruptedException | ExecutionException ex) {
+                            lblIncidentSocial.setGraphic(wv);
+                        }
+                        catch (InterruptedException | ExecutionException ex)
+                        {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -261,7 +294,7 @@ public class IncidentDetailController implements Observer, Initializable {
 
         //TAB 2 - Advice
         lvAdvicepage.setItems(advices);
-        
+
         //TODO
         // TAB 4 - Sent Information
         messages = FXCollections.observableArrayList(DatabaseManager.getMessagesWithId(incident.getId()));
@@ -272,7 +305,8 @@ public class IncidentDetailController implements Observer, Initializable {
         nameCol.setMinWidth(200);
         nameCol.setCellValueFactory(new Callback<CellDataFeatures<Message, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Message, String> p) {
+            public ObservableValue<String> call(CellDataFeatures<Message, String> p)
+            {
                 // p.getValue() returns the Person instance for a particular TableView row
                 return new SimpleStringProperty(p.getValue().getSender());
             }
@@ -282,7 +316,8 @@ public class IncidentDetailController implements Observer, Initializable {
         messageCol.setMinWidth(500);
         messageCol.setCellValueFactory(new Callback<CellDataFeatures<Message, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Message, String> p) {
+            public ObservableValue<String> call(CellDataFeatures<Message, String> p)
+            {
                 // p.getValue() returns the Person instance for a particular TableView row
                 return new SimpleStringProperty(p.getValue().getMessageText());
             }
@@ -292,7 +327,8 @@ public class IncidentDetailController implements Observer, Initializable {
         dateCol.setMinWidth(200);
         dateCol.setCellValueFactory(new Callback<CellDataFeatures<Message, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Message, String> p) {
+            public ObservableValue<String> call(CellDataFeatures<Message, String> p)
+            {
                 // p.getValue() returns the Person instance for a particular TableView row
                 return new SimpleStringProperty(p.getValue().getDate());
             }
@@ -302,9 +338,69 @@ public class IncidentDetailController implements Observer, Initializable {
         tableIncidentInfo.setItems(messages);
         tableIncidentInfo.getSortOrder().add(dateCol);
 
+        //Tab 5 - Sent Images
+        tilePane.setPadding(new Insets(10, 10, 10, 10));
+        tilePane.setHgap(10);
+        tilePane.setVgap(10);
+
+        List<String> imagePaths = DatabaseManager.getImagePaths(incident.getId());
+        if (imagePaths != null && imagePaths.size() > 0)
+        {
+            //Voor te testen
+            //for(int i = 1; i < 25; i++)
+            
+            int height = 150;
+            String basePath = "https://a-chan.nl/cims/";
+            for (String path : imagePaths)
+            {
+                //Voor te testen
+                //String path = "https://a-chan.nl/cims/images/image1.jpg";
+                //Image image = new Image(path);
+
+                Image image = new Image(basePath + path);
+                ImageView imageview = new ImageView(image);
+                imageview.preserveRatioProperty();
+                double scale = image.getHeight() / height;
+                imageview.setFitHeight(image.getHeight() / scale);
+                imageview.setFitWidth(image.getWidth() / scale);
+                tilePane.getChildren().addAll(imageview);
+
+                imageview.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                    @Override
+                    public void handle(MouseEvent mouseEvent)
+                    {
+                        if (mouseEvent.getButton().equals(MouseButton.PRIMARY))
+                        {
+                            if (mouseEvent.getClickCount() == 1)
+                            {
+                                BorderPane borderPane = new BorderPane();
+                                ImageView imageView = new ImageView();
+                                imageView.setImage(image);
+                                imageView.setStyle("-fx-background-color: BLACK");
+                                imageView.setFitHeight(image.getHeight());
+                                imageView.setPreserveRatio(true);
+                                imageView.setSmooth(true);
+                                imageView.setCache(true);
+                                borderPane.setCenter(imageView);
+                                borderPane.setStyle("-fx-background-color: BLACK");
+                                Stage newStage = new Stage();
+                                newStage.setWidth(image.getWidth());
+                                newStage.setHeight(image.getHeight());
+                                newStage.setTitle("Image Detail");
+                                Scene scene = new Scene(borderPane, Color.BLACK);
+                                newStage.setScene(scene);
+                                newStage.show();
+                            }
+                        }
+                    }
+                });
+            }
+        }
     }
 
-    private String getWeatherInfo(String location) {
+    private String getWeatherInfo(String location)
+    {
         WeatherFeed wf = new WeatherFeed(location, WeatherFeed.Query.TEMPERATURE);
         String temp = wf.getData();
         wf.setQuery(WeatherFeed.Query.DESCRIPTION);
@@ -321,13 +417,17 @@ public class IncidentDetailController implements Observer, Initializable {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg)
+    {
         Platform.runLater(new Runnable() {
             @Override
-            public void run() {
-                if (arg != null) {
+            public void run()
+            {
+                if (arg != null)
+                {
                     Message message = (Message) arg;
-                    if (incident.getId() == message.getIncidentId()) {
+                    if (incident.getId() == message.getIncidentId())
+                    {
                         //synchronised?
                         messages.add(message);
                         tableIncidentInfo.setItems(messages);
