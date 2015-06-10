@@ -354,7 +354,7 @@ public class IncidentDetailController implements Observer, Initializable {
             for (String path : imagePaths)
             {
                 //Voor te testen
-                //String path = "https://a-chan.nl/cims/images/image1.jpg";
+                //String path = "https://a-chan.nl/cims/images/IMG_0052.jpg";
                 //Image image = new Image(path);
 
                 Image image = new Image(basePath + path);
@@ -375,20 +375,23 @@ public class IncidentDetailController implements Observer, Initializable {
                             if (mouseEvent.getClickCount() == 1)
                             {
                                 BorderPane borderPane = new BorderPane();
+                                ScrollPane scrollpane = new ScrollPane();
                                 ImageView imageView = new ImageView();
                                 imageView.setImage(image);
-                                imageView.setStyle("-fx-background-color: BLACK");
+                                imageView.setStyle("-fx-background-color: WHITE");
                                 imageView.setFitHeight(image.getHeight());
                                 imageView.setPreserveRatio(true);
                                 imageView.setSmooth(true);
                                 imageView.setCache(true);
-                                borderPane.setCenter(imageView);
-                                borderPane.setStyle("-fx-background-color: BLACK");
+                                scrollpane.setPannable(true);
+                                scrollpane.setContent(imageView);
+                                borderPane.setCenter(scrollpane);
+                                borderPane.setStyle("-fx-background-color: WHITE");
                                 Stage newStage = new Stage();
                                 newStage.setWidth(image.getWidth());
                                 newStage.setHeight(image.getHeight());
                                 newStage.setTitle("Image Detail");
-                                Scene scene = new Scene(borderPane, Color.BLACK);
+                                Scene scene = new Scene(borderPane, Color.WHITE);
                                 newStage.setScene(scene);
                                 newStage.show();
                             }
