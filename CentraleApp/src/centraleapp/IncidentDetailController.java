@@ -359,7 +359,7 @@ public class IncidentDetailController implements Observer, Initializable {
 
                 Image image = new Image(basePath + path);
                 ImageView imageview = new ImageView(image);
-                imageview.preserveRatioProperty();
+                //imageview.preserveRatioProperty();
                 double scale = image.getHeight() / height;
                 imageview.setFitHeight(image.getHeight() / scale);
                 imageview.setFitWidth(image.getWidth() / scale);
@@ -385,12 +385,14 @@ public class IncidentDetailController implements Observer, Initializable {
                                 imageView.setCache(true);
                                 scrollpane.setPannable(true);
                                 scrollpane.setContent(imageView);
+                                scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                                scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
                                 borderPane.setCenter(scrollpane);
                                 borderPane.setStyle("-fx-background-color: WHITE");
                                 Stage newStage = new Stage();
-                                newStage.setWidth(image.getWidth());
-                                newStage.setHeight(image.getHeight());
                                 newStage.setTitle("Image Detail");
+                                newStage.setWidth(image.getWidth() + 3);
+                                newStage.setHeight(image.getHeight() + 24);
                                 Scene scene = new Scene(borderPane, Color.WHITE);
                                 newStage.setScene(scene);
                                 newStage.show();

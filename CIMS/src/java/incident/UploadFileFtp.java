@@ -162,7 +162,7 @@ public class UploadFileFtp extends HttpServlet {
             out.println("Geen bestand geselecteerd!");
         }
         
-        response.setHeader("Refresh", "5; index.jsp");
+        response.setHeader("Refresh", "2; index.jsp");
     }
 
 }
