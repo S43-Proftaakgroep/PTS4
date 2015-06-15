@@ -107,7 +107,6 @@ public class IncidentValidatieController implements Initializable, Observer {
     {
         ObservableList<Incident> incidents = FXCollections.observableArrayList(DatabaseManager.getIncidents(1));
         tableIncidents.setItems(incidents);
-        tableIncidents.set
     }
 
     @Override
