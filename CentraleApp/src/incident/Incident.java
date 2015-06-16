@@ -28,8 +28,9 @@ public class Incident implements Serializable {
     private IncidentInfo detailInfo;
     private boolean approved;
     private int id;
+    private int priority;
 
-    public Incident(String location, String longitude, String latitude, String submitter, String typeOfIncident, String situationDescription, String date) {
+    public Incident(String location, String longitude, String latitude, String submitter, String typeOfIncident, String situationDescription, String date, int priority) {
         this.location = location;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -40,6 +41,7 @@ public class Incident implements Serializable {
         this.approved = false;
         this.situationDescription = situationDescription;
         this.id = -1;
+        this.priority = priority;
     }
 
     public void approve() {
@@ -106,5 +108,13 @@ public class Incident implements Serializable {
         }
         
         return this.id;
+    }
+
+    public void setPriority(int value){
+        this.priority = value;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 }

@@ -220,7 +220,7 @@ public class DatabaseManager {
         {
             try
             {
-                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, longitude, latitude, submitter, description, date FROM incident WHERE approved = " + approved + ";");
+                PreparedStatement pStmnt = connection.prepareStatement("SELECT type, location, longitude, latitude, submitter, description, date, priority FROM incident WHERE approved = " + approved + ";");
                 ResultSet results = pStmnt.executeQuery();
                 while (results.next())
                 {
@@ -231,7 +231,8 @@ public class DatabaseManager {
                             results.getString("submitter"),
                             results.getString("type"),
                             results.getString("description"),
-                            results.getString("date"));
+                            results.getString("date"),
+                            Integer.parseInt(results.getString("priority")));
                     incidents.add(incident);
                 }
             }

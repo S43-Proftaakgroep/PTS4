@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.web.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -143,6 +144,19 @@
                            </BorderPane.margin>
                         </TableView>
                      </center></BorderPane>
+               </content>
+            </Tab>
+            <Tab text="Images">
+               <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ScrollPane hbarPolicy="NEVER" prefHeight="657.0" prefWidth="1024.0">
+                           <content>
+                              <TilePane fx:id="tilePane" prefHeight="655.0" prefWidth="1023.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
                </content>
             </Tab>
         </tabs>

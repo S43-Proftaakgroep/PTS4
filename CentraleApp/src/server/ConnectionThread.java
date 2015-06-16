@@ -66,7 +66,8 @@ public class ConnectionThread implements Runnable, Observer {
                 String submitter = incidentInfo[3];
                 String longitude = incidentInfo[4];
                 String latitude = incidentInfo[5];
-                container.addIncident(location, longitude, latitude, submitter, typeIncident, description, "Today");
+                int priority = Integer.parseInt(incidentInfo[6]);
+                container.addIncident(location, longitude, latitude, submitter, typeIncident, description, "Today", priority);
                 insocket.close();
             }
             else if (instring.startsWith("@2#"))

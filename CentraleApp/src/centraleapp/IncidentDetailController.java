@@ -154,7 +154,7 @@ public class IncidentDetailController implements Observer, Initializable {
         this.incident = incident;
 
         //TAB 1 - Incident
-        lblIncidentName.setText(incident.getType());
+        lblIncidentName.setText(incident.getType() + " (" + incident.getPriority() + ")");
         lblIncidentDescription.setText(incident.getDescription());
         lvAdvices.setItems(advices);
         Task<List<String>> adviceTask = new Task<List<String>>() {
