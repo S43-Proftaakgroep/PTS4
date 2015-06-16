@@ -12,6 +12,8 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +30,7 @@ public class CreateIncidentServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        boolean success = false;
         try {
             String name = request.getParameter("name");
             String location = request.getParameter("address");
@@ -47,7 +50,7 @@ public class CreateIncidentServlet extends HttpServlet {
             try{
             double longtitudeDouble = Double.parseDouble(longtitude);
             double latitudeDouble = Double.parseDouble(latitude);
-            DatabaseManager.addIncident(name, location, submitter, description, longtitudeDouble, latitudeDouble);
+            success = DatabaseManager.addIncident(name, location, submitter, description, longtitudeDouble, latitudeDouble);
             }
             catch(NumberFormatException e){
                 e.printStackTrace();
@@ -73,7 +76,11 @@ public class CreateIncidentServlet extends HttpServlet {
                 }
             });
             t.start();
-            response.sendRedirect("incident/new.jsp");
+            //response.sendRedirect("incident/new.jsp");
+            ServletContext sc = getServletContext();
+            RequestDispatcher rd = sc.getRequestDispatcher("/incident/new.jsp");
+            request.setAttribute("showBanner", success);
+            rd.forward(request, response);
         } catch (Throwable theException) {
             System.out.println(theException);
         }
