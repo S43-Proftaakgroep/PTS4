@@ -100,6 +100,16 @@
                     <label for="descr">Incident beschrijving:</label>
                     <input name="descr" type="text" class="form-control" id="descr">
                 </div>
+                <label for="gewonden">Aantal slachtoffers</label>
+                <div class="form-group">
+                    <select>
+                        <option value="Onbekend">Onbekend</option>
+                        <option value="none">0</option>
+                        <option value="low">1-5</option>
+                        <option value="medium">6-10</option>
+                        <option value="audi">>10</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label for="addresspicker_map">Locatie:</label><br>
                     <p>
@@ -108,13 +118,15 @@
                     <input name="address" class="form-control" id="addresspicker_map" autocomplete="off" required/>
                     <input name="longtitude" hidden = "false" id="longtitude"/>
                     <input name="latitude" hidden = "false" id="latitude"/>
-                    <div style="width:300px;height:300px;margin-top:20px;">
+                    <div style="width:300px;height:300px;margin-top:20px;display: -webkit-inline-box;">
                         <div id="map_canvas" style="width:100%; height:100%"></div>
                         <div id="location" class=""></div>
+                        <div id="aanvraag">
+
+                        </div>
                     </div>
-                    <div id = "suggestion" style="float: right;position: relative;bottom: 302px;left: 330px;"></div>
-                </div>
-                <button id= "meldButton" type="submit" class="btn btn-default">Melden</button>
+                    <br>
+                    <button id= "meldButton" type="submit" class="btn btn-default">Melden</button>
             </form>
             <br>
             <footer>
