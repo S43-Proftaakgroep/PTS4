@@ -121,16 +121,14 @@ public class IncidentDetailController implements Observer, Initializable {
      * @param rb
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
+    public void initialize(URL url, ResourceBundle rb) {
         webEngine = webView.getEngine();
         advices = FXCollections.observableArrayList();
         messageContainer = MessageContainer.getInstance();
         messageContainer.addObserver(this);
         cbWeather.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event)
-            {
+            public void handle(ActionEvent event) {
                 lblIncidentWeather.setVisible(cbWeather.isSelected());
                 //Set weather to irrelevant in webpages too
             }
@@ -138,8 +136,7 @@ public class IncidentDetailController implements Observer, Initializable {
         cbSocialMedia.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
-            public void handle(ActionEvent event)
-            {
+            public void handle(ActionEvent event) {
                 lblIncidentSocial.setVisible(cbSocialMedia.isSelected());
                 //Set social media to irrelevant in webpages too
             }
@@ -149,8 +146,7 @@ public class IncidentDetailController implements Observer, Initializable {
     //--------------------------------------------------------------------------------------------------------------
     //      Tasks and init.
     //--------------------------------------------------------------------------------------------------------------
-    public void init(Incident incident)
-    {
+    public void init(Incident incident) {
         this.incident = incident;
 
         //TAB 1 - Incident
@@ -160,11 +156,9 @@ public class IncidentDetailController implements Observer, Initializable {
         Task<List<String>> adviceTask = new Task<List<String>>() {
 
             @Override
-            protected List<String> call() throws Exception
-            {
+            protected List<String> call() throws Exception {
                 List<String> data = DatabaseManager.getAdviceById(incident.getId());
-                if (data.size() < 1)
-                {
+                if (data.size() < 1) {
                     data.add("<Geen adviezen>");
                 }
                 super.succeeded();
@@ -174,8 +168,7 @@ public class IncidentDetailController implements Observer, Initializable {
 
         Task<String> weatherTask = new Task<String>() {
             @Override
-            protected String call() throws Exception
-            {
+            protected String call() throws Exception {
                 String result = getWeatherInfo(incident.getLocation());
                 super.succeeded();
                 return result;
@@ -185,8 +178,7 @@ public class IncidentDetailController implements Observer, Initializable {
         Task<ArrayList<String>> socialMediaTask = new Task<ArrayList<String>>() {
 
             @Override
-            protected ArrayList<String> call() throws Exception
-            {
+            protected ArrayList<String> call() throws Exception {
                 TwitterFeed twitterFeed = new TwitterFeed();
                 ArrayList<String> results = twitterFeed.getByTag("incident"); // generic query because tweets don't exist.
                 super.succeeded();
@@ -199,19 +191,14 @@ public class IncidentDetailController implements Observer, Initializable {
         //--------------------------------------------------------------------------------------------------------------
         adviceTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event)
-            {
+            public void handle(WorkerStateEvent event) {
                 Platform.runLater(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        try
-                        {
+                    public void run() {
+                        try {
                             grid.getChildren().remove(piAdvice);
                             advices.addAll(adviceTask.get());
-                        }
-                        catch (InterruptedException | ExecutionException ex)
-                        {
+                        } catch (InterruptedException | ExecutionException ex) {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -221,21 +208,16 @@ public class IncidentDetailController implements Observer, Initializable {
 
         weatherTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event)
-            {
+            public void handle(WorkerStateEvent event) {
                 Platform.runLater(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        try
-                        {
+                    public void run() {
+                        try {
                             vbox.getChildren().remove(piWeather);
                             WebView wv = new WebView();
                             wv.getEngine().loadContent(weatherTask.get());
                             lblIncidentWeather.setGraphic(wv);
-                        }
-                        catch (InterruptedException | ExecutionException ex)
-                        {
+                        } catch (InterruptedException | ExecutionException ex) {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -245,14 +227,11 @@ public class IncidentDetailController implements Observer, Initializable {
 
         socialMediaTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event)
-            {
+            public void handle(WorkerStateEvent event) {
                 Platform.runLater(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        try
-                        {
+                    public void run() {
+                        try {
                             vbox.getChildren().remove(piSocialMedia);
                             WebView wv = new WebView();
                             ArrayList<String> results = socialMediaTask.get();
@@ -263,8 +242,7 @@ public class IncidentDetailController implements Observer, Initializable {
                             StringBuffer sb = new StringBuffer(); // muh performance
                             sb.append(openingtag);
 
-                            for (String result : results)
-                            {
+                            for (String result : results) {
                                 sb.append("<p style=\"font-family: 'Lucida Bright', 'Lucida Bright'\">" + result + "</p>");
                             }
 
@@ -272,9 +250,7 @@ public class IncidentDetailController implements Observer, Initializable {
 
                             wv.getEngine().loadContent(sb.toString());
                             lblIncidentSocial.setGraphic(wv);
-                        }
-                        catch (InterruptedException | ExecutionException ex)
-                        {
+                        } catch (InterruptedException | ExecutionException ex) {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -305,8 +281,7 @@ public class IncidentDetailController implements Observer, Initializable {
         nameCol.setMinWidth(200);
         nameCol.setCellValueFactory(new Callback<CellDataFeatures<Message, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Message, String> p)
-            {
+            public ObservableValue<String> call(CellDataFeatures<Message, String> p) {
                 // p.getValue() returns the Person instance for a particular TableView row
                 return new SimpleStringProperty(p.getValue().getSender());
             }
@@ -316,8 +291,7 @@ public class IncidentDetailController implements Observer, Initializable {
         messageCol.setMinWidth(500);
         messageCol.setCellValueFactory(new Callback<CellDataFeatures<Message, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Message, String> p)
-            {
+            public ObservableValue<String> call(CellDataFeatures<Message, String> p) {
                 // p.getValue() returns the Person instance for a particular TableView row
                 return new SimpleStringProperty(p.getValue().getMessageText());
             }
@@ -327,8 +301,7 @@ public class IncidentDetailController implements Observer, Initializable {
         dateCol.setMinWidth(200);
         dateCol.setCellValueFactory(new Callback<CellDataFeatures<Message, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Message, String> p)
-            {
+            public ObservableValue<String> call(CellDataFeatures<Message, String> p) {
                 // p.getValue() returns the Person instance for a particular TableView row
                 return new SimpleStringProperty(p.getValue().getDate());
             }
@@ -344,68 +317,75 @@ public class IncidentDetailController implements Observer, Initializable {
         tilePane.setVgap(10);
 
         List<String> imagePaths = DatabaseManager.getImagePaths(incident.getId());
-        if (imagePaths != null && imagePaths.size() > 0)
-        {
+        if (imagePaths != null && imagePaths.size() > 0) {
             //Voor te testen
             //for(int i = 1; i < 25; i++)
-            
+
             int height = 150;
             String basePath = "https://a-chan.nl/cims/";
-            for (String path : imagePaths)
-            {
+            for (String path : imagePaths) {
                 //Voor te testen
                 //String path = "https://a-chan.nl/cims/images/IMG_0052.jpg";
                 //Image image = new Image(path);
 
-                Image image = new Image(basePath + path);
-                ImageView imageview = new ImageView(image);
-                //imageview.preserveRatioProperty();
-                double scale = image.getHeight() / height;
-                imageview.setFitHeight(image.getHeight() / scale);
-                imageview.setFitWidth(image.getWidth() / scale);
-                tilePane.getChildren().addAll(imageview);
-
-                imageview.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                Thread t = new Thread(new Runnable() {
 
                     @Override
-                    public void handle(MouseEvent mouseEvent)
-                    {
-                        if (mouseEvent.getButton().equals(MouseButton.PRIMARY))
-                        {
-                            if (mouseEvent.getClickCount() == 1)
-                            {
-                                BorderPane borderPane = new BorderPane();
-                                ScrollPane scrollpane = new ScrollPane();
-                                ImageView imageView = new ImageView();
-                                imageView.setImage(image);
-                                imageView.setStyle("-fx-background-color: WHITE");
-                                imageView.setFitHeight(image.getHeight());
-                                imageView.setPreserveRatio(true);
-                                imageView.setSmooth(true);
-                                imageView.setCache(true);
-                                scrollpane.setPannable(true);
-                                scrollpane.setContent(imageView);
-                                scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-                                scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-                                borderPane.setCenter(scrollpane);
-                                borderPane.setStyle("-fx-background-color: WHITE");
-                                Stage newStage = new Stage();
-                                newStage.setTitle("Image Detail");
-                                newStage.setWidth(image.getWidth() + 3);
-                                newStage.setHeight(image.getHeight() + 24);
-                                Scene scene = new Scene(borderPane, Color.WHITE);
-                                newStage.setScene(scene);
-                                newStage.show();
+                    public void run() {
+                        Platform.runLater(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                Image image = new Image(basePath + path);
+                                ImageView imageview = new ImageView(image);
+                                //imageview.preserveRatioProperty();
+                                double scale = image.getHeight() / height;
+                                imageview.setFitHeight(image.getHeight() / scale);
+                                imageview.setFitWidth(image.getWidth() / scale);
+                                tilePane.getChildren().addAll(imageview);
+
+                                imageview.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                                    @Override
+                                    public void handle(MouseEvent mouseEvent) {
+                                        if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                                            if (mouseEvent.getClickCount() == 1) {
+                                                BorderPane borderPane = new BorderPane();
+                                                ScrollPane scrollpane = new ScrollPane();
+                                                ImageView imageView = new ImageView();
+                                                imageView.setImage(image);
+                                                imageView.setStyle("-fx-background-color: WHITE");
+                                                imageView.setFitHeight(image.getHeight());
+                                                imageView.setPreserveRatio(true);
+                                                imageView.setSmooth(true);
+                                                imageView.setCache(true);
+                                                scrollpane.setPannable(true);
+                                                scrollpane.setContent(imageView);
+                                                scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                                                scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                                                borderPane.setCenter(scrollpane);
+                                                borderPane.setStyle("-fx-background-color: WHITE");
+                                                Stage newStage = new Stage();
+                                                newStage.setTitle("Image Detail");
+                                                newStage.setWidth(image.getWidth() + 3);
+                                                newStage.setHeight(image.getHeight() + 24);
+                                                Scene scene = new Scene(borderPane, Color.WHITE);
+                                                newStage.setScene(scene);
+                                                newStage.show();
+                                            }
+                                        }
+                                    }
+                                });
                             }
-                        }
+                        });
                     }
                 });
+                t.start();
             }
         }
     }
 
-    private String getWeatherInfo(String location)
-    {
+    private String getWeatherInfo(String location) {
         WeatherFeed wf = new WeatherFeed(location, WeatherFeed.Query.TEMPERATURE);
         String temp = wf.getData();
         wf.setQuery(WeatherFeed.Query.DESCRIPTION);
@@ -422,17 +402,13 @@ public class IncidentDetailController implements Observer, Initializable {
     }
 
     @Override
-    public void update(Observable o, Object arg)
-    {
+    public void update(Observable o, Object arg) {
         Platform.runLater(new Runnable() {
             @Override
-            public void run()
-            {
-                if (arg != null)
-                {
+            public void run() {
+                if (arg != null) {
                     Message message = (Message) arg;
-                    if (incident.getId() == message.getIncidentId())
-                    {
+                    if (incident.getId() == message.getIncidentId()) {
                         //synchronised?
                         messages.add(message);
                         tableIncidentInfo.setItems(messages);
