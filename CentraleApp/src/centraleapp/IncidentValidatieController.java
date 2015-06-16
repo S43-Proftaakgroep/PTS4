@@ -33,6 +33,9 @@ public class IncidentValidatieController implements Initializable, Observer {
     Label lblName;
 
     @FXML
+    Label lblPriority;
+
+    @FXML
     Label lblDate;
 
     @FXML
@@ -148,6 +151,11 @@ public class IncidentValidatieController implements Initializable, Observer {
         nameCol.setCellValueFactory(
                 new PropertyValueFactory<>("type"));
 
+        TableColumn priorityCol = new TableColumn("Prioriteit");
+        priorityCol.setMinWidth(100);
+        priorityCol.setCellValueFactory(
+                new PropertyValueFactory<>("priority"));
+
         TableColumn locationCol = new TableColumn("Locatie");
         locationCol.setMinWidth(200);
         locationCol.setCellValueFactory(
@@ -164,7 +172,7 @@ public class IncidentValidatieController implements Initializable, Observer {
                 new PropertyValueFactory<>("date"));
         dateCol.setSortType(TableColumn.SortType.DESCENDING);
 
-        tableIncidents.getColumns().addAll(nameCol, locationCol, descriptionCol, dateCol);
+        tableIncidents.getColumns().addAll(nameCol, priorityCol, locationCol, descriptionCol, dateCol);
         tableIncidents.setItems(incidents);
         tableIncidents.getSortOrder().add(dateCol);
 
@@ -262,6 +270,7 @@ public class IncidentValidatieController implements Initializable, Observer {
             selectedIncident = incidentCurrent;
 
             lblName.setText(selectedIncident.toString());
+            lblPriority.setText(selectedIncident.getPriority() + "");
             lblDate.setText(selectedIncident.getDate());
             lblLocation.setText(selectedIncident.getLocation());
             lblSubmitter.setText(selectedIncident.getSubmitter());
@@ -277,6 +286,7 @@ public class IncidentValidatieController implements Initializable, Observer {
     {
         String noIncidentSelected = "No incident selected";
         lblName.setText(noIncidentSelected);
+        lblPriority.setText(noIncidentSelected);
         lblDate.setText(noIncidentSelected);
         lblLocation.setText(noIncidentSelected);
         lblSubmitter.setText(noIncidentSelected);

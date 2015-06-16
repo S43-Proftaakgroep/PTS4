@@ -23,8 +23,10 @@
                 <Label fx:id="lblLocation" layoutX="620.0" layoutY="110.0" text="&lt;Locatie&gt;" />
                 <Label fx:id="lblDate" layoutX="620.0" layoutY="77.0" text="&lt;Datum&gt;" />
                 <Label fx:id="lblName" layoutX="620.0" layoutY="46.0" text="&lt;Naam&gt;" />
+                <Label fx:id="lblPriority" layoutX="620.0" layoutY="15.0" text="&lt;Prioriteit&gt;" />
                 <Label fx:id="lblSubmitter" layoutX="620.0" layoutY="145.0" text="&lt;submitter&gt;" />
                 <Label layoutX="460.0" layoutY="190.0" text="Omschrijving:" />
+                <Label layoutX="460.0" layoutY="15.0" text="Prioriteit:" />
                 <Label layoutX="460.0" layoutY="110.0" text="Locatie:" />
                 <Label fx:id="lblDescription" layoutX="460.0" layoutY="227.0" text="&lt;Omschrijving van het incident&gt;" />
                 <Label layoutX="460.0" layoutY="145.0" text="Gemeld door:" />
