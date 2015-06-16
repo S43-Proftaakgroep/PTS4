@@ -42,12 +42,12 @@ public class DatabaseManagerTest {
     
     @Test
     public void testAddIncident() {
-        Assert.assertTrue(DatabaseManager.addIncident("unitTest", "noplace", "Meny", "new description", 5.0002, 6.0002));
-        Assert.assertTrue(DatabaseManager.addIncident("unitTest", "noplace", "Meny", "", 5.0002, 6.0002));
+        Assert.assertTrue(DatabaseManager.addIncident("unitTest", "noplace", "Meny", "new description", 5.0002, 6.0002,"0","Hoog"));
+        Assert.assertTrue(DatabaseManager.addIncident("unitTest", "noplace", "Meny", "", 5.0002, 6.0002,"1-5","Laag"));
         
-        Assert.assertFalse(DatabaseManager.addIncident(null, null, null, null, 0, 0));
-        Assert.assertFalse(DatabaseManager.addIncident("", "een plaats", "Meny", "niet adden", 0, 0));
-        Assert.assertFalse(DatabaseManager.addIncident("testing", "", "Meny", "niet adden", 0, 0));
-        Assert.assertFalse(DatabaseManager.addIncident("testing", "something", "", "niet adden", 0, 0));
+        Assert.assertFalse(DatabaseManager.addIncident(null, null, null, null, 0, 0,null,null));
+        Assert.assertFalse(DatabaseManager.addIncident("", "een plaats", "Meny", "niet adden",0,0, "0", "Laag"));
+        Assert.assertFalse(DatabaseManager.addIncident("testing", "", "Meny", "niet adden",0,0, "2","Gemiddeld"));
+        Assert.assertFalse(DatabaseManager.addIncident("testing", "something", "", "niet adden", 0, 0,"2","Hoog"));
     }
 }

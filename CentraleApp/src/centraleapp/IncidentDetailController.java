@@ -306,6 +306,7 @@ public class IncidentDetailController implements Observer, Initializable {
                 return new SimpleStringProperty(p.getValue().getDate());
             }
         });
+        
         dateCol.setSortType(TableColumn.SortType.DESCENDING);
         tableIncidentInfo.getColumns().addAll(nameCol, messageCol, dateCol);
         tableIncidentInfo.setItems(messages);

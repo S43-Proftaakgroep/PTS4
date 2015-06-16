@@ -100,14 +100,24 @@
                     <label for="descr">Incident beschrijving:</label>
                     <input name="descr" type="text" class="form-control" id="descr">
                 </div>
-                <label for="gewonden">Aantal slachtoffers</label>
+                <label for="victims">Aantal slachtoffers</label>
                 <div class="form-group">
-                    <select>
-                        <option value="Onbekend">Onbekend</option>
+                    <select name ="victims" class="form-control">
+                        <option value="unknown">Onbekend</option>
                         <option value="none">0</option>
                         <option value="low">1-5</option>
                         <option value="medium">6-10</option>
-                        <option value="audi">>10</option>
+                        <option value="high">>10</option>
+                    </select>
+                </div>
+                <label for="danger">Gevaar graad</label>
+                <div class="form-group">
+                    <select name = "danger" class="form-control">
+                        <option value="unknown">Onbekend</option>
+                        <option value="low">Laag</option>
+                        <option value="medium">Gemiddeld</option>
+                        <option value="high">Hoog</option>
+                        <option value="extreme">Extreem Hoog</option>
                     </select>
                 </div>
                 <div class="form-group">

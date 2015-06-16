@@ -150,11 +150,21 @@ public class IncidentValidatieController implements Initializable, Observer {
         nameCol.setMinWidth(100);
         nameCol.setCellValueFactory(
                 new PropertyValueFactory<>("type"));
-
+        
         TableColumn priorityCol = new TableColumn("Prioriteit");
         priorityCol.setMinWidth(100);
         priorityCol.setCellValueFactory(
                 new PropertyValueFactory<>("priority"));
+        
+        TableColumn victimsCol = new TableColumn("Slachtoffers");
+        victimsCol.setMinWidth(100);
+        victimsCol.setCellValueFactory(
+                new PropertyValueFactory<>("victims"));
+        
+        TableColumn dangerCol = new TableColumn("Gevaar");
+        dangerCol.setMinWidth(60);
+        dangerCol.setCellValueFactory(
+                new PropertyValueFactory<>("danger"));
 
         TableColumn locationCol = new TableColumn("Locatie");
         locationCol.setMinWidth(200);
@@ -170,11 +180,12 @@ public class IncidentValidatieController implements Initializable, Observer {
         dateCol.setMinWidth(140);
         dateCol.setCellValueFactory(
                 new PropertyValueFactory<>("date"));
-        dateCol.setSortType(TableColumn.SortType.DESCENDING);
+        dateCol.setSortType(TableColumn.SortType.ASCENDING);
 
-        tableIncidents.getColumns().addAll(nameCol, priorityCol, locationCol, descriptionCol, dateCol);
-        tableIncidents.setItems(incidents);
+        tableIncidents.getColumns().addAll(nameCol, priorityCol,victimsCol,dangerCol, locationCol, descriptionCol, dateCol);
         tableIncidents.getSortOrder().add(dateCol);
+        tableIncidents.setItems(incidents);
+        
 
         //        try {
         //            initMap();
