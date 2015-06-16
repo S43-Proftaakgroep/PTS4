@@ -4,6 +4,7 @@
     Author     : Joris
 --%>
 
+<%@page import="org.omg.PortableInterceptor.SYSTEM_EXCEPTION"%>
 <%@page import="incident.CreateIncidentServlet"%>
 <%@page import="java.io.IOException"%>
 <%@page import="cims.DatabaseManager"%>
@@ -71,6 +72,23 @@
     </head>
     <body>
         <%@include file="/navigationBar.jsp" %>
+        <%if(request.getAttribute("showBanner") != null) {
+            System.out.println("ShowBanner = " + request.getAttribute("showBanner"));
+            //boolean showBanner = (boolean) session.getAttribute("showBanner");
+            boolean showBanner = Boolean.parseBoolean(request.getAttribute("showBanner").toString());
+            //boolean showBanner = true;
+            String typeOfAlert = "danger";
+            if (showBanner)
+            {
+                typeOfAlert = "success";
+        
+        %>
+        <div class="alert alert-<%=typeOfAlert%> alert-dismissible" role="alert" style="position: fixed; width: 100%; z-index: 999;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Succes!</strong> Incident succesvol toegevoegd
+        </div>
+        <% } 
+        }%>
         <div class="container">
             <form id = "submitForm" role="form" class="form-create" action="/CIMS/CreateIncidentServlet" method = "POST">
                 <h2 class="form-signin-heading">Meld incident</h2>
@@ -85,7 +103,7 @@
                 <div class="form-group">
                     <label for="addresspicker_map">Locatie:</label><br>
                     <p>
-                        Type een deel van u locatie in en kies hem uit de suggesties.
+                        Type een deel van uw locatie in en kies hem uit de suggesties.
                     </p>
                     <input name="address" class="form-control" id="addresspicker_map" autocomplete="off" required/>
                     <input name="longtitude" hidden = "false" id="longtitude"/>
