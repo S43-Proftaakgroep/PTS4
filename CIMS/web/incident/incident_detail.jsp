@@ -24,6 +24,7 @@
         <title>Crisis Informatie Management Systeem</title>
         <link href="/CIMS/css/bootstrap.min.css" rel="stylesheet">
         <link href="/CIMS/css/Site.css" rel="stylesheet">
+	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     </head>
     <body>
         <%@include file="/navigationBar.jsp" %>
@@ -75,17 +76,38 @@
                     out.println(wf.getData());%></p>
                 <div style="height:400px;overflow:scroll;">
                     <h3>Laatste updates over dit incident op Twitter:</h3>		    
-                    <ul>
-                        <%
-                            // Veel kun je niet meer aan de query toevoegen; de tweets moeten wel bestaan en recent zijn.
-                            double latitude = this.currentIncident.getLatitude();
-                            double longitude = this.currentIncident.getLongitude();
-                            ArrayList<String> tweets = new TwitterFeed().getByLocation(latitude, longitude, 5, "", 25);
-                            for (String tweet : tweets)
-                            {
-                                out.println("<li><a href='http://twitter.com/search?q=" + tweet + "'>" + tweet + "</a></li>" + "<br>");
-                            }
-                        %>
+                    <ul id="tweets"> bezig met laden van tweets...
+			<script>
+			    var result = 
+				$.post(
+				    // Address of the request recipient
+				    "./TwitterRequest.jsp",
+				    
+				    // Data to send
+				    {
+					"action" : "requestTweets", // overhead for future requesthandling
+					"longitude" : <% out.println(this.currentIncident.getLongitude()); %>,
+					"latitude" : <% out.println(this.currentIncident.getLatitude()); %>
+				    },
+
+				    // Handler for the response.
+				    function(data){
+					//alert(data); debug: displays data.
+					document.getElementById("tweets").innerHTML = data;
+				    }
+				)
+
+				.done(function() {
+				    //alert( "AJAX/post succesvol uitgevoerd."); debug: shows on success.
+				})
+				.fail(function() {
+				    alert( "Oeps! Ergens ging er iets mis. :(" );
+				})
+				.error(function(){
+				    alert("wow, dikke faal. #fontysict");
+				})
+			    ;
+			</script>
                     </ul>
                 </div>
             </div>

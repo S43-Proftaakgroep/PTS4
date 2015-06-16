@@ -23,6 +23,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.net.ftp.FTP;
 
 /**
  *
@@ -101,6 +102,7 @@ public class UploadFileFtp extends HttpServlet {
                         {
                             client.connect("a-chan.nl");
                             client.login("cims@a-chan.nl", "1234");
+                            client.setFileType(FTP.BINARY_FILE_TYPE);
                             String path = "images/";
                             String filename = path + fileItem.getName();
                             client.storeFile(filename, is);
@@ -140,7 +142,7 @@ public class UploadFileFtp extends HttpServlet {
         PrintWriter out = response.getWriter();
         response.setContentType("text/html");
 
-        if (succes && !message.equals("") && incidentId != -1 && !nameOfFile.equals(""))
+        if (succes && incidentId != -1 && !nameOfFile.equals(""))
         {
             //Voeg filename toe aan bijbehorend incident in de database.
 
@@ -160,7 +162,7 @@ public class UploadFileFtp extends HttpServlet {
             out.println("Geen bestand geselecteerd!");
         }
         
-        response.setHeader("Refresh", "5; index.jsp");
+        response.setHeader("Refresh", "2; index.jsp");
     }
 
 }
