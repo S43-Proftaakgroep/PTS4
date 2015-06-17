@@ -11,6 +11,8 @@ import incident.IncidentContainer;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.logging.Logger;
+
 import javafx.collections.*;
 import javafx.event.*;
 import javafx.fxml.FXML;
@@ -37,6 +39,9 @@ public class IncidentValidatieController implements Initializable, Observer {
 
     @FXML
     Label lblDate;
+
+    @FXML
+    ChoiceBox cbPriority;
 
     @FXML
     Label lblLocation;
@@ -89,7 +94,8 @@ public class IncidentValidatieController implements Initializable, Observer {
     {
         if (selectedIncident != null)
         {
-            DatabaseManager.authIncident(selectedIncident.getType(), selectedIncident.getLocation());
+            int priority = translatePriority(cbPriority.getValue());
+            DatabaseManager.authIncident(selectedIncident.getType(), priority, selectedIncident.getLocation());
             instance.approveIncident(selectedIncident);
         }
     }
@@ -278,6 +284,7 @@ public class IncidentValidatieController implements Initializable, Observer {
         if (incidentCurrent != null)
         {
             System.out.println("Selected incident: " + incidentCurrent.toString());
+            System.out.println(incidentCurrent.getDescription());
             selectedIncident = incidentCurrent;
 
             lblName.setText(selectedIncident.toString());
@@ -312,4 +319,16 @@ public class IncidentValidatieController implements Initializable, Observer {
         listViewNewUsers.setItems(list);
     }
 
+    private int translatePriority(Object priority){
+        switch (priority.toString()){
+            case "Laag":
+                return 1;
+            case "Normaal":
+                return 2;
+            case "Hoog":
+                return 3;
+            default:
+                throw new UnsupportedOperationException("Error: Invalid priority! (" + priority.toString() + ").");
+        }
+    }
 }
