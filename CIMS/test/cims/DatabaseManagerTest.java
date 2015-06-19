@@ -6,6 +6,8 @@
 package cims;
 
 import authentication.UserBean;
+import static cims.DatabaseManager.connection;
+import java.sql.*;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -32,6 +34,25 @@ public class DatabaseManagerTest {
         System.out.println("Operation took: " + (System.currentTimeMillis() - firstTime) + " milliseconds");
     }
     
+	/**
+	 * Test of DDDD™: Database Duplicates Detection & Deletion™.
+	 */
+	@Test
+	public void testDuplicateChecking() throws SQLException, ClassNotFoundException{
+		/* Add new incident. */ 
+		Assert.assertTrue("Nieuw incident niet toegevoegd.",        DatabaseManager.addIncident("Fontys Hogescholen", "Rachelsmolen", "A-chan", "Maatwerk.", 0, 0, "0", "Hoog"));
+		Assert.assertTrue("Nieuw incident niet toegevoegd.",        DatabaseManager.addIncident("Fontys Hogescholen", "Rachelsmolen", "A-chan", "Meer maatwerk.", 0, 0, "0", "Hoog"));
+		Assert.assertTrue("Nieuw incident niet toegevoegd.",        DatabaseManager.addIncident("Fontys Hogescholen", "Rachelsmolen", "A-chan", "Nog meer maatwerk.", 0, 0, "0", "Hoog"));
+		/* Add incident again to test duplication prevention. */ 
+		Assert.assertFalse("Bestaand incident opnieuw toegevoegd.", DatabaseManager.addIncident("Fontys Hogescholen", "Rachelsmolen", "A-chan", "Maatwerk.", 0, 0, "0", "Hoog"));
+		Assert.assertFalse("Bestaand incident opnieuw toegevoegd.", DatabaseManager.addIncident("Fontys Hogescholen", "Rachelsmolen", "A-chan", "Meer maatwerk.", 0, 0, "0", "Hoog"));
+		Assert.assertFalse("Bestaand incident opnieuw toegevoegd.", DatabaseManager.addIncident("Fontys Hogescholen", "Rachelsmolen", "A-chan", "Nog meer maatwerk.", 0, 0, "0", "Hoog"));
+		/* Delete added incident. */ 
+		Assert.assertTrue(DatabaseManager.deleteTestIncident("Fontys Hogescholen", "Rachelsmolen", "A-chan", "Maatwerk."));
+		Assert.assertTrue(DatabaseManager.deleteTestIncident("Fontys Hogescholen", "Rachelsmolen", "A-chan", "Meer maatwerk."));
+		Assert.assertTrue(DatabaseManager.deleteTestIncident("Fontys Hogescholen", "Rachelsmolen", "A-chan", "Nog meer maatwerk."));
+	}
+	
     /**
      *  Test of AddUser method, of class DatabaseManager.
      */
