@@ -114,8 +114,12 @@ public class IncidentValidatieController implements Initializable, Observer {
     @FXML
     private void btnRefreshIncident_Click(ActionEvent event)
     {
+        ObservableList<Incident> currentIncidents = tableIncidents.getItems();
         ObservableList<Incident> incidents = FXCollections.observableArrayList(DatabaseManager.getIncidents(1));
-        tableIncidents.setItems(incidents);
+        tableIncidents.setVisible(false);
+        tableIncidents.getItems().removeAll(currentIncidents);
+        tableIncidents.getItems().addAll(incidents);
+        tableIncidents.setVisible(true);
     }
 
     @Override

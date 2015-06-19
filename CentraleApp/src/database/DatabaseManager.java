@@ -8,13 +8,14 @@ package database;
 //import authentication.UserBean;
 import incident.Incident;
 import incident.Message;
+import utilities.u;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -110,9 +111,9 @@ public class DatabaseManager {
         {
             try
             {
-                PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = 1 AND priority = ? WHERE type = ? AND location = ?;");
-                pStmnt.setString(1, type);
-                pStmnt.setString(2, "" + priority);
+                PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = 1, priority = ? WHERE type = ? AND location = ?;");
+                pStmnt.setInt(1, priority);
+                pStmnt.setString(2, type);
                 pStmnt.setString(3, locatie);
 
                 if (pStmnt.executeUpdate() > 0) {
@@ -189,7 +190,7 @@ public class DatabaseManager {
                             results.getString("type"),
                             results.getString("description"),
                             results.getString("date"),
-                            Integer.parseInt(results.getString("priority")),
+                            results.getInt("priority"),
                             results.getString("victims"),
                             results.getString("dangergrade"));
                     incidents.add(incident);
