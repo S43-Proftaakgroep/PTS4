@@ -31,7 +31,8 @@ public class CentraleApp extends Application {
         CentralServer server = new CentralServer();
         server.init();
         stage.setScene(scene);
-        stage.show();        
+        stage.show();
+        stage.setTitle("CIMS | Centraal Incident Management Systeem");
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
           public void handle(WindowEvent we) {
               server.stop();

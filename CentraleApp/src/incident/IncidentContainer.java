@@ -26,7 +26,7 @@ public class IncidentContainer extends Observable {
         incidents = new ArrayList<>();
         approved = new ArrayList<>();
         incidents = DatabaseManager.getIncidents(0);
-    }// TODO prioriteit bij incident, alle incidenten, en incidentDetailview.
+    }
 
     public static IncidentContainer getInstance() {
         if (instance == null) {

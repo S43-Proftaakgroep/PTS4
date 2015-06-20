@@ -65,11 +65,21 @@
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
                 <Pane prefHeight="632.0" prefWidth="1106.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<<<<<<< HEAD
                   <children>
                     <TableView fx:id="tableIncidents" layoutX="14.0" layoutY="14.0" prefHeight="607.0" prefWidth="948.0" />
                     <Button layoutX="975.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnDetailsIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Meer info" />
                     <Button layoutX="975.0" layoutY="53.0" mnemonicParsing="false" onAction="#btnRefreshIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Vernieuwen" />
                   </children>
+=======
+                           <children>
+                              <TableView fx:id="tableIncidents" layoutX="14.0" layoutY="14.0" prefHeight="607.0" prefWidth="948.0" />
+                              <Button layoutX="975.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnDetailsIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Meer info" />
+                              <Button layoutX="975.0" layoutY="53.0" mnemonicParsing="false" onAction="#btnRefreshIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Vernieuwen" />
+                              <Label layoutX="975.0" layoutY="156.0" text="Prioriteitsfilter:" />
+                              <ChoiceBox layoutX="977.0" layoutY="188.0" prefHeight="25.0" prefWidth="120.0" fx:id="cbPriorityFilter" />
+                           </children>
+>>>>>>> origin/master
                 </Pane>
               </children>
             </AnchorPane>

@@ -13,6 +13,9 @@ import java.net.*;
 import java.util.*;
 import java.util.logging.Logger;
 
+import incident.Priority;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
 import javafx.event.*;
 import javafx.fxml.FXML;
@@ -70,6 +73,9 @@ public class IncidentValidatieController implements Initializable, Observer {
 
     @FXML
     Tab tabGebruiker;
+
+    @FXML
+    ChoiceBox cbPriorityFilter;
 
     IncidentContainer instance = IncidentContainer.getInstance();
     ObservableList<Incident> OLincidents = FXCollections.observableArrayList();
@@ -201,13 +207,49 @@ public class IncidentValidatieController implements Initializable, Observer {
         tableIncidents.getColumns().addAll(nameCol, priorityCol,victimsCol,dangerCol, locationCol, descriptionCol, dateCol);
         tableIncidents.getSortOrder().add(dateCol);
         tableIncidents.setItems(incidents);
-        
 
+        cbPriorityFilter.setItems(FXCollections.observableArrayList("Alle", /*Ongevalideerd",*/ "Laag", "Normaal", "Hoog"));
+        cbPriorityFilter.setValue("Alle");
+        cbPriorityFilter.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                int priority = translatePriority(cbPriorityFilter.getValue());
+                filterBy(priority);// FIXME: lijst wordt pas ge?pdate na tweede event.
+            }
+        });
         //        try {
         //            initMap();
         //        } catch (IOException ex) {
         //            Logger.getLogger(IncidentValidatieController.class.getName()).log(Level.SEVERE, null, ex);
         //        }
+    }
+
+    /**
+     * Priority filter in incident overview.
+     * @param priority
+     */
+    private void filterBy(int priority) {
+
+        ObservableList<Incident> filteredList = FXCollections.observableArrayList();
+        ObservableList<Incident> all = FXCollections.observableArrayList();
+
+        // Get all approved incidents.
+        all.addAll(DatabaseManager.getIncidents(1));
+
+        if (priority < 0) { // Show all incidents.
+            filteredList = all;
+        }
+        else {
+            for (Incident i : all) {
+                if (i.getPriority() == priority)
+                    filteredList.add(i);
+            }
+        }
+
+        ObservableList olditems = tableIncidents.getItems();
+
+        tableIncidents.getItems().clear();//.removeAll(olditems);
+        tableIncidents.setItems(filteredList);
     }
 
     void initMap() throws IOException
@@ -331,8 +373,15 @@ public class IncidentValidatieController implements Initializable, Observer {
         listViewNewUsers.setItems(list);
     }
 
+    /**
+     * Translates a ChoicBox item to an incidents' priority integer.
+     */
     private int translatePriority(Object priority){
         switch (priority.toString()){
+            case "Alle":
+                return -1;
+            case "Ongevalideerd":
+                return 0;
             case "Laag":
                 return 1;
             case "Normaal":
