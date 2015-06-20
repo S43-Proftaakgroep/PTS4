@@ -10,82 +10,79 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="659.0" prefWidth="1102.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="centraleapp.IncidentValidatieController">
-  <children>
-    <TabPane prefHeight="661.0" prefWidth="1106.0" tabClosingPolicy="UNAVAILABLE">
-      <tabs>
-        <Tab text="Incident">
-          <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="573.0" prefWidth="1001.0">
-              <children>
-                <ListView fx:id="lvApproveIncidents" prefHeight="589.0" prefWidth="426.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="666.0" AnchorPane.topAnchor="14.0" />
-                <Label layoutX="460.0" layoutY="107.0" text="Naam:" />
-                <Label layoutX="460.0" layoutY="138.0" text="Datum:" />
-                <Label fx:id="lblLocation" layoutX="620.0" layoutY="174.0" text="&lt;Locatie&gt;" />
-                <Label fx:id="lblDate" layoutX="620.0" layoutY="141.0" text="&lt;Datum&gt;" />
-                <Label fx:id="lblName" layoutX="620.0" layoutY="110.0" text="&lt;Naam&gt;" />
-                <ChoiceBox fx:id="cbPriority" layoutX="620.0" layoutY="15.0" value="Normaal">
-                  <items>
-                    <FXCollections fx:factory="observableArrayList">
-                      <String fx:value="Laag" />
-                      <String fx:value="Normaal" />
-                      <String fx:value="Hoog" />
-                    </FXCollections>
-                  </items>
-                </ChoiceBox>
-                <Label fx:id="lblSubmitter" layoutX="620.0" layoutY="209.0" text="&lt;submitter&gt;" />
-                <Label layoutX="459.0" layoutY="247.0" text="Omschrijving:" />
-                <Label layoutX="460.0" layoutY="15.0" text="Prioriteit:" />
-                <Label layoutX="460.0" layoutY="174.0" text="Locatie:" />
-                <Label fx:id="lblDescription" layoutX="460.0" layoutY="278.0" text="&lt;Omschrijving van het incident&gt;" />
-                <Label layoutX="460.0" layoutY="209.0" text="Gemeld door:" />
-                <Button fx:id="btnApprove" layoutX="1013.0" layoutY="565.0" mnemonicParsing="false" onAction="#btnApprove_Click" text="Valideer" />
-                <Button layoutX="931.0" layoutY="564.0" mnemonicParsing="false" onAction="#btnDeny_Click" text="Weiger" />
-                <Label layoutX="460.0" layoutY="53.0" text="Slachtoffers:" />
-                <Label layoutX="460.0" layoutY="79.0" text="Gevaar:" />
-                <Label id="lblName" fx:id="lblDanger" layoutX="620.0" layoutY="82.0" minHeight="12.999908447265625" prefHeight="13.0" prefWidth="58.0" text="&lt;Gevaar&gt;" />
-                <Label id="lblName" fx:id="lblVictims" layoutX="620.0" layoutY="53.0" text="&lt;Slachtoffers&gt;" />
-              </children>
-            </AnchorPane>
-          </content>
-        </Tab>
-        <Tab fx:id="tabGebruiker" text="Gebruiker">
-          <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-              <children>
-                <ListView fx:id="listViewNewUsers" layoutX="20.0" layoutY="14.0" prefHeight="452.0" prefWidth="324.0" />
-                <Button layoutX="370.0" layoutY="21.0" mnemonicParsing="false" onAction="#btnValidateUser_Click" text="Valideer" />
-                <Button layoutX="370.0" layoutY="58.0" mnemonicParsing="false" onAction="#btnDenyUser_Click" text="Weiger" />
-                <Button layoutX="370.0" layoutY="97.0" mnemonicParsing="false" onAction="#btnRefresh_Click" text="Vernieuwen" />
-              </children>
-            </AnchorPane>
-          </content>
-        </Tab>
-        <Tab text="Alle incidenten">
-          <content>
-            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-              <children>
-                <Pane prefHeight="632.0" prefWidth="1106.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-<<<<<<< HEAD
-                  <children>
-                    <TableView fx:id="tableIncidents" layoutX="14.0" layoutY="14.0" prefHeight="607.0" prefWidth="948.0" />
-                    <Button layoutX="975.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnDetailsIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Meer info" />
-                    <Button layoutX="975.0" layoutY="53.0" mnemonicParsing="false" onAction="#btnRefreshIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Vernieuwen" />
-                  </children>
-=======
-                           <children>
-                              <TableView fx:id="tableIncidents" layoutX="14.0" layoutY="14.0" prefHeight="607.0" prefWidth="948.0" />
-                              <Button layoutX="975.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnDetailsIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Meer info" />
-                              <Button layoutX="975.0" layoutY="53.0" mnemonicParsing="false" onAction="#btnRefreshIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Vernieuwen" />
-                              <Label layoutX="975.0" layoutY="156.0" text="Prioriteitsfilter:" />
-                              <ChoiceBox layoutX="977.0" layoutY="188.0" prefHeight="25.0" prefWidth="120.0" fx:id="cbPriorityFilter" />
-                           </children>
->>>>>>> origin/master
-                </Pane>
-              </children>
-            </AnchorPane>
-          </content>
-        </Tab>
-      </tabs>
-    </TabPane>
-  </children>
+    <children>
+        <TabPane prefHeight="661.0" prefWidth="1106.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Incident">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="573.0" prefWidth="1001.0">
+                            <children>
+                                <ListView fx:id="lvApproveIncidents" prefHeight="589.0" prefWidth="426.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="666.0" AnchorPane.topAnchor="14.0" />
+                                <Label layoutX="460.0" layoutY="107.0" text="Naam:" />
+                                <Label layoutX="460.0" layoutY="138.0" text="Datum:" />
+                                <Label fx:id="lblLocation" layoutX="620.0" layoutY="174.0" text="&lt;Locatie&gt;" />
+                                <Label fx:id="lblDate" layoutX="620.0" layoutY="141.0" text="&lt;Datum&gt;" />
+                                <Label fx:id="lblName" layoutX="620.0" layoutY="110.0" text="&lt;Naam&gt;" />
+                                <ChoiceBox fx:id="cbPriority" layoutX="620.0" layoutY="15.0" value="Normaal">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="Laag" />
+                                            <String fx:value="Normaal" />
+                                            <String fx:value="Hoog" />
+                                        </FXCollections>
+                                    </items>
+                                </ChoiceBox>
+                                <Label fx:id="lblSubmitter" layoutX="620.0" layoutY="209.0" text="&lt;submitter&gt;" />
+                                <Label layoutX="459.0" layoutY="247.0" text="Omschrijving:" />
+                                <Label layoutX="460.0" layoutY="15.0" text="Prioriteit:" />
+                                <Label layoutX="460.0" layoutY="174.0" text="Locatie:" />
+                                <Label fx:id="lblDescription" layoutX="460.0" layoutY="278.0" text="&lt;Omschrijving van het incident&gt;" />
+                                <Label layoutX="460.0" layoutY="209.0" text="Gemeld door:" />
+                                <Button fx:id="btnApprove" layoutX="1013.0" layoutY="565.0" mnemonicParsing="false" onAction="#btnApprove_Click" text="Valideer" />
+                                <Button layoutX="931.0" layoutY="564.0" mnemonicParsing="false" onAction="#btnDeny_Click" text="Weiger" />
+                                <Label layoutX="460.0" layoutY="53.0" text="Slachtoffers:" />
+                                <Label layoutX="460.0" layoutY="79.0" text="Gevaar:" />
+                                <Label id="lblName" fx:id="lblDanger" layoutX="620.0" layoutY="82.0" minHeight="12.999908447265625" prefHeight="13.0" prefWidth="58.0" text="&lt;Gevaar&gt;" />
+                                <Label id="lblName" fx:id="lblVictims" layoutX="620.0" layoutY="53.0" text="&lt;Slachtoffers&gt;" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="tabGebruiker" text="Gebruiker">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <ListView fx:id="listViewNewUsers" layoutX="20.0" layoutY="14.0" prefHeight="452.0" prefWidth="324.0" />
+                                <Button layoutX="370.0" layoutY="21.0" mnemonicParsing="false" onAction="#btnValidateUser_Click" text="Valideer" />
+                                <Button layoutX="370.0" layoutY="58.0" mnemonicParsing="false" onAction="#btnDenyUser_Click" text="Weiger" />
+                                <Button layoutX="370.0" layoutY="97.0" mnemonicParsing="false" onAction="#btnRefresh_Click" text="Vernieuwen" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Alle incidenten">
+                    <content>
+                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <Pane prefHeight="632.0" prefWidth="1106.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<!--                                    <children>
+                                        <TableView fx:id="tableIncidents" layoutX="14.0" layoutY="14.0" prefHeight="607.0" prefWidth="948.0" />
+                                        <Button layoutX="975.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnDetailsIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Meer info" />
+                                        <Button layoutX="975.0" layoutY="53.0" mnemonicParsing="false" onAction="#btnRefreshIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Vernieuwen" />
+                                    </children>-->
+                                    <children>
+                                        <TableView fx:id="tableIncidents" layoutX="14.0" layoutY="14.0" prefHeight="607.0" prefWidth="948.0" />
+                                        <Button layoutX="975.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnDetailsIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Meer info" />
+                                        <Button layoutX="975.0" layoutY="53.0" mnemonicParsing="false" onAction="#btnRefreshIncident_Click" prefHeight="25.0" prefWidth="123.0" text="Vernieuwen" />
+                                        <Label layoutX="975.0" layoutY="156.0" text="Prioriteitsfilter:" />
+                                        <ChoiceBox layoutX="977.0" layoutY="188.0" prefHeight="25.0" prefWidth="120.0" fx:id="cbPriorityFilter" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
 </AnchorPane>
