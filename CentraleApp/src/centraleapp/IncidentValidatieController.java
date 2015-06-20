@@ -33,6 +33,13 @@ public class IncidentValidatieController implements Initializable, Observer {
 
     @FXML
     Label lblName;
+    
+    @FXML 
+    Label lblVictims;
+    
+    
+    @FXML 
+    Label lblDanger;
 
     @FXML
     Label lblPriority;
@@ -141,7 +148,6 @@ public class IncidentValidatieController implements Initializable, Observer {
                 }
             }
         });
-
         tabGebruiker.setOnSelectionChanged(new EventHandler<Event>() {
             @Override
             public void handle(Event t)
@@ -292,11 +298,13 @@ public class IncidentValidatieController implements Initializable, Observer {
             selectedIncident = incidentCurrent;
 
             lblName.setText(selectedIncident.toString());
-            lblPriority.setText(selectedIncident.getPriority() + "");
+            //cbPriority.selectionModelProperty().setValue(selectedIncident.getPriority());
             lblDate.setText(selectedIncident.getDate());
             lblLocation.setText(selectedIncident.getLocation());
             lblSubmitter.setText(selectedIncident.getSubmitter());
             lblDescription.setText(selectedIncident.getDescription());
+            lblVictims.setText(selectedIncident.getVictims());
+            lblDanger.setText(selectedIncident.getDanger());
         }
         else
         {

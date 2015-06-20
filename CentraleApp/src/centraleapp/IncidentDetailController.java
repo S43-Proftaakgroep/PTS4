@@ -26,6 +26,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -107,7 +108,18 @@ public class IncidentDetailController implements Observer, Initializable {
     //Tab Sent Images
     @FXML
     TilePane tilePane;
-
+    //Tab Assistance Units
+    @FXML
+    Label lblDescription;
+    @FXML
+    Label lblName;
+    @FXML
+    Label lblVictims;
+    @FXML
+    Label lblDanger;
+    @FXML
+    Label lblSuccess;
+    
     private Incident incident;
     private ObservableList<String> advices;
     private String mapsHTML;
@@ -384,6 +396,16 @@ public class IncidentDetailController implements Observer, Initializable {
                 t.start();
             }
         }
+        //Tab 6: Assistance units
+        lblName.setText(incident.getType());
+        lblDescription.setText(incident.getDescription());
+        lblVictims.setText(incident.getVictims());
+        lblDanger.setText(incident.getDanger());
+    }
+    
+    @FXML
+    public void btnSendRequest_Click(ActionEvent event) {
+        lblSuccess.setText("De desbetreffende eenheden worden geinformeerd.");
     }
 
     private String getWeatherInfo(String location) {

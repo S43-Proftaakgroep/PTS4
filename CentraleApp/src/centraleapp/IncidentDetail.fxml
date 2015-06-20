@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
@@ -73,7 +74,7 @@
               <top>
                 <Label fx:id="lblIncidentName" text="&lt;incident_naam&gt;" BorderPane.alignment="CENTER">
                   <font>
-                    <Font name="System Bold" size="24.0" />
+                    <Font name="System Bold" size="24.0" fx:id="x2" />
                   </font>
                   <BorderPane.margin>
                     <Insets left="10.0" right="10.0" />
@@ -145,9 +146,69 @@
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <Label layoutX="49.0" layoutY="84.0" prefWidth="44.0" text="Naam :" />
-                <Label layoutX="49.0" layoutY="122.0" text="Beschrijving : " />
-                <Label layoutX="49.0" layoutY="169.0" text="Label" />
+                <Label fx:id="lblName" font="$x2" layoutX="467.0" layoutY="30.0" prefWidth="321.0" text="Naam :" textAlignment="CENTER" />
+                <Label fx:id="lblDescription" layoutX="446.0" layoutY="89.0" prefHeight="-1.0" prefWidth="-1.0" text="Beschrijving : " textAlignment="LEFT">
+                  <font>
+                    <Font size="20.0" fx:id="x5" />
+                  </font>
+                </Label>
+                <Label fx:id="lblVictims" layoutX="443.0" layoutY="218.0" text="Label">
+                  <font>
+                    <Font size="17.0" fx:id="x3" />
+                  </font>
+                </Label>
+                <Label fx:id="lblDanger" font="$x3" layoutX="581.0" layoutY="218.0" text="Label" />
+                <Label layoutX="427.0" layoutY="174.0" text="Slachtoffers">
+                  <font>
+                    <Font name="System Italic" size="16.0" fx:id="x4" />
+                  </font>
+                </Label>
+                <Label font="$x4" layoutX="581.0" layoutY="175.0" text="Gevaar" />
+                <Label font="$x5" layoutX="426.0" layoutY="296.0" text="Selecteer aantal eenheden" />
+                <Label layoutX="434.0" layoutY="354.0" prefWidth="40.0" text="Politie" />
+                <Label layoutX="507.0" layoutY="354.0" text="Ambulance" />
+                <Label layoutX="598.0" layoutY="354.0" text="Brandweer" />
+                <ComboBox layoutX="426.0" layoutY="381.0" prefHeight="21.0" prefWidth="57.0" promptText="1">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="0" />
+                      <String fx:value="1" />
+                      <String fx:value="2" />
+                      <String fx:value="3" />
+                      <String fx:value="4" />
+                      <String fx:value="5" />
+                      <String fx:value="6" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <ComboBox layoutX="509.0" layoutY="381.0" prefHeight="21.0" prefWidth="57.0" promptText="1">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="0" />
+                      <String fx:value="1" />
+                      <String fx:value="2" />
+                      <String fx:value="3" />
+                      <String fx:value="4" />
+                      <String fx:value="5" />
+                      <String fx:value="6" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <ComboBox layoutX="598.0" layoutY="381.0" prefHeight="21.0" prefWidth="57.0" promptText="0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="0" />
+                      <String fx:value="1" />
+                      <String fx:value="2" />
+                      <String fx:value="3" />
+                      <String fx:value="4" />
+                      <String fx:value="5" />
+                      <String fx:value="6" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <Button layoutX="483.0" layoutY="450.0" mnemonicParsing="false" onAction="#btnSendRequest_Click" text="Verzend aanvraag" />
+                <Label fx:id="lblSuccess" font="$x1" layoutX="306.0" layoutY="514.0" prefHeight="-1.0" prefWidth="-1.0" text="" />
               </children>
             </AnchorPane>
           </content>
