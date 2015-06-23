@@ -34,7 +34,7 @@
                 v.src = url ? url.createObjectURL(stream) : stream;
                 // Set the video to play
                 gotAudio(stream);
-                v.muted = true;
+                //v.muted = true;
                 v.play();
             },
                     function (error) {
