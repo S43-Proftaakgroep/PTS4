@@ -10,11 +10,7 @@ import database.DatabaseManager;
 import incident.Incident;
 import incident.Message;
 import incident.MessageContainer;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import javafx.application.Platform;
@@ -26,14 +22,12 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -46,7 +40,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javax.imageio.ImageIO;
 
 /**
  * FXML Controller class
@@ -119,7 +112,7 @@ public class IncidentDetailController implements Observer, Initializable {
     Label lblDanger;
     @FXML
     Label lblSuccess;
-    
+
     private Incident incident;
     private ObservableList<String> advices;
     private String mapsHTML;
@@ -194,7 +187,9 @@ public class IncidentDetailController implements Observer, Initializable {
                 TwitterFeed twitterFeed = new TwitterFeed();
                 String[] strings = {"CIMS", "incident", incident.getType().replace(" ", "")};
                 ArrayList<String> results = twitterFeed.getByTags(strings); // generic query because tweets don't exist.
-                if (results.isEmpty())results.add("Er zijn geen tweets gevonden voor #" + incident.getType() + ", #CIMS, #incident.");
+                if (results.isEmpty()) {
+                    results.add("Er zijn geen tweets gevonden voor #" + incident.getType() + ", #CIMS, #incident.");
+                }
                 super.succeeded();
                 return results;
             }
@@ -284,6 +279,12 @@ public class IncidentDetailController implements Observer, Initializable {
 
         //TAB 2 - Advice
         lvAdvicepage.setItems(advices);
+        lvAdvicepage.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println(lvAdvicepage.getSelectionModel().getSelectedIndex());
+            }
+        });
 
         //TODO
         // TAB 4 - Sent Information
@@ -320,7 +321,7 @@ public class IncidentDetailController implements Observer, Initializable {
                 return new SimpleStringProperty(p.getValue().getDate());
             }
         });
-        
+
         dateCol.setSortType(TableColumn.SortType.DESCENDING);
         tableIncidentInfo.getColumns().addAll(nameCol, messageCol, dateCol);
         tableIncidentInfo.setItems(messages);
@@ -404,10 +405,25 @@ public class IncidentDetailController implements Observer, Initializable {
         lblVictims.setText(incident.getVictims());
         lblDanger.setText(incident.getDanger());
     }
-    
+
     @FXML
-    public void btnSendRequest_Click(ActionEvent event) {
+    private void btnSendRequest_Click(ActionEvent event) {
         lblSuccess.setText("De desbetreffende eenheden worden geinformeerd.");
+    }
+
+    @FXML
+    private void btnAddAdvice_Click(ActionEvent event) {
+
+    }
+
+    @FXML
+    private void btnRemoveAdvice_Click(ActionEvent event) {
+
+    }
+
+    @FXML
+    private void btnEditAdvice_Click(ActionEvent event) {
+
     }
 
     private String getWeatherInfo(String location) {
