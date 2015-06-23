@@ -214,7 +214,11 @@ public class IncidentValidatieController implements Initializable, Observer {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 int priority = translatePriority(cbPriorityFilter.getValue());
-                filterBy(priority);// FIXME: lijst wordt pas ge?pdate na tweede event.
+                int value = newValue.intValue();
+                if(value == 0) {
+                    value = -1;
+                }
+                filterBy(value);// FIXME: lijst wordt pas ge?pdate na tweede event.
             }
         });
         //        try {

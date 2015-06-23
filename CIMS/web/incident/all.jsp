@@ -94,7 +94,7 @@
             $(function () {
                 setInterval(function () {
                     $.ajax({
-                        url: "ViewIncidentsServlet", // Your Servlet mapping or JSP(not suggested)
+                        url: "ViewIncidentsServlet",
                         data: null,
                         type: "POST",
                         dataType: "html", // Returns HTML as plain text; included script tags are evaluated when inserted in the DOM.
