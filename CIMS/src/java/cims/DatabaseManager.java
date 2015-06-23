@@ -237,7 +237,7 @@ public class DatabaseManager {
         return encryptedString;
     }
 
-    public static boolean addIncident(String type, String locatie, String submitter, String description, double longitude, double latitude)
+    public static boolean addIncident(String type, String locatie, String submitter, String description, double longitude, double latitude, String victims, String dangerGrade)
     {
         boolean result = false;
         if (type == null || locatie == null || submitter == null)
@@ -249,14 +249,29 @@ public class DatabaseManager {
         {
             try
             {
-                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incident (type, location, submitter, description, longitude, latitude) VALUES(?, ?, ?, ?, ?, ?);");
+				// Prevent duplicate incidents.
+				PreparedStatement duplicatePrevention = connection.prepareStatement("SELECT id FROM incident WHERE type = ? AND location = ? AND submitter = ? AND description = ? AND longitude = ? AND latitude = ?;");
+				
+                duplicatePrevention.setString(1, type);
+                duplicatePrevention.setString(2, locatie);
+                duplicatePrevention.setString(3, submitter);
+                duplicatePrevention.setString(4, description);
+                duplicatePrevention.setDouble(5, longitude);
+                duplicatePrevention.setDouble(6, latitude);
+				
+				if (duplicatePrevention.executeQuery().first())                
+                    return false;//throw new RuntimeException("Incident already exists.");
+                
+				
+				PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO incident (type, location, submitter, description, longitude, latitude, victims, dangergrade) VALUES(?, ?, ?, ?, ?, ?,?,?);");
                 pStmnt.setString(1, type);
                 pStmnt.setString(2, locatie);
                 pStmnt.setString(3, submitter);
                 pStmnt.setString(4, description);
                 pStmnt.setDouble(5, longitude);
                 pStmnt.setDouble(6, latitude);
-
+                pStmnt.setString(7, victims);
+                pStmnt.setString(8, dangerGrade);
                 if (pStmnt.executeUpdate() > 0)
                 {
                     result = true;
@@ -273,6 +288,30 @@ public class DatabaseManager {
         return result;
     }
 
+	/**
+	 * Only to be used in DatabaseManagerTest.java.
+	 * Unless Open/Close connection will be public I can't be arsed to move this to DatabaseManagerTest.
+	 * @return 
+	 */
+	public static boolean deleteTestIncident(String type, String location, String submitter, String description){
+		openConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement("DELETE FROM incident WHERE type = ? AND location = ? AND submitter = ? AND description = ?;");
+			ps.setString(1, type);
+			ps.setString(2, location);
+			ps.setString(3, submitter);
+			ps.setString(4, description);
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		finally{
+			closeConnection();
+		}
+	}
+	
     public static List<Incident> getIncidents()
     {
         List<Incident> approvedIncidents = new ArrayList<>();

@@ -26,7 +26,7 @@ public class IncidentContainer extends Observable {
         incidents = new ArrayList<>();
         approved = new ArrayList<>();
         incidents = DatabaseManager.getIncidents(0);
-    }// TODO prioriteit bij incident, alle incidenten, en incidentDetailview.
+    }
 
     public static IncidentContainer getInstance() {
         if (instance == null) {
@@ -52,8 +52,8 @@ public class IncidentContainer extends Observable {
         return approved;
     }
 
-    public void addIncident(String location, String longitude, String latitude, String submitter, String typeOfIncident, String situationDescription, String date, int priority) {
-        Incident incident = new Incident(location, longitude, latitude, submitter, typeOfIncident, situationDescription, date, priority);
+    public void addIncident(String location, String longitude, String latitude, String submitter, String typeOfIncident, String situationDescription, String date, int priority, String victims, String dangerLevel) {
+        Incident incident = new Incident(location, longitude, latitude, submitter, typeOfIncident, situationDescription, date, priority,victims,dangerLevel);
         this.incidents.add(incident);
         Platform.runLater(new Runnable() {
 

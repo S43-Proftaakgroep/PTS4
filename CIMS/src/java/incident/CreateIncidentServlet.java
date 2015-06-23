@@ -37,7 +37,10 @@ public class CreateIncidentServlet extends HttpServlet {
             String description = request.getParameter("descr");
             String longtitude = request.getParameter("longtitude");
             String latitude = request.getParameter("latitude");
-            if (longtitude.equals("") || latitude.equals("")) {
+            String victims = request.getParameter("victims");
+            String dangerlevel = request.getParameter("danger");
+            System.out.println(victims + " " +dangerlevel);
+            if(longtitude.equals("") || latitude.equals("")) {
                 request.setAttribute("errorMessageLocation", "Please enter a location for the incident");
                 request.getRequestDispatcher("incident/new.jsp").forward(request, response);
             }
@@ -46,12 +49,13 @@ public class CreateIncidentServlet extends HttpServlet {
             name = name.replace("|", "");
             location = location.replace("|", "");
             description = description.replace("|", "");
-            String infoString = "@1#" + name + "|" + location + "|" + description + "|" + submitter + "|" + longtitude + "|" + latitude;
-            try {
-                double longtitudeDouble = Double.parseDouble(longtitude);
-                double latitudeDouble = Double.parseDouble(latitude);
-                success = DatabaseManager.addIncident(name, location, submitter, description, longtitudeDouble, latitudeDouble);
-            } catch (NumberFormatException e) {
+            String infoString = "@1#" + name + "|" + location + "|" + description + "|" + submitter + "|" + longtitude + "|" + latitude + "|" + victims + "|" + dangerlevel;
+            try{
+            double longtitudeDouble = Double.parseDouble(longtitude);
+            double latitudeDouble = Double.parseDouble(latitude);
+            success = DatabaseManager.addIncident(name, location, submitter, description, longtitudeDouble, latitudeDouble,victims,dangerlevel);
+            }
+            catch(NumberFormatException e){
                 e.printStackTrace();
             }
             Thread t = new Thread(new Runnable() {

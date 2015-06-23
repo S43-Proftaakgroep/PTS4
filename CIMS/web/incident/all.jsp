@@ -91,21 +91,21 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="/CIMS/js/bootstrap.min.js"></script>
         <script type="text/javascript">
-            $(function updateIncidents() {
-                $.ajax({
-                    url: "ViewIncidentsServlet", // Your Servlet mapping or JSP(not suggested)
-                    data: null,
-                    type: "POST",
-                    dataType: "html", // Returns HTML as plain text; included script tags are evaluated when inserted in the DOM.
-                    success: function (response) {
-                        $('#newIncidents').html(response);
-                        setInterval(function() {updateIncidents();},5000);
-                    },
-                    error: function (request, textStatus, errorThrown) {
-                        alert(errorThrown);
-                    }
+            $(function () {
+                setInterval(function () {
+                    $.ajax({
+                        url: "ViewIncidentsServlet", // Your Servlet mapping or JSP(not suggested)
+                        data: null,
+                        type: "POST",
+                        dataType: "html", // Returns HTML as plain text; included script tags are evaluated when inserted in the DOM.
+                        success: function (response) {
+                            $('#newIncidents').html(response);
+                        },
+                        error: function (request, textStatus, errorThrown) {
+                        }
+                    });
+                    }, 10000);
                 });
-            });
         </script>
     </body>
 </html>

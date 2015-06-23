@@ -31,7 +31,8 @@ public class CentraleApp extends Application {
         CentralServer server = new CentralServer();
         server.init();
         stage.setScene(scene);
-        stage.show();        
+        stage.show();
+        stage.setTitle("CIMS | Incidentenmanagement");
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
           public void handle(WindowEvent we) {
               server.stop();
@@ -39,6 +40,7 @@ public class CentraleApp extends Application {
           }
       }); 
         Stage s =  new Stage();
+        s.setTitle("CIMS | Inkomende verbindingen");
         s.setScene(scene2);
         s.show();
     }
