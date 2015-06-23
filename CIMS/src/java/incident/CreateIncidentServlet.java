@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Joris
+ * @author Meny
  */
 @WebServlet(name = "CreateIncidentServlet", urlPatterns = {"/CreateIncidentServlet"})
 public class CreateIncidentServlet extends HttpServlet {
@@ -37,7 +37,7 @@ public class CreateIncidentServlet extends HttpServlet {
             String description = request.getParameter("descr");
             String longtitude = request.getParameter("longtitude");
             String latitude = request.getParameter("latitude");
-            if(longtitude.equals("") || latitude.equals("")) {
+            if (longtitude.equals("") || latitude.equals("")) {
                 request.setAttribute("errorMessageLocation", "Please enter a location for the incident");
                 request.getRequestDispatcher("incident/new.jsp").forward(request, response);
             }
@@ -47,36 +47,34 @@ public class CreateIncidentServlet extends HttpServlet {
             location = location.replace("|", "");
             description = description.replace("|", "");
             String infoString = "@1#" + name + "|" + location + "|" + description + "|" + submitter + "|" + longtitude + "|" + latitude;
-            try{
-            double longtitudeDouble = Double.parseDouble(longtitude);
-            double latitudeDouble = Double.parseDouble(latitude);
-            success = DatabaseManager.addIncident(name, location, submitter, description, longtitudeDouble, latitudeDouble);
-            }
-            catch(NumberFormatException e){
+            try {
+                double longtitudeDouble = Double.parseDouble(longtitude);
+                double latitudeDouble = Double.parseDouble(latitude);
+                success = DatabaseManager.addIncident(name, location, submitter, description, longtitudeDouble, latitudeDouble);
+            } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
             Thread t = new Thread(new Runnable() {
 
                 @Override
                 public void run() {
-                                try {
-                int port = Integer.parseInt(Property.IPPORT.getProperty());
-                Socket socket = new Socket(Property.IPADRESS.getProperty(), port);
-                OutputStream outSocket = socket.getOutputStream();
-                ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
-                outWriter.writeObject(infoString);
-                outWriter.close();
-                socket.close();
-                
-            } catch (ConnectException e) {
-                e.printStackTrace();
-            }       catch (IOException ex) {
+                    try {
+                        int port = Integer.parseInt(Property.IPPORT.getProperty());
+                        Socket socket = new Socket(Property.IPADRESS.getProperty(), port);
+                        OutputStream outSocket = socket.getOutputStream();
+                        ObjectOutputStream outWriter = new ObjectOutputStream(outSocket);
+                        outWriter.writeObject(infoString);
+                        outWriter.close();
+                        socket.close();
+
+                    } catch (ConnectException e) {
+                        e.printStackTrace();
+                    } catch (IOException ex) {
                         Logger.getLogger(CreateIncidentServlet.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
             t.start();
-            //response.sendRedirect("incident/new.jsp");
             ServletContext sc = getServletContext();
             RequestDispatcher rd = sc.getRequestDispatcher("/incident/new.jsp");
             request.setAttribute("showBanner", success);

@@ -7,8 +7,6 @@ package communication;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +32,6 @@ public class AudioThread implements Runnable {
     public void run() {
         while (true) {
             try {
-                //ObjectInputStream oin = new ObjectInputStream(insocket.getInputStream());
                 BufferedInputStream in = new BufferedInputStream(insocket.getInputStream());
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(in);
                 Clip clip = AudioSystem.getClip();
