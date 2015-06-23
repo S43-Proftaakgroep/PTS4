@@ -101,14 +101,11 @@ public class DatabaseManager {
         return result;
     }
 
-    public static boolean authIncident(String type, int priority, String locatie)
-    {
+    public static boolean authIncident(String type, int priority, String locatie) {
         boolean result = false;
         //Open the connection
-        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty())
-        {
-            try
-            {
+        if (openConnection() && !type.trim().isEmpty() && !locatie.trim().isEmpty()) {
+            try {
                 PreparedStatement pStmnt = connection.prepareStatement("UPDATE incident SET approved = 1, priority = ? WHERE type = ? AND location = ?;");
                 pStmnt.setInt(1, priority);
                 pStmnt.setString(2, type);
@@ -277,8 +274,24 @@ public class DatabaseManager {
             }
 
         }
-
     }
+
+    public static void addAdvice(String advice, int incidentID) {
+        if (openConnection()) {
+            try {
+                PreparedStatement pStmnt = connection.prepareStatement("INSERT INTO advice(id, adviceText) VALUES(?, ?)");
+                pStmnt.setInt(1, incidentID);
+                pStmnt.setString(2, advice);
+                pStmnt.executeUpdate();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            } finally {
+                closeConnection();
+            }
+        }
+    }
+
+    
 
     public static List<String> getImagePaths(int id) {
         List<String> imagePaths = new ArrayList<String>();

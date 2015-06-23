@@ -11,7 +11,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.web.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="687.0" prefWidth="1023.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="centraleapp.IncidentDetailController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="687.0" prefWidth="1023.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="centraleapp.IncidentDetailController">
   <children>
     <TabPane prefHeight="484.0" prefWidth="885.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <tabs>
@@ -101,8 +101,6 @@
                     <HBox prefHeight="50.0" prefWidth="362.0" spacing="40.0">
                       <children>
                         <Button fx:id="btnAddAdvice" mnemonicParsing="false" text="Voeg toe" />
-                        <Button fx:id="btnEditAdvice" mnemonicParsing="false" text="Wijzig" />
-                        <Button fx:id="btnRemoveAdvice" mnemonicParsing="false" text="Verwijder" />
                       </children>
                     </HBox>
                   </children>

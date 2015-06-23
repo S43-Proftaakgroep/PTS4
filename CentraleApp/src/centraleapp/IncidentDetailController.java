@@ -164,7 +164,7 @@ public class IncidentDetailController implements Observer, Initializable {
             protected List<String> call() throws Exception {
                 List<String> data = DatabaseManager.getAdviceById(incident.getId());
                 if (data.size() < 1) {
-                    data.add("<Geen adviezen>");
+                    data.add("");
                 }
                 super.succeeded();
                 return data;
@@ -279,6 +279,15 @@ public class IncidentDetailController implements Observer, Initializable {
 
         //TAB 2 - Advice
         lvAdvicepage.setItems(advices);
+        btnAddAdvice.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                 advices.add(taAdvicetext.getText());
+                 DatabaseManager.addAdvice(taAdvicetext.getText(), incident.getId());
+                 taAdvicetext.setText("");
+            }
+        });
         lvAdvicepage.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
