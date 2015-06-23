@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import static java.lang.System.out;
 import java.util.Iterator;
 import java.util.List;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,11 +31,13 @@ import org.apache.commons.net.ftp.FTP;
  *
  * @author Eric
  */
-@WebServlet(name = "UploadFileFtp", urlPatterns =
-{
-    "/UploadFileFtp"
-})
+@WebServlet(name = "UploadFileFtp", urlPatterns
+        = {
+            "/UploadFileFtp"
+        })
 public class UploadFileFtp extends HttpServlet {
+
+    boolean bannerSuccess = false;
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -45,15 +49,13 @@ public class UploadFileFtp extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         int incidentId = -1;
         String message = "";
         boolean succes = false;
         String nameOfFile = "";
         boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
-        if (!isMultipartContent)
-        {
+        if (!isMultipartContent) {
             out.println("You are not trying to upload");
             return;
         }
@@ -61,45 +63,34 @@ public class UploadFileFtp extends HttpServlet {
         out.println("You are trying to upload");
         FileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
-        try
-        {
+        try {
             List<FileItem> fields = upload.parseRequest(request);
             out.println("Number of fields: " + fields.size());
             Iterator<FileItem> it = fields.iterator();
-            if (!it.hasNext())
-            {
+            if (!it.hasNext()) {
                 out.println("No fileds found");
                 return;
             }
-            while (it.hasNext())
-            {
+            while (it.hasNext()) {
                 FileItem fileItem = it.next();
                 boolean isFormField = fileItem.isFormField();
-                if (isFormField)
-                {
+                if (isFormField) {
                     out.println("FieldName: " + fileItem.getFieldName() + ", Fileitem String: " + fileItem.getString());
-                    if (fileItem.getFieldName().equals("incidentId"))
-                    {
+                    if (fileItem.getFieldName().equals("incidentId")) {
                         incidentId = Integer.parseInt(fileItem.getString());
-                    }
-                    else if (fileItem.getFieldName().equals("message"))
-                    {
+                    } else if (fileItem.getFieldName().equals("message")) {
                         message = fileItem.getString();
                     }
-                }
-                else
-                {
+                } else {
                     out.println("\n \n Name: " + fileItem.getName()
                             + "\n \n Content Type: " + fileItem.getContentType()
                             + "\n \n Size (Bytes): " + fileItem.getSize()
                             + "\n \n To String: " + fileItem.toString());
 
-                    if (fileItem.getContentType().equals("image/jpeg") || fileItem.getContentType().equals("image/png"))
-                    {
+                    if (fileItem.getContentType().equals("image/jpeg") || fileItem.getContentType().equals("image/png")) {
                         InputStream is = fileItem.getInputStream();
                         FTPClient client = new FTPClient();
-                        try
-                        {
+                        try {
                             client.connect("a-chan.nl");
                             client.login("cims@a-chan.nl", "1234");
                             client.setFileType(FTP.BINARY_FILE_TYPE);
@@ -109,23 +100,16 @@ public class UploadFileFtp extends HttpServlet {
                             client.logout();
                             succes = true;
                             nameOfFile = filename;
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch (Exception ex) {
                             //Error handling
                             out.println("\n \n \n File upload 1 error! \n \n \n");
-                        } finally
-                        {
-                            try
-                            {
-                                if (is != null)
-                                {
+                        } finally {
+                            try {
+                                if (is != null) {
                                     is.close();
                                 }
                                 client.disconnect();
-                            }
-                            catch (Exception ex)
-                            {
+                            } catch (Exception ex) {
                                 //Error handling
                                 out.println("\n \n \n File upload 2 error! \n \n \n");
                             }
@@ -133,36 +117,32 @@ public class UploadFileFtp extends HttpServlet {
                     }
                 }
             }
-        }
-        catch (FileUploadException ex)
-        {
+        } catch (FileUploadException ex) {
             ex.printStackTrace();
         }
 
         PrintWriter out = response.getWriter();
         response.setContentType("text/html");
 
-        if (succes && incidentId != -1 && !nameOfFile.equals(""))
-        {
+        if (succes && incidentId != -1 && !nameOfFile.equals("")) {
             //Voeg filename toe aan bijbehorend incident in de database.
 
-            if (DatabaseManager.addFileNameToIncident(nameOfFile, incidentId))
-            {
+            if (DatabaseManager.addFileNameToIncident(nameOfFile, incidentId)) {
                 //Gelukt met toevoegen aan de database.
                 out.println("File upload gelukt!");
-            }
-            else
-            {
+                bannerSuccess = true;
+            } else {
                 //Niet gelukt om het toe te voegen aan de database.
                 out.println("File upload niet gelukt!");
             }
-        }
-        else
-        {
+        } else {
             out.println("Geen bestand geselecteerd!");
         }
-        
-        response.setHeader("Refresh", "2; index.jsp");
+
+        ServletContext sc = getServletContext();
+        RequestDispatcher rd = sc.getRequestDispatcher("/index.jsp");
+        request.setAttribute("showBanner", bannerSuccess);
+        rd.forward(request, response);
     }
 
 }

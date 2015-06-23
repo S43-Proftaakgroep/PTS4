@@ -27,19 +27,39 @@ and open the template in the editor.
         <%@include file="/navigationBar.jsp" %>
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <%
-            incidentList = DatabaseManager.getIncidents();
-            Coordinates coord = (Coordinates) session.getAttribute("geolocation");
-            if (coord != null) {
-                this.closestIncident = coord.getClosestIncident(incidentList);
-                this.closestIncidentId = closestIncident.getId();
+            if(request.getAttribute("showBanner") != null) {
+            System.out.println("ShowBanner = " + request.getAttribute("showBanner"));
+            boolean showBanner = Boolean.parseBoolean(request.getAttribute("showBanner").toString());
+            String typeOfAlert = "danger";
+            String text = "Bestand of bericht is niet toegevoegd!";
+            String title = "Failed";
+            if (showBanner) {
+                typeOfAlert = "success";
+                text = "Bestand of bericht is succesvol toegevoegd!";
+                title = "Succes!";
             }
-            if (currentUser != null && currentUser.isValid()) {%>
+
+        %>
+        <div class="alert alert-<%=typeOfAlert%> alert-dismissible" role="alert" style="position: fixed; width: 100%; z-index: 999;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong><%=title%></strong> <%=text%>
+        </div>
+        <% } 
+        incidentList = DatabaseManager.getIncidents();
+        Coordinates coord = (Coordinates) session.getAttribute("geolocation");
+        if (coord != null) {
+        this.closestIncident = coord.getClosestIncident(incidentList);
+        this.closestIncidentId = closestIncident.getId();
+        }
+        if (currentUser != null && currentUser.isValid()) {%>
         <div class="row container" id="rowCall" style="width:100%">
             <div class="col-md-6" id="col1">
                 <div class="jumbotron" id="jum1">
                     <div class="container">
                         <%
-                            if (request.getParameter("create") != null) {
+
+                            if (request.getParameter ( 
+                                "create") != null) {
                                 if (request.getParameter("create").equals("success")) {
                                     out.write("Successfully Created Account");
                                 }
@@ -48,7 +68,10 @@ and open the template in the editor.
                         <h1>
                             <a  class="btn btn-primary" href="incident/incident_detail.jsp?incident=<%=closestIncidentId%>">
                                 <%
-                                    if (closestIncident != null) {
+                                    if (closestIncident
+
+                                    
+                                        != null) {
                                         out.println(closestIncident.toString() + " " + closestIncident.getDate());
                                     }
                                 %>
@@ -56,7 +79,10 @@ and open the template in the editor.
                         </h1>  
                         <h5><strong>Omschrijving:</strong> <br />
                             <%
-                                if (closestIncident != null) {
+                                if (closestIncident
+
+                                
+                                    != null) {
                                     out.println(closestIncident.getDescription());%>
                             <h5><strong>Type: </strong> <br />
                                 <%
