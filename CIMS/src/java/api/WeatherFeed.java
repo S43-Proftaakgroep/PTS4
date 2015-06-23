@@ -101,8 +101,9 @@ public class WeatherFeed{
 				}
 			}
 		} catch (IOException ex) {
-			Logger.getLogger(WeatherFeed.class.getName()).log(Level.SEVERE, null, ex);
-			feed = "Weather Unavailable. (Unknown Error.)";
+			System.out.println("IOException raised in WeatherFeed. [line 104]");
+			//Logger.getLogger(WeatherFeed.class.getName()).log(Level.SEVERE, null, ex);
+			//feed = "Weather Unavailable. (Unknown Error.)";
 		}	
 		
 		return feed;
