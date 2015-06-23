@@ -192,9 +192,9 @@ public class IncidentDetailController implements Observer, Initializable {
             @Override
             protected ArrayList<String> call() throws Exception {
                 TwitterFeed twitterFeed = new TwitterFeed();
-                String[] strings = {"CIMS", "incident"};
+                String[] strings = {"CIMS", "incident", incident.getType().replace(" ", "")};
                 ArrayList<String> results = twitterFeed.getByTags(strings); // generic query because tweets don't exist.
-                if (results.isEmpty())results.add("Er zijn geen tweets gevonden voor #" + incident.getType() + ", #CIMS");
+                if (results.isEmpty())results.add("Er zijn geen tweets gevonden voor #" + incident.getType() + ", #CIMS, #incident.");
                 super.succeeded();
                 return results;
             }
