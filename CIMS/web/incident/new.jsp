@@ -41,9 +41,6 @@
                     if ($.trim($("#longtitude").val()) === "" || $.trim($("#latitude").val()) === "") {
                         getLatLong($("#addresspicker_map").val());
                     }
-                    else {
-                        $("#submitForm").submit();
-                    }
                 });
                 addresspickerMap.on("addressChanged", function (evt, address) {
                     $("#longtitude").val(address.geometry.location.lng());
@@ -103,21 +100,21 @@
                 <label for="victims">Aantal slachtoffers</label>
                 <div class="form-group">
                     <select name ="victims" class="form-control">
-                        <option value="unknown">Onbekend</option>
-                        <option value="none">0</option>
-                        <option value="low">1-5</option>
-                        <option value="medium">6-10</option>
-                        <option value="high">>10</option>
+                        <option value="Unknown">Onbekend</option>
+                        <option value="None">0</option>
+                        <option value="Low">1-5</option>
+                        <option value="Medium">6-10</option>
+                        <option value="High">>10</option>
                     </select>
                 </div>
                 <label for="danger">Gevaar graad</label>
                 <div class="form-group">
                     <select name = "danger" class="form-control">
-                        <option value="unknown">Onbekend</option>
-                        <option value="low">Laag</option>
-                        <option value="medium">Gemiddeld</option>
-                        <option value="high">Hoog</option>
-                        <option value="extreme">Extreem Hoog</option>
+                        <option value="Unknown">Onbekend</option>
+                        <option value="Low">Laag</option>
+                        <option value="Medium">Gemiddeld</option>
+                        <option value="High">Hoog</option>
+                        <option value="Extreme">Extreem Hoog</option>
                     </select>
                 </div>
                 <div class="form-group">

@@ -26,12 +26,12 @@ import java.util.regex.Pattern;
  */
 public class ConnectionThread implements Runnable, Observer {
 
-    Socket insocket;
-    int newIncidentCount = 0;
-    ObjectInputStream in;
-    ObjectOutputStream out;
-    IncidentContainer container;
-    MessageContainer messageContainer;
+    private Socket insocket;
+    private int newIncidentCount = 0;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private IncidentContainer container;
+    private MessageContainer messageContainer;
 
     public ConnectionThread(Socket socket)
     {

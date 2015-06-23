@@ -102,7 +102,6 @@
                         setInterval(function() {updateIncidents();},5000);
                     },
                     error: function (request, textStatus, errorThrown) {
-                        alert(errorThrown);
                     }
                 });
             });
