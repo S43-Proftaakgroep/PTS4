@@ -188,7 +188,7 @@ public final class PropertiesController {
             props.setProperty("dbpassword", "watdenkjezelf");
             props.setProperty("dbname", "deb82648_cims");
             //props.setProperty("ipadress", "145.93.104.191");
-            props.setProperty("ipadress", "145.93.162.23");
+            props.setProperty("ipadress", "145.144.248.88");
             props.setProperty("ipport", "1099");
             //Save properties to project root folder
             props.store(output, null);
