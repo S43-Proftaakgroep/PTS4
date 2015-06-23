@@ -62,7 +62,7 @@ public class CreateIncidentServlet extends HttpServlet {
 
                 @Override
                 public void run() {
-                                try {
+                try {
                 int port = Integer.parseInt(Property.IPPORT.getProperty());
                 Socket socket = new Socket(Property.IPADRESS.getProperty(), port);
                 OutputStream outSocket = socket.getOutputStream();

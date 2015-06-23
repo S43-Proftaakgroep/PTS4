@@ -23,7 +23,7 @@ public class SocketRunnable implements Runnable {
 
     String socketString;
     public SocketRunnable() {
-        socketString = "geen nieuwe incidenten";
+        socketString = "";
     }
     @Override
     public void run() {
